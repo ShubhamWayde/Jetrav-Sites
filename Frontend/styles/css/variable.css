@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+:root {
+    --primary-50: #ffffff;
+    --primary-100: #F0F0F0;
+    --primary-200: #7A7A7A;
+    --primary-300: #616161;
+
+    --secondary-100: #000;
+
+    --primary-border: #F0F0F0;
+    --secondary-border: #2E2E2E;
+
+    --primary-text: var(--primary-100);
+    --secondary-text: var(--primary-200);
+
+    --status-success: #66BB6A;
+    --status-error: #FF7043;
+    --status-cancel: #7A7A7A;
+    --status-negotiate: #26A69A;
+    --status-quoted: #29B6F6;
+    --status-quotation: #D4E157;
+
+    --Outfit-font: "Outfit", sans-serif;
+    --base-font: var(--font-md);
+
+    --h1-font: clamp(30px, 1.771vw, 34px);
+    --h2-font: clamp(24px, 1.667vw, 32px);
+    --h3-font: clamp(18px, 1.25vw, 24px);
+    --h4-font: clamp(14px, 1.042vw, 20px);
+    --h5-font: clamp(16px, 0.938vw, 18px);
+    --h6-font: clamp(14px, 0.833vw, 16px);
+
+    --font-md: clamp(14px, 0.833vw, 16px);
+    --font-sm: clamp(13px, 0.729vw, 14px);
+    --font-xs: clamp(12px, 0.625vw, 12px);
+    --font-xxs: 10px;
+
+    --font-weight-100: 100;
+    --font-weight-200: 200;
+    --font-weight-300: 300;
+    --font-weight-400: 400;
+    --font-weight-500: 500;
+    --font-weight-600: 600;
+    --font-weight-700: 700;
+    --font-weight-bold: bold;
+
+    --display-size-small: 575px;
+    --display-size-medium: 767px;
+    --display-size-large: 991px;
+    --display-size-x-large: 1199px;
+    --display-size-xx-large: 1399px;
+
+    --spacing-01: 0.125rem;
+    --spacing-02: 0.25rem;
+    --spacing-03: 0.5rem;
+    --spacing-04: 0.75rem;
+    --spacing-05: 1rem;
+    --spacing-06: 1.5rem;
+    --spacing-07: 2rem;
+
+    --border-radius-2: 2px;
+    --border-radius-4: 4px;
+    --border-radius-6: 6px;
+    --border-radius-8: 8px;
+    --border-radius-10: 10px;
+    --border-radius-12: 12px;
+}
+
+body.light {
+    --primary-100: #1A1A1A;
+    --primary-200: #E0E0E0;
+    --primary-300: #F5F5F5;
+
+    --secondary-100: #fff;
+
+    --primary-border: #E0E0E0;
+}
+
+body.dark {
+    --primary-100: #F0F0F0;
+    --primary-200: #7A7A7A;
+    --primary-300: #616161;
+
+    --secondary-100: #000;
+
+    --primary-border: #2E2E2E;
+}
