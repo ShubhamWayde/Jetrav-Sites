@@ -15,10 +15,14 @@
   color: #f59e0b;
   background: rgba(245, 158, 11, 0.08);
   border: 1px solid rgba(245, 158, 11, 0.2);
-  border-radius: var(--border-radius-6, 6px);
+  border-radius: var(--radius-md, 6px);
   padding: 7px 12px;
   text-align: center;
   margin: 0 0 4px;
+  -webkit-border-radius: var(--radius-md, 6px);
+  -moz-border-radius: var(--radius-md, 6px);
+  -ms-border-radius: var(--radius-md, 6px);
+  -o-border-radius: var(--radius-md, 6px);
 }
 
 .otpWrapper {

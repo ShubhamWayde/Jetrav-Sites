@@ -27,11 +27,15 @@
   align-items: center;
   gap: 10px;
   padding: 9px 12px;
-  border-radius: var(--border-radius-8);
+  border-radius: var(--radius-lg);
   font-size: var(--font-sm);
   color: var(--primary-200);
   text-decoration: none;
   transition: background 0.15s ease, color 0.15s ease;
+  -webkit-border-radius: var(--radius-lg);
+  -moz-border-radius: var(--radius-lg);
+  -ms-border-radius: var(--radius-lg);
+  -o-border-radius: var(--radius-lg);
 }
 
 .navItem:hover {

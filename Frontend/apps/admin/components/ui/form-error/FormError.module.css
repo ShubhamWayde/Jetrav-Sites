@@ -3,12 +3,16 @@
   align-items: flex-start;
   gap: 8px;
   padding: 10px 14px;
-  border-radius: var(--border-radius-8);
+  border-radius: var(--radius-lg);
   background: rgba(255, 112, 67, 0.08);
   border: 1px solid rgba(255, 112, 67, 0.25);
   font-size: var(--font-sm);
   color: var(--status-error);
   line-height: 1.5;
+  -webkit-border-radius: var(--radius-lg);
+  -moz-border-radius: var(--radius-lg);
+  -ms-border-radius: var(--radius-lg);
+  -o-border-radius: var(--radius-lg);
 }
 
 .icon {

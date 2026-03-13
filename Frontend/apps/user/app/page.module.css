@@ -52,8 +52,12 @@
   font-family: inherit;
   background: var(--gray-alpha-100);
   padding: 2px 4px;
-  border-radius: 4px;
+  border-radius: var(--radius-bas);
   font-weight: 600;
+  -webkit-border-radius: var(--radius-bas);
+  -moz-border-radius: var(--radius-bas);
+  -ms-border-radius: var(--radius-bas);
+  -o-border-radius: var(--radius-bas);
 }
 
 .ctas {

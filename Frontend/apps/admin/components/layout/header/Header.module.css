@@ -34,12 +34,16 @@
   justify-content: center;
   width: 34px;
   height: 34px;
-  border-radius: var(--border-radius-8, 8px);
+  border-radius: var(--radius-lg, 8px);
   border: none;
   background: transparent;
   color: var(--primary-200, #a0a0a0);
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
+  -webkit-border-radius: var(--radius-lg, 8px);
+  -moz-border-radius: var(--radius-lg, 8px);
+  -ms-border-radius: var(--radius-lg, 8px);
+  -o-border-radius: var(--radius-lg, 8px);
 }
 
 .iconBtn:hover {
@@ -89,11 +93,15 @@
   width: 248px;
   background: #161616;
   border: 1px solid var(--secondary-border);
-  border-radius: 12px;
+  border-radius: var(--radius-xl, 12px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
   overflow: hidden;
   animation: dropIn 0.15s ease;
   z-index: 200;
+  -webkit-border-radius: var(--radius-xl, 12px);
+  -moz-border-radius: var(--radius-xl, 12px);
+  -ms-border-radius: var(--radius-xl, 12px);
+  -o-border-radius: var(--radius-xl, 12px);
 }
 
 @keyframes dropIn {
@@ -155,13 +163,17 @@
   display: inline-block;
   margin-top: 8px;
   padding: 3px 12px;
-  border-radius: 20px;
+  border-radius: var(--radius-3xl, 20px);
   font-size: 11px;
   font-weight: var(--font-weight-500, 500);
   background: rgba(255, 255, 255, 0.07);
   color: var(--primary-100, #d0d0d0);
   border: 1px solid rgba(255, 255, 255, 0.12);
   letter-spacing: 0.4px;
+  -webkit-border-radius: var(--radius-3xl, 20px);
+  -moz-border-radius: var(--radius-3xl, 20px);
+  -ms-border-radius: var(--radius-3xl, 20px);
+  -o-border-radius: var(--radius-3xl, 20px);
 }
 
 /* ── Divider ──────────────────────────────────────────────────────────────── */

@@ -61,11 +61,15 @@
 .card {
   background: #0d0d0d;
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-12);
+  border-radius: var(--radius-xl);
   padding: 28px;
   display: flex;
   flex-direction: column;
   gap: 22px;
+  -webkit-border-radius: var(--radius-xl);
+  -moz-border-radius: var(--radius-xl);
+  -ms-border-radius: var(--radius-xl);
+  -o-border-radius: var(--radius-xl);
 }
 
 .cardTitle {
@@ -104,21 +108,6 @@
   text-transform: uppercase;
 }
 
-/* .readOnlyBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 10px;
-  font-weight: var(--font-weight-400);
-  color: var(--primary-300);
-  letter-spacing: 0.3px;
-  text-transform: lowercase;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--secondary-border);
-  border-radius: 4px;
-  padding: 1px 6px;
-} */
-
 /* ── Field input ─────────────────────────────────────────────────────────── */
 
 .fieldInput {
@@ -126,12 +115,16 @@
   padding: 11px 16px;
   background: transparent;
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-8);
+  border-radius: var(--radius-lg);
   font-size: var(--base-font);
   font-family: var(--font-primary);
   color: var(--primary-100);
   transition: border-color 0.2s ease, background 0.2s ease;
   outline: none;
+  -webkit-border-radius: var(--radius-lg);
+  -moz-border-radius: var(--radius-lg);
+  -ms-border-radius: var(--radius-lg);
+  -o-border-radius: var(--radius-lg);
 }
 
 .fieldInput::placeholder {

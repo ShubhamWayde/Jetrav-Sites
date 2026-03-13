@@ -36,8 +36,12 @@
   font-family: var(--font-primary);
   cursor: pointer;
   padding: 4px 6px;
-  border-radius: var(--border-radius-6);
+  border-radius: var(--radius-md);
   transition: color 0.15s ease, background 0.15s ease;
+  -webkit-border-radius: var(--radius-md);
+  -moz-border-radius: var(--radius-md);
+  -ms-border-radius: var(--radius-md);
+  -o-border-radius: var(--radius-md);
 }
 
 .backBtn:hover {
@@ -105,7 +109,7 @@
 .retryBtn {
   background: transparent;
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-6);
+  border-radius: var(--radius-md);
   color: var(--primary-200);
   font-size: var(--font-sm);
   font-family: var(--font-primary);
@@ -201,13 +205,17 @@
 .typeBadge {
   display: inline-block;
   padding: 2px 10px;
-  border-radius: 99px;
+  border-radius: 30%;
   font-size: var(--font-xs);
   font-weight: var(--font-weight-500);
   background: rgba(59, 130, 246, 0.12);
   border: 1px solid rgba(59, 130, 246, 0.3);
   color: #60a5fa;
   white-space: nowrap;
+  -webkit-border-radius: 30%;
+  -moz-border-radius: 30%;
+  -ms-border-radius: 30%;
+  -o-border-radius: 30%;
 }
 
 /* Per-type colour overrides */
@@ -279,7 +287,7 @@
   background: transparent;
   border: none;
   padding: 5px 7px;
-  border-radius: var(--border-radius-6);
+  border-radius: var(--radius-md);
   cursor: pointer;
   line-height: 1;
   display: flex;

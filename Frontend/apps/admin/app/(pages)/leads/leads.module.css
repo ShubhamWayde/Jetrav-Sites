@@ -41,7 +41,7 @@
 .filterTab {
   background: transparent;
   border: 1px solid var(--secondary-border);
-  border-radius: 99px;
+  border-radius: 30%;
   color: var(--primary-200);
   font-size: var(--font-xs);
   font-family: var(--font-primary);
@@ -50,6 +50,10 @@
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  -webkit-border-radius: 30%;
+  -moz-border-radius: 30%;
+  -ms-border-radius: 30%;
+  -o-border-radius: 30%;
 }
 
 .filterTab:hover {
@@ -100,13 +104,17 @@
 .retryBtn {
   background: transparent;
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-6);
+  border-radius: var(--radius-md);
   color: var(--primary-200);
   font-size: var(--font-sm);
   font-family: var(--font-primary);
   padding: 6px 16px;
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease;
+  -webkit-border-radius: var(--radius-md);
+  -moz-border-radius: var(--radius-md);
+  -ms-border-radius: var(--radius-md);
+  -o-border-radius: var(--radius-md);
 }
 
 .retryBtn:hover {
@@ -235,7 +243,7 @@
   background: transparent;
   border: none;
   padding: 5px 7px;
-  border-radius: var(--border-radius-6);
+  border-radius: var(--radius-md);
   cursor: pointer;
   line-height: 1;
   display: flex;
@@ -243,6 +251,10 @@
   justify-content: center;
   color: var(--primary-300);
   transition: background 0.12s ease, color 0.12s ease;
+  -webkit-border-radius: var(--radius-md);
+  -moz-border-radius: var(--radius-md);
+  -ms-border-radius: var(--radius-md);
+  -o-border-radius: var(--radius-md);
 }
 
 .editBtn:hover {
@@ -254,7 +266,7 @@
   background: transparent;
   border: none;
   padding: 5px 7px;
-  border-radius: var(--border-radius-6);
+  border-radius: var(--radius-md);
   cursor: pointer;
   line-height: 1;
   display: flex;
@@ -262,6 +274,10 @@
   justify-content: center;
   color: var(--primary-300);
   transition: background 0.12s ease, color 0.12s ease;
+  -webkit-border-radius: var(--radius-md);
+  -moz-border-radius: var(--radius-md);
+  -ms-border-radius: var(--radius-md);
+  -o-border-radius: var(--radius-md);
 }
 
 .deleteBtn:hover {

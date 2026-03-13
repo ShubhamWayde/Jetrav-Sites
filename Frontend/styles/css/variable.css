@@ -109,6 +109,20 @@
 	--size-20: 5rem; /* 80px */
 	--size-24: 6rem; /* 96px */
 
+	/* font sizes */
+	--base-font: var(--font-md);
+    --h1-font: clamp(30px, 1.771vw, 34px);
+    --h2-font: clamp(24px, 1.667vw, 32px);
+    --h3-font: clamp(18px, 1.25vw, 24px);
+    --h4-font: clamp(14px, 1.042vw, 20px);
+    --h5-font: clamp(16px, 0.938vw, 18px);
+    --h6-font: clamp(14px, 0.833vw, 16px);
+
+    --font-md: clamp(14px, 0.833vw, 16px);
+    --font-sm: clamp(13px, 0.729vw, 14px);
+    --font-xs: clamp(12px, 0.625vw, 12px);
+    --font-xxs: 10px;
+
 	/* 	radius */
 	--radius-none: 0px;
 	--radius-sm: 0.125rem; /* 2px */
@@ -126,4 +140,14 @@
 	--container-lg: 1024px;
 	--container-xl: 1280px;
 	--container-2xl: 1536px;
+
+	/* font weights */
+	--font-weight-100: 100;
+    --font-weight-200: 200;
+    --font-weight-300: 300;
+    --font-weight-400: 400;
+    --font-weight-500: 500;
+    --font-weight-600: 600;
+    --font-weight-700: 700;
+    --font-weight-bold: bold;
 }

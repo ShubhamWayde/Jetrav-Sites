@@ -46,7 +46,7 @@
 .tab {
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-md, 6px);
   color: var(--primary-300);
   font-size: var(--font-xs);
   font-family: var(--font-primary);
@@ -55,6 +55,10 @@
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  -webkit-border-radius: var(--radius-md, 6px);
+  -moz-border-radius: var(--radius-md, 6px);
+  -ms-border-radius: var(--radius-md, 6px);
+  -o-border-radius: var(--radius-md, 6px);
 }
 
 .tab:hover {
@@ -77,8 +81,12 @@
   gap: 1px;
   background: var(--secondary-border);
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-8);
+  border-radius: var(--radius-lg);
   overflow: hidden;
+  -webkit-border-radius: var(--radius-lg);
+  -moz-border-radius: var(--radius-lg);
+  -ms-border-radius: var(--radius-lg);
+  -o-border-radius: var(--radius-lg);
 }
 
 .statCard {
@@ -124,7 +132,7 @@
   padding: 12px 16px;
   background: rgba(239, 68, 68, 0.08);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: var(--border-radius-8);
+  border-radius: var(--radius-lg);
   font-size: var(--font-sm);
   color: #f87171;
 }
@@ -133,13 +141,17 @@
   margin-left: auto;
   background: transparent;
   border: 1px solid rgba(239, 68, 68, 0.4);
-  border-radius: var(--border-radius-6);
+  border-radius: var(--radius-md);
   color: #f87171;
   font-size: var(--font-xs);
   font-family: var(--font-primary);
   padding: 4px 12px;
   cursor: pointer;
   transition: background 0.12s ease;
+  -webkit-border-radius: var(--radius-md);
+  -moz-border-radius: var(--radius-md);
+  -ms-border-radius: var(--radius-md);
+  -o-border-radius: var(--radius-md);
 }
 
 .retryBtn:hover {
@@ -151,7 +163,7 @@
 .tripSection {
   background: #0d0d0d;
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-8);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -190,11 +202,15 @@
   min-width: 20px;
   height: 20px;
   padding: 0 6px;
-  border-radius: 99px;
+  border-radius: 30%;
   background: rgba(255, 255, 255, 0.1);
   font-size: var(--font-xs);
   font-weight: var(--font-weight-600);
   color: var(--primary-100);
+  -webkit-border-radius: 30%;
+  -moz-border-radius: 30%;
+  -ms-border-radius: 30%;
+  -o-border-radius: 30%;
 }
 
 /* ── Table loading state ─────────────────────────────────────────────────── */

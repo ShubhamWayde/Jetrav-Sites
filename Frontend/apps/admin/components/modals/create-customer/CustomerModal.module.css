@@ -23,7 +23,7 @@
 .modal {
   background: #1a1a1a;
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-12);
+  border-radius: var(--radius-xl);
   width: 100%;
   max-width: 640px;
   max-height: 90dvh;
@@ -31,6 +31,10 @@
   display: flex;
   flex-direction: column;
   animation: slideUp 0.2s ease;
+  -webkit-border-radius: var(--radius-xl);
+  -moz-border-radius: var(--radius-xl);
+  -ms-border-radius: var(--radius-xl);
+  -o-border-radius: var(--radius-xl);
 }
 
 @keyframes slideUp {
@@ -63,9 +67,13 @@
   font-size: var(--font-sm);
   cursor: pointer;
   padding: 4px 8px;
-  border-radius: var(--border-radius-6);
+  border-radius: var(--radius-md);
   transition: color 0.15s ease, background 0.15s ease;
   font-family: var(--font-primary);
+  -webkit-border-radius: var(--radius-md);
+  -moz-border-radius: var(--radius-md);
+  -ms-border-radius: var(--radius-md);
+  -o-border-radius: var(--radius-md);
 }
 
 .closeBtn:hover {
@@ -147,7 +155,7 @@
   width: 100%;
   background: #111;
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-8);
+  border-radius: var(--radius-xl);
   color: var(--primary-50);
   font-size: var(--font-sm);
   font-family: var(--font-primary);
@@ -157,10 +165,14 @@
   transition: border-color 0.15s ease;
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvgxmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 36px;
+  -webkit-border-radius: var(--radius-xl);
+  -moz-border-radius: var(--radius-xl);
+  -ms-border-radius: var(--radius-xl);
+  -o-border-radius: var(--radius-xl);
 }
 
 .select:hover,

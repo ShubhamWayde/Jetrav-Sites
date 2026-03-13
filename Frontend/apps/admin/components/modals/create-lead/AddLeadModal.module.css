@@ -23,7 +23,7 @@
 .modal {
   background: #1a1a1a;
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-12);
+  border-radius: var(--radius-xl);
   width: 100%;
   max-width: 720px;
   max-height: 92dvh;
@@ -31,6 +31,10 @@
   display: flex;
   flex-direction: column;
   animation: slideUp 0.2s ease;
+  -webkit-border-radius: var(--radius-xl);
+  -moz-border-radius: var(--radius-xl);
+  -ms-border-radius: var(--radius-xl);
+  -o-border-radius: var(--radius-xl);
 }
 
 @keyframes slideUp {
@@ -42,7 +46,10 @@
 
 .modal::-webkit-scrollbar        { width: 5px; }
 .modal::-webkit-scrollbar-track  { background: transparent; }
-.modal::-webkit-scrollbar-thumb  { background: var(--secondary-border); border-radius: 3px; }
+.modal::-webkit-scrollbar-thumb  {
+   background: var(--secondary-border);
+   border-radius: 3px;
+   }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */
 
@@ -69,9 +76,13 @@
   font-size: var(--font-sm);
   cursor: pointer;
   padding: 4px 10px;
-  border-radius: var(--border-radius-6);
+  border-radius: var(--radius-md);
   transition: color 0.15s ease, background 0.15s ease;
   font-family: var(--font-primary);
+  -webkit-border-radius: var(--radius-md);
+  -moz-border-radius: var(--radius-md);
+  -ms-border-radius: var(--radius-md);
+  -o-border-radius: var(--radius-md);
 }
 
 .closeBtn:hover {
@@ -149,9 +160,13 @@
   gap: 0;
   margin-bottom: 16px;
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-8);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   width: fit-content;
+  -webkit-border-radius: var(--radius-lg);
+  -moz-border-radius: var(--radius-lg);
+  -ms-border-radius: var(--radius-lg);
+  -o-border-radius: var(--radius-lg);
 }
 
 .subTab {
@@ -248,7 +263,7 @@
   width: 100%;
   background: #111;
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-8);
+  border-radius: var(--radius-lg);
   color: var(--primary-50);
   font-size: var(--font-sm);
   font-family: var(--font-primary);
@@ -256,6 +271,10 @@
   outline: none;
   transition: border-color 0.15s ease;
   box-sizing: border-box;
+  -webkit-border-radius: var(--radius-lg);
+  -moz-border-radius: var(--radius-lg);
+  -ms-border-radius: var(--radius-lg);
+  -o-border-radius: var(--radius-lg);
 }
 
 .input:hover:not(:disabled),
@@ -278,7 +297,7 @@
   width: 100%;
   background: #111;
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-8);
+  border-radius: var(--radius-lg);
   color: var(--primary-50);
   font-size: var(--font-sm);
   font-family: var(--font-primary);
@@ -310,7 +329,7 @@
   width: 100%;
   background: #111;
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-8);
+  border-radius: var(--radius-lg);
   color: var(--primary-50);
   font-size: var(--font-sm);
   font-family: var(--font-primary);

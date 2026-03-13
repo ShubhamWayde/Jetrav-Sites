@@ -60,13 +60,17 @@
 .retryBtn {
   background: transparent;
   border: 1px solid var(--secondary-border);
-  border-radius: var(--border-radius-6);
+  border-radius: var(--radius-md);
   color: var(--primary-200);
   font-size: var(--font-sm);
   font-family: var(--font-primary);
   padding: 6px 16px;
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease;
+  -webkit-border-radius: var(--radius-md);
+  -moz-border-radius: var(--radius-md);
+  -ms-border-radius: var(--radius-md);
+  -o-border-radius: var(--radius-md);
 }
 
 .retryBtn:hover {
@@ -175,12 +179,16 @@
 .planBadge {
   display: inline-block;
   padding: 2px 10px;
-  border-radius: 99px;
+  border-radius: 30%;
   font-size: var(--font-xs);
   font-weight: var(--font-weight-500);
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid var(--secondary-border);
   color: var(--primary-100);
+  -webkit-border-radius: 30%;
+  -moz-border-radius: 30%;
+  -ms-border-radius: 30%;
+  -o-border-radius: 30%;
 }
 
 .planSilver {
@@ -239,13 +247,17 @@
   background: transparent;
   border: none;
   padding: 5px 7px;
-  border-radius: var(--border-radius-6);
+  border-radius: var(--radius-md);
   cursor: pointer;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background 0.12s ease, color 0.12s ease;
+  -webkit-border-radius: var(--radius-md);
+  -moz-border-radius: var(--radius-md);
+  -ms-border-radius: var(--radius-md);
+  -o-border-radius: var(--radius-md);
 }
 
 .editBtn {
@@ -271,7 +283,7 @@
 .quotationBtn {
   background: rgba(59, 130, 246, 0.08);
   border: 1px solid rgba(59, 130, 246, 0.3);
-  border-radius: var(--border-radius-6);
+  border-radius: var(--radius-md);
   color: #60a5fa;
   font-size: var(--font-xs);
   font-family: var(--font-primary);
@@ -280,6 +292,10 @@
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease;
   white-space: nowrap;
+  -webkit-border-radius: var(--radius-md);
+  -moz-border-radius: var(--radius-md);
+  -ms-border-radius: var(--radius-md);
+  -o-border-radius: var(--radius-md);
 }
 
 .quotationBtn:hover {
@@ -292,7 +308,7 @@
 .viewBtn {
   background: rgba(99, 102, 241, 0.08);
   border: 1px solid rgba(99, 102, 241, 0.3);
-  border-radius: var(--border-radius-6);
+  border-radius: var(--radius-md);
   color: #818cf8;
   font-size: var(--font-xs);
   font-family: var(--font-primary);
