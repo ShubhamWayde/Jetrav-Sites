@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"internal/models"
-	"internal/repository"
+	"Backend/internal/models"
+	"Backend/internal/repository"
 )
 
 type sessionService struct {

@@ -1,0 +1,285 @@
+/* ── Page wrapper ────────────────────────────────────────────────────────── */
+
+.page {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+/* ── Section header (Customers label + customer-type tabs + date-range) ──── */
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--secondary-border);
+}
+
+.sectionLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sectionTitle {
+  font-size: var(--font-sm);
+  font-weight: var(--font-weight-600);
+  color: var(--primary-100);
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* ── Tab group ───────────────────────────────────────────────────────────── */
+
+.tabGroup {
+  display: flex;
+  gap: 4px;
+}
+
+.tab {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--primary-300);
+  font-size: var(--font-xs);
+  font-family: var(--Outfit-font);
+  font-weight: var(--font-weight-500);
+  padding: 4px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+
+.tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--primary-100);
+}
+
+.tabActive {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--secondary-border);
+  color: var(--primary-50);
+  font-weight: var(--font-weight-600);
+}
+
+/* ── Stats row ───────────────────────────────────────────────────────────── */
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--secondary-border);
+  border: 1px solid var(--secondary-border);
+  border-radius: var(--border-radius-8);
+  overflow: hidden;
+}
+
+.statCard {
+  background: #0d0d0d;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 18px;
+  gap: 4px;
+  min-width: 0;
+}
+
+.statCardSkeleton {
+  min-height: 66px;
+  animation: pulse 1.4s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.statValue {
+  font-size: var(--h4-font, 1.5rem);
+  font-weight: var(--font-weight-600);
+  color: var(--primary-50);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: var(--font-xs);
+  color: var(--primary-300);
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+/* ── Error banner ────────────────────────────────────────────────────────── */
+
+.errorBanner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--border-radius-8);
+  font-size: var(--font-sm);
+  color: #f87171;
+}
+
+.retryBtn {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: var(--border-radius-6);
+  color: #f87171;
+  font-size: var(--font-xs);
+  font-family: var(--Outfit-font);
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.retryBtn:hover {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+/* ── Trip section ────────────────────────────────────────────────────────── */
+
+.tripSection {
+  background: #0d0d0d;
+  border: 1px solid var(--secondary-border);
+  border-radius: var(--border-radius-8);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tripHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--secondary-border);
+}
+
+.tripTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tripTitle {
+  font-size: var(--font-sm);
+  font-weight: var(--font-weight-600);
+  color: var(--primary-100);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tripCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: var(--font-xs);
+  font-weight: var(--font-weight-600);
+  color: var(--primary-100);
+}
+
+/* ── Table loading state ─────────────────────────────────────────────────── */
+
+.tableLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--secondary-border);
+  border-top-color: var(--primary-100);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+
+.emptyTrips {
+  padding: 28px 20px;
+  font-size: var(--font-sm);
+  color: var(--primary-300);
+  text-align: center;
+}
+
+/* ── Table wrapper ───────────────────────────────────────────────────────── */
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+/* ── Table ───────────────────────────────────────────────────────────────── */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+  font-size: var(--font-sm);
+}
+
+.th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: var(--font-xs);
+  font-weight: var(--font-weight-500);
+  color: var(--primary-300);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--secondary-border);
+  white-space: nowrap;
+  background: #0d0d0d;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.row {
+  border-bottom: 1px solid var(--secondary-border);
+  transition: background 0.12s ease;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.td {
+  padding: 11px 14px;
+  color: var(--primary-100);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.name {
+  font-weight: var(--font-weight-500);
+  color: var(--primary-50);
+}

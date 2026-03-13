@@ -7,9 +7,9 @@ import (
 	"github.com/google/wire"
 	"gorm.io/gorm"
 
-	"internal/handlers"
-	"internal/repository"
-	"internal/service"
+	"Backend/internal/handlers"
+	"Backend/internal/repository"
+	"Backend/internal/service"
 )
 
 func InitializeApp(db *gorm.DB) (*App, error) {

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"internal/models"
-	"internal/service"
-	"pkg/utils"
+	"Backend/internal/models"
+	"Backend/internal/service"
+	"Backend/pkg/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/mssola/user_agent"
 )
@@ -235,7 +235,7 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 		})
 		return
 	}
-	accessToken, err := utils.GenerateAccessToken(claims.UserID, claims.Email)
+	accessToken, err := utils.GenerateAccessToken(claims.UserID, claims.Email, claims.Role)
 
 	if err != nil {
 		c.JSON(500, gin.H{

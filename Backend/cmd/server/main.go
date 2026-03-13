@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
-	"config"
-	"internal/bootstrap"
-	"internal/routes"
-	"pkg/database"
+	"Backend/config"
+	"Backend/internal/bootstrap"
+	"Backend/internal/routes"
+	"Backend/pkg/database"
 )
 
 func main() {
@@ -41,16 +42,29 @@ func main() {
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
 			"http://localhost:3000",
+			"http://localhost:3001", // admin app
 		},
+		// OPTIONS must be listed so preflight requests are answered, not rejected
 		AllowMethods: []string{
-			"GET", "POST", "PUT", "DELETE",
+			"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS",
 		},
+		// Include every header a browser may send in Access-Control-Request-Headers
 		AllowHeaders: []string{
 			"Origin",
 			"Content-Type",
+			"Content-Length",
+			"Accept",
+			"Accept-Encoding",
 			"Authorization",
+			"X-Requested-With",
+			"Cache-Control",
+		},
+		ExposeHeaders: []string{
+			"Content-Length",
 		},
 		AllowCredentials: true,
+		// Cache preflight for 12 hours so the browser doesn't re-check every request
+		MaxAge: 12 * time.Hour,
 	}))
 
 	routes.Register(r, app)

@@ -1,6 +1,6 @@
 package repository
 
-import "internal/models"
+import "Backend/internal/models"
 
 type SessionRepository interface {
 	Create(session *models.UserSession) error

@@ -1,6 +1,6 @@
 package service
 
-import "internal/models"
+import "Backend/internal/models"
 
 type SessionService interface {
 	CreateSession(

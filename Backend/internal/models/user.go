@@ -28,11 +28,15 @@ type User struct {
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
+	// Skip hashing if no password provided (e.g. admin OTP-only signup)
+	if u.Password == "" {
+		return nil
+	}
 	return u.hashPassword()
 }
 
 func (u *User) BeforeUpdate(tx *gorm.DB) (err error) {
-	if tx.Statement.Changed("Password") {
+	if tx.Statement.Changed("Password") && u.Password != "" {
 		return u.hashPassword()
 	}
 	return nil
@@ -51,6 +55,10 @@ func (u *User) hashPassword() error {
 }
 
 func (u *User) CheckPassword(password string) bool {
+	// Cannot authenticate with an empty stored hash
+	if u.Password == "" {
+		return false
+	}
 	return bcrypt.CompareHashAndPassword(
 		[]byte(u.Password),
 		[]byte(password),

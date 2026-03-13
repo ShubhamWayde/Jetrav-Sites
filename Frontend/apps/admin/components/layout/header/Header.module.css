@@ -1,0 +1,217 @@
+/* ── Header bar ───────────────────────────────────────────────────────────── */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 55px;
+  padding: 0 24px;
+  background: #0d0d0d;
+  border-bottom: 1px solid var(--secondary-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.logo h1{
+  font-size: var(--h5-font);
+  margin: 0;
+}
+
+/* ── Right-side action buttons ────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--border-radius-8, 8px);
+  border: none;
+  background: transparent;
+  color: var(--primary-200, #a0a0a0);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.iconBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--primary-100, #d0d0d0);
+}
+
+/* ── Avatar button ────────────────────────────────────────────────────────── */
+
+.avatarWrap {
+  position: relative;
+}
+
+.avatarBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--primary-50, #f5f5f5);
+  font-size: 12px;
+  font-weight: var(--font-weight-600, 600);
+  font-family: var(--Outfit-font, inherit);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatarBtn:hover {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.avatarText {
+  line-height: 1;
+  user-select: none;
+}
+
+/* ── Dropdown ─────────────────────────────────────────────────────────────── */
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 248px;
+  background: #161616;
+  border: 1px solid var(--secondary-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  animation: dropIn 0.15s ease;
+  z-index: 200;
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* ── User card inside dropdown ────────────────────────────────────────────── */
+
+.userCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 22px 16px 18px;
+  text-align: center;
+  gap: 3px;
+}
+
+.userAvatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: var(--font-weight-600, 600);
+  font-family: var(--Outfit-font, inherit);
+  color: var(--primary-50, #f5f5f5);
+  margin-bottom: 10px;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.userName {
+  font-size: var(--font-sm, 14px);
+  font-weight: var(--font-weight-600, 600);
+  color: var(--primary-50, #f5f5f5);
+  line-height: 1.35;
+}
+
+.userEmail {
+  font-size: 12px;
+  color: var(--primary-200, #a0a0a0);
+  line-height: 1.4;
+  word-break: break-all;
+  margin-top: 1px;
+}
+
+.userMobile {
+  font-size: 12px;
+  color: var(--primary-200, #a0a0a0);
+  line-height: 1.4;
+}
+
+.roleBadge {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: var(--font-weight-500, 500);
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--primary-100, #d0d0d0);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  letter-spacing: 0.4px;
+}
+
+/* ── Divider ──────────────────────────────────────────────────────────────── */
+
+.divider {
+  height: 1px;
+  background: var(--secondary-border);
+  margin: 0;
+}
+
+/* ── Dropdown menu items ──────────────────────────────────────────────────── */
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 16px;
+  font-size: var(--font-sm, 14px);
+  font-family: var(--Outfit-font, inherit);
+  color: var(--primary-100, #d0d0d0);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+  text-align: left;
+}
+
+.dropdownItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--primary-50, #f5f5f5);
+}
+
+.dropdownItemIcon {
+  display: flex;
+  align-items: center;
+  color: var(--primary-200, #a0a0a0);
+  flex-shrink: 0;
+}
+
+.dropdownItemDanger {
+  color: #ff6b6b;
+}
+
+.dropdownItemDanger:hover {
+  background: rgba(255, 80, 80, 0.08);
+  color: #ff6b6b;
+}
+
+.dropdownItemDanger .dropdownItemIcon {
+  color: #ff6b6b;
+}

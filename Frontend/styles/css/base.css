@@ -121,6 +121,13 @@ a {
     cursor: pointer;
     line-height: 1.25;
 }
+.btn-sm {
+    padding: 4px 10px !important;
+ }
+
+ .btn-md {
+    padding: 8px 12px !important;
+ }
 
 .btn-primary {
     background: var(--primary-100);

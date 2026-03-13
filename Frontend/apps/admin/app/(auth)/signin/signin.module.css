@@ -1,0 +1,41 @@
+/* ── Tab switcher ─────────────────────────────────────────────────────────── */
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--secondary-border);
+  margin-bottom: 4px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: var(--font-sm);
+  font-weight: var(--font-weight-400);
+  color: var(--primary-200);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-family: var(--Outfit-font);
+  transition: color 0.2s ease, border-bottom-color 0.2s ease;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px; /* overlap the parent border */
+}
+
+.tab:hover {
+  color: var(--primary-100);
+}
+
+.tabActive {
+  color: var(--primary-50);
+  font-weight: var(--font-weight-500);
+  border-bottom-color: var(--primary-100);
+}
+
+/* ── Form ─────────────────────────────────────────────────────────────────── */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

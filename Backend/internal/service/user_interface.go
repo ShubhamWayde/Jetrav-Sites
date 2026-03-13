@@ -1,7 +1,7 @@
 package service
 
 import (
-	"internal/models"
+	"Backend/internal/models"
 )
 
 type UserService interface {

@@ -5,7 +5,7 @@ import (
 	"log"
 	"sync"
 
-	"config"
+	"Backend/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

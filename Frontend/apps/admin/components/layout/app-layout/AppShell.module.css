@@ -1,0 +1,14 @@
+.shell {
+  min-height: 100dvh;
+}
+.mainWrapper {
+  display: flex;
+  height: calc(100dvh - 56px);
+}
+
+.main {
+  width: calc(100% - 220px);
+  padding: 8px;
+  height: calc(100dvh - 56px);
+  overflow-y: auto;
+}

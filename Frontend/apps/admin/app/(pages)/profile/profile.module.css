@@ -1,0 +1,202 @@
+/* ── Page wrapper ────────────────────────────────────────────────────────── */
+
+.page {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 900px;
+}
+
+/* ── Loading state ───────────────────────────────────────────────────────── */
+
+.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 10px;
+  color: var(--primary-200);
+  font-size: var(--font-sm);
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--secondary-border);
+  border-top-color: var(--primary-100);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Page header ─────────────────────────────────────────────────────────── */
+
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.pageTitle {
+  font-size: var(--h3-font);
+  font-weight: var(--font-weight-600);
+  color: var(--primary-50);
+  margin: 0;
+}
+
+.pageSubtitle {
+  font-size: var(--font-sm);
+  color: var(--primary-200);
+  margin: 0;
+}
+
+/* ── Card ────────────────────────────────────────────────────────────────── */
+
+.card {
+  background: #0d0d0d;
+  border: 1px solid var(--secondary-border);
+  border-radius: var(--border-radius-12);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.cardTitle {
+  font-size: var(--h5-font);
+  font-weight: var(--font-weight-600);
+  color: var(--primary-50);
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--secondary-border);
+  margin: 0;
+}
+
+/* ── Fields grid ─────────────────────────────────────────────────────────── */
+
+.fieldsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ── Individual field row ────────────────────────────────────────────────── */
+
+.fieldRow {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.fieldLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: var(--font-weight-600);
+  color: var(--primary-200);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+/* .readOnlyBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: var(--font-weight-400);
+  color: var(--primary-300);
+  letter-spacing: 0.3px;
+  text-transform: lowercase;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--secondary-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+} */
+
+/* ── Field input ─────────────────────────────────────────────────────────── */
+
+.fieldInput {
+  width: 100%;
+  padding: 11px 16px;
+  background: transparent;
+  border: 1px solid var(--secondary-border);
+  border-radius: var(--border-radius-8);
+  font-size: var(--base-font);
+  font-family: var(--Outfit-font);
+  color: var(--primary-100);
+  transition: border-color 0.2s ease, background 0.2s ease;
+  outline: none;
+}
+
+.fieldInput::placeholder {
+  color: var(--primary-300);
+}
+
+.fieldInput:hover:not(:disabled),
+.fieldInput:focus:not(:disabled) {
+  background: var(--primary-300);
+  border-color: var(--primary-200);
+}
+
+.fieldInputError {
+  border-color: var(--status-error) !important;
+}
+
+.fieldInputDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.errorText {
+  font-size: var(--font-xs);
+  color: var(--status-error);
+  letter-spacing: 0.2px;
+}
+
+/* ── Password input with eye toggle ──────────────────────────────────────── */
+
+.pwdWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.pwdInput {
+  padding-right: 44px; /* leave room for eye button */
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--primary-300);
+  cursor: pointer;
+  padding: 2px;
+  transition: color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.eyeBtn:hover {
+  color: var(--primary-200);
+}
+
+/* ── Card footer (action buttons) ────────────────────────────────────────── */
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 6px;
+  border-top: 1px solid var(--secondary-border);
+}

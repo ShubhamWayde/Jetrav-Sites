@@ -1,0 +1,101 @@
+/* ── Overlay ──────────────────────────────────────────────────────────────── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Modal box ────────────────────────────────────────────────────────────── */
+
+.modal {
+  background: #1a1a1a;
+  border: 1px solid var(--secondary-border);
+  border-radius: var(--border-radius-12);
+  padding: 32px 28px 24px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(12px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Icon ─────────────────────────────────────────────────────────────────── */
+
+.iconWrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 80, 80, 0.1);
+  border: 1px solid rgba(255, 80, 80, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.icon {
+  color: #ff6b6b;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ── Typography ───────────────────────────────────────────────────────────── */
+
+.title {
+  font-size: var(--h5-font);
+  font-weight: var(--font-weight-600);
+  color: var(--primary-50);
+  text-align: center;
+  margin: 0;
+}
+
+.description {
+  font-size: var(--font-sm);
+  color: var(--primary-200);
+  text-align: center;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── Action buttons ───────────────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.actions > * {
+  flex: 1;
+}
+
+/* Override primary button to use red for the delete action */
+.deleteBtn {
+  background: #e53935 !important;
+  border-color: #e53935 !important;
+}
+
+.deleteBtn:hover:not(:disabled) {
+  background: #c62828 !important;
+  border-color: #c62828 !important;
+}

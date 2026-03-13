@@ -4,9 +4,9 @@ import (
 	"errors"
 	"time"
 
-	"internal/models"
-	"internal/repository"
-	"pkg/utils"
+	"Backend/internal/models"
+	"Backend/internal/repository"
+	"Backend/pkg/utils"
 )
 
 type userService struct {
@@ -62,12 +62,12 @@ func (s *userService) LoginWithPhone(phoneNumber string, password string, device
 		return "", "", errors.New("device limit reached")
 	}
 
-	accessToken, err := utils.GenerateAccessToken(user.ID, user.Email)
+	accessToken, err := utils.GenerateAccessToken(user.ID, user.Email, user.Role)
 	if err != nil {
 		return "", "", err
 	}
 
-	refreshToken, err := utils.GenerateRefreshToken(user.ID, user.Email)
+	refreshToken, err := utils.GenerateRefreshToken(user.ID, user.Email, user.Role)
 	if err != nil {
 		return "", "", err
 	}
@@ -116,12 +116,12 @@ func (s *userService) LoginWithEmail(email string, password string, deviceID str
 		return "", "", errors.New("device limit reached")
 	}
 
-	accessToken, err := utils.GenerateAccessToken(user.ID, user.Email)
+	accessToken, err := utils.GenerateAccessToken(user.ID, user.Email, user.Role)
 	if err != nil {
 		return "", "", err
 	}
 
-	refreshToken, err := utils.GenerateRefreshToken(user.ID, user.Email)
+	refreshToken, err := utils.GenerateRefreshToken(user.ID, user.Email, user.Role)
 	if err != nil {
 		return "", "", err
 	}

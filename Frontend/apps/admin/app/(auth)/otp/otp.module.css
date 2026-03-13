@@ -1,0 +1,62 @@
+.mobile {
+  text-align: center;
+  font-size: var(--font-sm);
+  color: var(--primary-200);
+  margin-bottom: 4px;
+}
+
+.mobile strong {
+  color: var(--primary-100);
+  font-weight: var(--font-weight-500);
+}
+
+.devBanner {
+  font-size: var(--font-xs);
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--border-radius-6, 6px);
+  padding: 7px 12px;
+  text-align: center;
+  margin: 0 0 4px;
+}
+
+.otpWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.otpErrorText {
+  font-size: var(--font-xs);
+  color: #ff6b6b;
+  text-align: center;
+  margin: 0;
+}
+
+.resendRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: var(--font-sm);
+  color: var(--primary-200);
+}
+
+.timer {
+  color: var(--primary-300);
+  font-variant-numeric: tabular-nums;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.changeLink {
+  text-align: center;
+  margin-top: 4px;
+}
