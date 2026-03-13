@@ -33,7 +33,7 @@
   border: none;
   color: var(--primary-200);
   font-size: var(--font-sm);
-  font-family: var(--Outfit-font);
+  font-family: var(--font-primary);
   cursor: pointer;
   padding: 4px 6px;
   border-radius: var(--border-radius-6);
@@ -108,7 +108,7 @@
   border-radius: var(--border-radius-6);
   color: var(--primary-200);
   font-size: var(--font-sm);
-  font-family: var(--Outfit-font);
+  font-family: var(--font-primary);
   padding: 6px 16px;
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease;

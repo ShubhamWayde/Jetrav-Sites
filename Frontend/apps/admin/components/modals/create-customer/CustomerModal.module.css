@@ -65,7 +65,7 @@
   padding: 4px 8px;
   border-radius: var(--border-radius-6);
   transition: color 0.15s ease, background 0.15s ease;
-  font-family: var(--Outfit-font);
+  font-family: var(--font-primary);
 }
 
 .closeBtn:hover {
@@ -150,7 +150,7 @@
   border-radius: var(--border-radius-8);
   color: var(--primary-50);
   font-size: var(--font-sm);
-  font-family: var(--Outfit-font);
+  font-family: var(--font-primary);
   padding: 10px 12px;
   outline: none;
   cursor: pointer;
