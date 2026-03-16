@@ -32,7 +32,6 @@
   flex-direction: column;
   gap: 12px;
   margin-bottom: 24px;
-  padding-bottom: 24px;
 }
 
 .footer {
@@ -42,7 +41,7 @@
 }
 
 .footer a {
-  color: var(--jt-skyBlue-base);
+  color: var(--jt-dark-400);
   font-weight: var(--font-weight-500);
   text-decoration: underline;
   text-underline-offset: 2px;

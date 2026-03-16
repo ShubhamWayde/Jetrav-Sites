@@ -1,7 +1,7 @@
 .mobile {
   text-align: center;
   font-size: var(--font-sm);
-  color: var(--jt-skyBlue-base);
+  color: var(--jt-dark-200);
   margin-bottom: 4px;
 }
 
@@ -42,11 +42,11 @@
   justify-content: center;
   gap: 6px;
   font-size: var(--font-sm);
-  color: var(--jt-light-base);
+  color:  var(--jt-dark-200);
 }
 
 .timer {
-  color: var(--jt-skyBlue-base);
+  color: var(--jt-dark-200);
   font-variant-numeric: tabular-nums;
 }
 

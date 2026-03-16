@@ -1,6 +1,6 @@
 .tabs {
   display: flex;
-  border-bottom: 1px solid var(--jt-skyBlue-base);
+  border-bottom: 1px solid var(--jt-dark-200);
   margin-bottom: 4px;
 }
 
@@ -10,7 +10,7 @@
   text-align: center;
   font-size: var(--font-sm);
   font-weight: var(--font-weight-400);
-  color: var(--jt-skyBlue-base);
+  color: var(--jt-dark-200);
   cursor: pointer;
   border: none;
   background: transparent;
@@ -27,7 +27,7 @@
 .tabActive {
  color: var(--jt-light-base);
   font-weight: var(--font-weight-500);
-  border-bottom-color: var(--primary-100);
+  border-bottom-color: var(--jt-light-base);
 }
 
 .form {
