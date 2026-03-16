@@ -32,19 +32,6 @@
 	--jt-dark-800: oklch(from var(--jt-dark-base) var(--l-800) c h);
 	--jt-dark-900: oklch(from var(--jt-dark-base) var(--l-900) c h);
 
-	/* light palette */
-	--jt-light-exact: var(--jt-light-base); /* base color */
-	--jt-light-50: oklch(from var(--jt-light-base) var(--l-50) c h);
-	--jt-light-100: oklch(from var(--jt-light-base) var(--l-100) c h);
-	--jt-light-200: oklch(from var(--jt-light-base) var(--l-200) c h);
-	--jt-light-300: oklch(from var(--jt-light-base) var(--l-300) c h);
-	--jt-light-400: oklch(from var(--jt-light-base) var(--l-400) c h);
-	--jt-light-500: oklch(from var(--jt-light-base) var(--l-500) c h);
-	--jt-light-600: oklch(from var(--jt-light-base) var(--l-600) c h);
-	--jt-light-700: oklch(from var(--jt-light-base) var(--l-700) c h);
-	--jt-light-800: oklch(from var(--jt-light-base) var(--l-800) c h);
-	--jt-light-900: oklch(from var(--jt-light-base) var(--l-900) c h);
-
 	/* sky blue palette */
 	--jt-skyBlue-exact: var(--jt-skyBlue-base); /* base color */
 	--jt-skyBlue-50: oklch(from var(--jt-skyBlue-base) var(--l-50) c h);

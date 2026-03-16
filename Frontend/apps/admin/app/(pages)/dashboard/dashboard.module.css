@@ -19,7 +19,7 @@
   gap: 12px;
   flex-wrap: wrap;
   padding-bottom: 4px;
-  border-bottom: 1px solid var(--secondary-border);
+  border-bottom: 1px solid var(--jt-skyBlue-base);
 }
 
 .sectionLeft {
@@ -31,7 +31,7 @@
 .sectionTitle {
   font-size: var(--font-sm);
   font-weight: var(--font-weight-600);
-  color: var(--primary-100);
+  color: var(--jt-light-base);
   margin: 0;
   white-space: nowrap;
 }
@@ -47,7 +47,7 @@
   background: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-md, 6px);
-  color: var(--primary-300);
+  color: var(--jt-light-base);
   font-size: var(--font-xs);
   font-family: var(--font-primary);
   font-weight: var(--font-weight-500);
@@ -63,13 +63,13 @@
 
 .tab:hover {
   background: rgba(255, 255, 255, 0.05);
-  color: var(--primary-100);
+  color: var(--jt-light-base);
 }
 
 .tabActive {
   background: rgba(255, 255, 255, 0.1);
   border-color: var(--secondary-border);
-  color: var(--primary-50);
+  color: var(--jt-light-base);
   font-weight: var(--font-weight-600);
 }
 
@@ -112,13 +112,13 @@
 .statValue {
   font-size: var(--h4-font, 1.5rem);
   font-weight: var(--font-weight-600);
-  color: var(--primary-50);
+  color: var(--jt-light-base);
   line-height: 1;
 }
 
 .statLabel {
   font-size: var(--font-xs);
-  color: var(--primary-300);
+  color: var(--jt-light-base);
   text-transform: capitalize;
   white-space: nowrap;
 }
@@ -135,27 +135,6 @@
   border-radius: var(--radius-lg);
   font-size: var(--font-sm);
   color: #f87171;
-}
-
-.retryBtn {
-  margin-left: auto;
-  background: transparent;
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  border-radius: var(--radius-md);
-  color: #f87171;
-  font-size: var(--font-xs);
-  font-family: var(--font-primary);
-  padding: 4px 12px;
-  cursor: pointer;
-  transition: background 0.12s ease;
-  -webkit-border-radius: var(--radius-md);
-  -moz-border-radius: var(--radius-md);
-  -ms-border-radius: var(--radius-md);
-  -o-border-radius: var(--radius-md);
-}
-
-.retryBtn:hover {
-  background: rgba(239, 68, 68, 0.12);
 }
 
 /* ── Trip section ────────────────────────────────────────────────────────── */
@@ -188,7 +167,7 @@
 .tripTitle {
   font-size: var(--font-sm);
   font-weight: var(--font-weight-600);
-  color: var(--primary-100);
+  color: var(--jt-light-base);
   margin: 0;
   display: flex;
   align-items: center;
@@ -202,15 +181,15 @@
   min-width: 20px;
   height: 20px;
   padding: 0 6px;
-  border-radius: 30%;
+  border-radius: 90px;
   background: rgba(255, 255, 255, 0.1);
   font-size: var(--font-xs);
   font-weight: var(--font-weight-600);
-  color: var(--primary-100);
-  -webkit-border-radius: 30%;
-  -moz-border-radius: 30%;
-  -ms-border-radius: 30%;
-  -o-border-radius: 30%;
+  color: var(--jt-light-base);
+  -webkit-border-radius: 90px;
+  -moz-border-radius: 90px;
+  -ms-border-radius: 90px;
+  -o-border-radius: 90px;
 }
 
 /* ── Table loading state ─────────────────────────────────────────────────── */
@@ -226,7 +205,7 @@
   width: 20px;
   height: 20px;
   border: 2px solid var(--secondary-border);
-  border-top-color: var(--primary-100);
+  border-top-color: var(--jt-skyBlue-base);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -240,62 +219,11 @@
 .emptyTrips {
   padding: 28px 20px;
   font-size: var(--font-sm);
-  color: var(--primary-300);
+  color: var(--jt-light-base);
   text-align: center;
-}
-
-/* ── Table wrapper ───────────────────────────────────────────────────────── */
-
-.tableWrap {
-  overflow-x: auto;
-}
-
-/* ── Table ───────────────────────────────────────────────────────────────── */
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 900px;
-  font-size: var(--font-sm);
-}
-
-.th {
-  text-align: left;
-  padding: 10px 14px;
-  font-size: var(--font-xs);
-  font-weight: var(--font-weight-500);
-  color: var(--primary-300);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 1px solid var(--secondary-border);
-  white-space: nowrap;
-  background: #0d0d0d;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.row {
-  border-bottom: 1px solid var(--secondary-border);
-  transition: background 0.12s ease;
-}
-
-.row:last-child {
-  border-bottom: none;
-}
-
-.row:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.td {
-  padding: 11px 14px;
-  color: var(--primary-100);
-  vertical-align: middle;
-  white-space: nowrap;
 }
 
 .name {
   font-weight: var(--font-weight-500);
-  color: var(--primary-50);
+  color: var(--jt-light-base);
 }

@@ -67,28 +67,6 @@
   margin: 0;
 }
 
-.closeBtn {
-  background: transparent;
-  border: none;
-  color: var(--primary-200);
-  font-size: var(--font-sm);
-  cursor: pointer;
-  padding: 4px 10px;
-  border-radius: var(--radius-md);
-  transition: color 0.15s ease, background 0.15s ease;
-  font-family: var(--font-primary);
-  flex-shrink: 0;
-  -webkit-border-radius: var(--radius-md);
-  -moz-border-radius: var(--radius-md);
-  -ms-border-radius: var(--radius-md);
-  -o-border-radius: var(--radius-md);
-}
-
-.closeBtn:hover {
-  color: var(--primary-50);
-  background: rgba(255, 255, 255, 0.06);
-}
-
 .tabBar {
   display: flex;
   gap: 6px;
@@ -171,67 +149,6 @@
   font-size: var(--font-sm);
   color: var(--primary-100);
   font-weight: var(--font-weight-500);
-}
-
-.input {
-  width: 100%;
-  background: #111;
-  border: 1px solid var(--secondary-border);
-  border-radius: var(--radius-lg);
-  color: var(--primary-50);
-  font-size: var(--font-sm);
-  font-family: var(--font-primary);
-  padding: 10px 12px;
-  outline: none;
-  transition: border-color 0.15s ease;
-  box-sizing: border-box;
-  -webkit-border-radius: var(--radius-lg);
-  -moz-border-radius: var(--radius-lg);
-  -ms-border-radius: var(--radius-lg);
-  -o-border-radius: var(--radius-lg);
-}
-
-.input:hover,
-.input:focus {
-  border-color: var(--primary-200);
-}
-
-.input[type="date"] {
-  color-scheme: dark;
-}
-
-.select {
-  width: 100%;
-  background: #111;
-  border: 1px solid var(--secondary-border);
-  border-radius: var(--radius-lg);
-  color: var(--primary-50);
-  font-size: var(--font-sm);
-  font-family: var(--font-primary);
-  padding: 10px 36px 10px 12px;
-  outline: none;
-  cursor: pointer;
-  transition: border-color 0.15s ease;
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvgxmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  box-sizing: border-box;
-  -webkit-border-radius: var(--radius-lg);
-  -moz-border-radius: var(--radius-lg);
-  -ms-border-radius: var(--radius-lg);
-  -o-border-radius: var(--radius-lg);
-}
-
-.select:hover,
-.select:focus {
-  border-color: var(--primary-200);
-}
-
-.select option {
-  background: #1a1a1a;
-  color: var(--primary-50);
 }
 
 .textarea {

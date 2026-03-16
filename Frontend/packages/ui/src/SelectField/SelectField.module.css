@@ -1,0 +1,57 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: var(--font-sm);
+  font-weight: var(--font-weight-400);
+  color: var(--jt-light-base);
+  letter-spacing: 0.2px;
+}
+
+.required {
+  color: var(--jt-yellow-base);
+  margin-left: 2px;
+}
+
+.select {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--jt-skyBlue-base);
+  border-radius: var(--radius-lg);
+  color: var(--jt-light-base);
+  font-size: var(--base-font);
+  font-family: var(--font-primary);
+  padding: 12px 36px 12px 16px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  box-sizing: border-box;
+}
+
+.select:hover,
+.select:focus {
+  border-color: var(--jt-light-base);
+}
+
+.select.hasError {
+  border-color: var(--jt-yellow-base);
+}
+
+.select option {
+  background: #1a1a1a;
+  color: var(--jt-light-base);
+}
+
+.errorText {
+  font-size: var(--font-xs);
+  color: var(--jt-yellow-base);
+  letter-spacing: 0.2px;
+}

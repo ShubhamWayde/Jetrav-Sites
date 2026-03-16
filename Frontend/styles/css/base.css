@@ -29,7 +29,7 @@ body {
     line-height: 1.35;
     overflow-x: hidden;
     font-weight: var(--font-weight-400);
-    background: var(--secondary-100);
+    background: var(--jt-dark-exact);
 }
 
 h1,
@@ -42,7 +42,7 @@ h6 {
     line-height: 1.45;
     font-weight: var(--font-weight-500);
     margin-bottom: 1rem;
-    color: var(--primary-text);
+    color: var(--jt-light-base);
 }
 
 h1 {
@@ -74,12 +74,12 @@ a {
     text-decoration: none;
     outline: none;
     cursor: pointer;
-    color: var(--primary-text);
+    color: var(--jt-skyBlue-base);
 }
 
 a:hover,
 a:focus {
-    color: var(--secondary-text);
+    color: var(--jt-light-base);
 }
 
 img {
@@ -97,7 +97,7 @@ ul {
 p {
     margin-bottom: 1rem;
     line-height: 1.6;
-    color: var(--primary-text);
+    color: var(--jt-light-base);
 }
 
 input,
@@ -110,61 +110,16 @@ a {
     box-shadow: none;
 }
 
-.btn {
-    transition: all 0.25s linear;
-    border-radius: var(--radius-lg);
-    padding: 12px 20px;
-    display: inline-block;
-    font-size: var(--base-font);
-    font-family: var(--font-primary);
-    font-weight: var(--font-weight-400);
-    cursor: pointer;
-    line-height: 1.25;
-    -webkit-border-radius: var(--radius-lg);
-    -moz-border-radius: var(--radius-lg);
-    -ms-border-radius: var(--radius-lg);
-    -o-border-radius: var(--radius-lg);
-}
-.btn-sm {
-    padding: 4px 10px !important;
- }
-
- .btn-md {
-    padding: 8px 12px !important;
- }
-
-.btn-primary {
-    background: var(--primary-100);
-    color: var(--secondary-100);
-    border: 1px solid var(--primary-border);
+.btn-md{
+    padding: 8px 16px;
 }
 
-.btn-primary:hover {
-    background: transparent;
-    color: var(--primary-100);
-}
-
-.input-field {
-    border: 1px solid var(--secondary-border);
-    border-radius: var(--radius-xl);
-    padding: 12px 16px;
-    background: transparent;
-    font-size: var(--base-font);
-    font-family: var(--font-primary);
-    color: var(--primary-100);
-    transition: all 0.3s linear;
-    width: 100%;
-    -webkit-border-radius: var(--radius-xl);
-    -moz-border-radius: var(--radius-xl);
-    -ms-border-radius: var(--radius-xl);
-    -o-border-radius: var(--radius-xl);
-}
-
-.input-field:hover,
-.input-field:focus {
-    background: var(--primary-300);
-}
-
-.btn-full {
-    width: 100%;
+.btn-sm{
+  padding: 4px 10px;
+  font-size: var(--font-xs);
+  border-radius: var(--radius-md);
+  -webkit-border-radius: var(--radius-md);
+  -moz-border-radius: var(--radius-md);
+  -ms-border-radius: var(--radius-md);
+  -o-border-radius: var(--radius-md);
 }

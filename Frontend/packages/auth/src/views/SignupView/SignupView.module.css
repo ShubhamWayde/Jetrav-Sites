@@ -1,0 +1,15 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nameRow {
+  display: flex;
+  gap: 12px;
+}
+
+.nameRow > * {
+  flex: 1;
+  min-width: 0;
+}

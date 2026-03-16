@@ -1,0 +1,16 @@
+{
+  "name": "@repo/fonts",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "peerDependencies": {
+    "next": "*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "19.2.14",
+    "typescript": "5.9.3"
+  }
+}

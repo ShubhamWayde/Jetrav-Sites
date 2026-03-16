@@ -11,7 +11,9 @@ import type {
   TripFilter,
 } from '@/app/types/dashboard';
 import type { LeadResponse } from '@/app/types/lead';
+import Table, { Tr, Td } from '@repo/ui/Table';
 import styles from './dashboard.module.css';
+import Button from '@repo/ui/Button';
 
 function fmt(val: string): string {
   if (!val || val === '—') return '—';
@@ -61,80 +63,70 @@ function Tabs<T extends string>({ options, active, onChange }: TabsProps<T>) {
 function AirTripTable({ trips }: { trips: LeadResponse[] }) {
   if (trips.length === 0) return <div className={styles.emptyTrips}>No upcoming air trips.</div>;
   return (
-    <div className={styles.tableWrap}>
-      <table className={styles.table}>
-        <thead><tr>
-          <th className={styles.th}>Name</th>
-          <th className={styles.th}>Mobile no.</th>
-          <th className={styles.th}>Origin</th>
-          <th className={styles.th}>Destination</th>
-          <th className={styles.th}>Departure</th>
-          <th className={styles.th}>Return</th>
-          <th className={styles.th}>Adults</th>
-          <th className={styles.th}>Children</th>
-          <th className={styles.th}>Infant</th>
-          <th className={styles.th}>SSR</th>
-          <th className={styles.th}>Updated on</th>
-          <th className={styles.th}>Assign to</th>
-        </tr></thead>
-        <tbody>
-          {trips.map(t => (
-            <tr key={t.id} className={styles.row}>
-              <td className={`${styles.td} ${styles.name}`}>{t.customerName}</td>
-              <td className={styles.td}>{t.mobileNumber || '—'}</td>
-              <td className={styles.td}>{det(t, 'source')}</td>
-              <td className={styles.td}>{det(t, 'destination')}</td>
-              <td className={styles.td}>{fmt(det(t, 'departure'))}</td>
-              <td className={styles.td}>{fmt(det(t, 'return'))}</td>
-              <td className={styles.td}>{det(t, 'adults')}</td>
-              <td className={styles.td}>{det(t, 'children')}</td>
-              <td className={styles.td}>{det(t, 'infant')}</td>
-              <td className={styles.td}>{det(t, 'ssr')}</td>
-              <td className={styles.td}>{fmt(t.updatedAt)}</td>
-              <td className={styles.td}>{t.assignTo || '—'}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Table columns={[
+      { header: 'Name' },
+      { header: 'Mobile no.' },
+      { header: 'Origin' },
+      { header: 'Destination' },
+      { header: 'Departure' },
+      { header: 'Return' },
+      { header: 'Adults' },
+      { header: 'Children' },
+      { header: 'Infant' },
+      { header: 'SSR' },
+      { header: 'Updated on' },
+      { header: 'Assign to' },
+    ]}>
+      {trips.map(t => (
+        <Tr key={t.id}>
+          <Td className={styles.name}>{t.customerName}</Td>
+          <Td>{t.mobileNumber || '—'}</Td>
+          <Td>{det(t, 'source')}</Td>
+          <Td>{det(t, 'destination')}</Td>
+          <Td>{fmt(det(t, 'departure'))}</Td>
+          <Td>{fmt(det(t, 'return'))}</Td>
+          <Td>{det(t, 'adults')}</Td>
+          <Td>{det(t, 'children')}</Td>
+          <Td>{det(t, 'infant')}</Td>
+          <Td>{det(t, 'ssr')}</Td>
+          <Td>{fmt(t.updatedAt)}</Td>
+          <Td>{t.assignTo || '—'}</Td>
+        </Tr>
+      ))}
+    </Table>
   );
 }
 
 function HotelTripTable({ trips }: { trips: LeadResponse[] }) {
   if (trips.length === 0) return <div className={styles.emptyTrips}>No upcoming hotel trips.</div>;
   return (
-    <div className={styles.tableWrap}>
-      <table className={styles.table}>
-        <thead><tr>
-          <th className={styles.th}>Name</th>
-          <th className={styles.th}>Mobile no.</th>
-          <th className={styles.th}>City</th>
-          <th className={styles.th}>Check-in</th>
-          <th className={styles.th}>Check-out</th>
-          <th className={styles.th}>Rooms</th>
-          <th className={styles.th}>Adults</th>
-          <th className={styles.th}>Children</th>
-          <th className={styles.th}>Updated on</th>
-          <th className={styles.th}>Assign to</th>
-        </tr></thead>
-        <tbody>
-          {trips.map(t => (
-            <tr key={t.id} className={styles.row}>
-              <td className={`${styles.td} ${styles.name}`}>{t.customerName}</td>
-              <td className={styles.td}>{t.mobileNumber || '—'}</td>
-              <td className={styles.td}>{det(t, 'city')}</td>
-              <td className={styles.td}>{fmt(det(t, 'checkIn'))}</td>
-              <td className={styles.td}>{fmt(det(t, 'checkOut'))}</td>
-              <td className={styles.td}>{det(t, 'rooms')}</td>
-              <td className={styles.td}>{det(t, 'adults')}</td>
-              <td className={styles.td}>{det(t, 'children')}</td>
-              <td className={styles.td}>{fmt(t.updatedAt)}</td>
-              <td className={styles.td}>{t.assignTo || '—'}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Table columns={[
+      { header: 'Name' },
+      { header: 'Mobile no.' },
+      { header: 'City' },
+      { header: 'Check-in' },
+      { header: 'Check-out' },
+      { header: 'Rooms' },
+      { header: 'Adults' },
+      { header: 'Children' },
+      { header: 'Updated on' },
+      { header: 'Assign to' },
+    ]}>
+      {trips.map(t => (
+        <Tr key={t.id}>
+          <Td className={styles.name}>{t.customerName}</Td>
+          <Td>{t.mobileNumber || '—'}</Td>
+          <Td>{det(t, 'city')}</Td>
+          <Td>{fmt(det(t, 'checkIn'))}</Td>
+          <Td>{fmt(det(t, 'checkOut'))}</Td>
+          <Td>{det(t, 'rooms')}</Td>
+          <Td>{det(t, 'adults')}</Td>
+          <Td>{det(t, 'children')}</Td>
+          <Td>{fmt(t.updatedAt)}</Td>
+          <Td>{t.assignTo || '—'}</Td>
+        </Tr>
+      ))}
+    </Table>
   );
 }
 
@@ -253,7 +245,7 @@ export default function DashboardPage() {
       ) : error ? (
         <div className={styles.errorBanner}>
           <span>{error}</span>
-          <button className={styles.retryBtn} onClick={fetchDashboard}>Retry</button>
+          <Button variant="secondary" onClick={fetchDashboard}>Retry</Button>
         </div>
       ) : (
         <div className={styles.statsRow}>

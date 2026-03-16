@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import Button from '@/components/ui/button/Button';
-import InputField from '@/components/ui/input-field/InputField';
+import Button from '@repo/ui/Button';
+import InputField from '@repo/ui/InputField';
+import SelectField from '@repo/ui/SelectField';
 import { api } from '@/lib/api';
 import { ADMIN_API } from '@/lib/constants';
 import styles from './CustomerModal.module.css';
@@ -191,9 +192,7 @@ export default function CustomerModal({
           <h2 className={styles.title}>
             {isEdit ? 'Edit Customer' : 'Add Customer'}
           </h2>
-          <button className={styles.closeBtn} type="button" onClick={onClose}>
-            Close
-          </button>
+          <Button variant="ghost" type="button" onClick={onClose}>Close</Button>
         </div>
 
         {/* Body */}
@@ -248,24 +247,14 @@ export default function CustomerModal({
                 autoComplete="email"
               />
 
-              {/* Plan Type — custom select styled like InputField */}
-              <div className={styles.fieldWrap}>
-                <label className={styles.fieldLabel}>
-                  Plan Type <span className={styles.required}>*</span>
-                </label>
-                <select
-                  className={`${styles.select} ${fieldErrors.planType ? styles.selectError : ''}`}
-                  value={form.planType}
-                  onChange={handleChange('planType')}
-                >
-                  {PLAN_TYPES.map((p) => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-                {fieldErrors.planType && (
-                  <span className={styles.errorText}>{fieldErrors.planType}</span>
-                )}
-              </div>
+              <SelectField
+                label="Plan Type"
+                required
+                value={form.planType}
+                onChange={handleChange('planType')}
+                error={fieldErrors.planType}
+                options={PLAN_TYPES.map((p) => ({ value: p, label: p }))}
+              />
 
               <InputField
                 label="Reference"
@@ -305,7 +294,7 @@ export default function CustomerModal({
 
             {/* Footer */}
             <div className={styles.footer}>
-              <Button className="btn-md" variant="ghost" type="button" onClick={onClose} disabled={loading}>
+              <Button className='btn-md' variant="secondary" type="button" onClick={onClose} disabled={loading}>
                 Cancel
               </Button>
               <Button  className="btn-md" type="submit" loading={loading} disabled={!isFormValid || loading}>

@@ -21,7 +21,7 @@
 
 .modal {
   background: #1a1a1a;
-  border: 1px solid var(--secondary-border);
+  border: 1px solid var(--jt-skyBlue-base);
   border-radius: var(--radius-xl);
   padding: 32px 28px 24px;
   width: 100%;
@@ -67,14 +67,14 @@
 .title {
   font-size: var(--h5-font);
   font-weight: var(--font-weight-600);
-  color: var(--primary-50);
+color: var(--jt-light-base);
   text-align: center;
   margin: 0;
 }
 
 .description {
   font-size: var(--font-sm);
-  color: var(--primary-200);
+  color: var(--jt-light-base);
   text-align: center;
   line-height: 1.55;
   margin: 0;

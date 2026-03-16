@@ -8,9 +8,11 @@ import { ADMIN_API } from '@/lib/constants';
 import CustomerModal from '@/components/modals/create-customer/CustomerModal';
 import ConfirmDeleteModal from '@/components/modals/confirm-delete/ConfirmDeleteModal';
 import AddQuotationModal from '@/components/modals/create-quotation/AddQuotationModal';
-import { PencilIcon, TrashIcon, UsersIcon } from '@/components/ui/icons-library/Icons';
+import { PencilIcon, TrashIcon, UsersIcon } from '@repo/ui/Icons';
+import Table, { Tr, Td } from '@repo/ui/Table';
 import styles from './customers.module.css';
 import { CustomerResponse } from '@/app/types/customer';
+import Button from '@repo/ui/Button';
 import { formatDate, formatNumber } from '@/utility/date';
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -83,13 +85,9 @@ export default function CustomersPage() {
       {/* ── Page header ─────────────────────────────────────────────────── */}
       <div className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>Customers</h1>
-        <button
-          className="btn btn-primary btn-sm"
-          type="button"
-          onClick={() => { setEditId(undefined); setShowCreate(true); }}
-        >
+        <Button className='btn-md' type="button" onClick={() => { setEditId(undefined); setShowCreate(true); }}>
           + Add Customer
-        </button>
+        </Button>
       </div>
 
       {/* ── Content ─────────────────────────────────────────────────────── */}
@@ -101,7 +99,7 @@ export default function CustomersPage() {
       ) : fetchError ? (
         <div className={styles.centered}>
           <span className={styles.errorText}>{fetchError}</span>
-          <button className={styles.retryBtn} onClick={fetchCustomers}>Retry</button>
+          <Button variant="secondary" onClick={fetchCustomers}>Retry</Button>
         </div>
       ) : customers.length === 0 ? (
         <div className={styles.empty}>
@@ -109,94 +107,77 @@ export default function CustomersPage() {
           <p>No customers yet.</p>
         </div>
       ) : (
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th className={styles.th} style={{ width: 32 }} />
-                <th className={styles.th}>Name</th>
-                <th className={styles.th}>Plan Type</th>
-                <th className={styles.th}>Jetcoins</th>
-                <th className={styles.th}>Total Trips</th>
-                <th className={styles.th}>Total Stays</th>
-                <th className={styles.th}>Email</th>
-                <th className={styles.th}>Mobile Number</th>
-                <th className={styles.th}>Reference</th>
-                <th className={styles.th}>Added on</th>
-                <th className={styles.th}>Added by</th>
-                <th className={styles.th}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {customers.map((c) => (
-                <tr key={c.id} className={styles.row}>
-                  <td className={styles.td}>
-                    <span className={styles.radioIcon} />
-                  </td>
-                  <td className={styles.td}>
-                    <span className={styles.name}>{c.fullName}</span>
-                  </td>
-                  <td className={styles.td}>
-                    <span className={`${styles.planBadge} ${styles[`plan${c.planType}`] ?? ''}`}>
-                      {c.planType}
-                    </span>
-                  </td>
-                  <td className={styles.td}>{formatNumber(c.jetcoins)}</td>
-                  <td className={styles.td}>{formatNumber(c.totalTrips)}</td>
-                  <td className={styles.td}>{formatNumber(c.totalStays)}</td>
-                  <td className={styles.td}>
-                    {c.email
-                      ? <a className={styles.emailLink} href={`mailto:${c.email}`}>{c.email}</a>
-                      : <span className={styles.muted}>—</span>
-                    }
-                  </td>
-                  <td className={styles.td}>{c.mobileNumber}</td>
-                  <td className={styles.td}>
-                    {c.reference || <span className={styles.muted}>—</span>}
-                  </td>
-                  <td className={styles.td}>{formatDate(c.addedOn)}</td>
-                  <td className={styles.td}>{c.addedByName?.trim() || '—'}</td>
-                  <td className={styles.td}>
-                    <div className={styles.actions}>
-                      <button
-                        className={styles.editBtn}
-                        type="button"
-                        title="Edit customer"
-                        onClick={() => { setEditId(c.id); setShowCreate(true); }}
-                      >
-                        <PencilIcon size={14} />
-                      </button>
-                      <button
-                        className={styles.deleteBtn}
-                        type="button"
-                        title="Delete customer"
-                        onClick={() => setDeleteTarget(c)}
-                      >
-                        <TrashIcon size={14} />
-                      </button>
-                      <button
-                        className={styles.quotationBtn}
-                        type="button"
-                        title="Add quotation"
-                        onClick={() => handleCreateQuotation(c)}
-                      >
-                        + Quotation
-                      </button>
-                      <button
-                        className={styles.viewBtn}
-                        type="button"
-                        title="View quotations"
-                        onClick={() => handleViewQuotations(c)}
-                      >
-                        View
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table columns={[
+          { header: '',              width: 32 },
+          { header: 'Name' },
+          { header: 'Plan Type' },
+          { header: 'Jetcoins' },
+          { header: 'Total Trips' },
+          { header: 'Total Stays' },
+          { header: 'Email' },
+          { header: 'Mobile Number' },
+          { header: 'Reference' },
+          { header: 'Added on' },
+          { header: 'Added by' },
+          { header: 'Actions' },
+        ]}>
+          {customers.map((c) => (
+            <Tr key={c.id}>
+              <Td>
+                <span className={styles.radioIcon} />
+              </Td>
+              <Td>
+                <span className={styles.name}>{c.fullName}</span>
+              </Td>
+              <Td>
+                <span className={`${styles.planBadge} ${styles[`plan${c.planType}`] ?? ''}`}>
+                  {c.planType}
+                </span>
+              </Td>
+              <Td>{formatNumber(c.jetcoins)}</Td>
+              <Td>{formatNumber(c.totalTrips)}</Td>
+              <Td>{formatNumber(c.totalStays)}</Td>
+              <Td>
+                {c.email
+                  ? <a className={styles.emailLink} href={`mailto:${c.email}`}>{c.email}</a>
+                  : <span className={styles.muted}>—</span>
+                }
+              </Td>
+              <Td>{c.mobileNumber}</Td>
+              <Td>
+                {c.reference || <span className={styles.muted}>—</span>}
+              </Td>
+              <Td>{formatDate(c.addedOn)}</Td>
+              <Td>{c.addedByName?.trim() || '—'}</Td>
+              <Td>
+                <div className={styles.actions}>
+                  <button
+                    className={styles.editBtn}
+                    type="button"
+                    title="Edit customer"
+                    onClick={() => { setEditId(c.id); setShowCreate(true); }}
+                  >
+                    <PencilIcon size={14} />
+                  </button>
+                  <button
+                    className={styles.deleteBtn}
+                    type="button"
+                    title="Delete customer"
+                    onClick={() => setDeleteTarget(c)}
+                  >
+                    <TrashIcon size={14} />
+                  </button>
+                  <Button className='btn-sm' variant="secondary" type="button" title="Add quotation" onClick={() => handleCreateQuotation(c)}>
+                    + Quotation
+                  </Button>
+                  <Button className='btn-sm' variant="secondary" type="button" title="View quotations" onClick={() => handleViewQuotations(c)}>
+                    View
+                  </Button>
+                </div>
+              </Td>
+            </Tr>
+          ))}
+        </Table>
       )}
 
       {/* ── Create / Edit modal ──────────────────────────────────────────── */}

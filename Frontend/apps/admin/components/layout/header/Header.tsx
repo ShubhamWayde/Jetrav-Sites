@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@repo/auth';
 import { api } from '@/lib/api';
 import { ADMIN_API } from '@/lib/constants';
-import { BellIcon, GearIcon, LogoutIcon } from '@/components/ui/icons-library/Icons';
+import { BellIcon, GearIcon, LogoutIcon } from '@repo/ui/Icons';
 import styles from './Header.module.css';
 import { AdminProfile } from '@/app/types/profile';
 

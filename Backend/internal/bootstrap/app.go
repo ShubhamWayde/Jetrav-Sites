@@ -5,17 +5,19 @@ import (
 )
 
 type App struct {
-	AuthHandler       *handlers.AuthHandler
-	AdminHandler      *handlers.AdminHandler
-	CustomerHandler   *handlers.CustomerHandler
-	QuotationHandler  *handlers.QuotationHandler
-	LeadHandler       *handlers.LeadHandler
-	DashboardHandler  *handlers.DashboardHandler
+	AuthHandler      *handlers.AuthHandler
+	AdminHandler     *handlers.AdminHandler
+	UserHandler      *handlers.UserHandler
+	CustomerHandler  *handlers.CustomerHandler
+	QuotationHandler *handlers.QuotationHandler
+	LeadHandler      *handlers.LeadHandler
+	DashboardHandler *handlers.DashboardHandler
 }
 
 func NewApp(
 	authHandler *handlers.AuthHandler,
 	adminHandler *handlers.AdminHandler,
+	userHandler *handlers.UserHandler,
 	customerHandler *handlers.CustomerHandler,
 	quotationHandler *handlers.QuotationHandler,
 	leadHandler *handlers.LeadHandler,
@@ -24,6 +26,7 @@ func NewApp(
 	return &App{
 		AuthHandler:      authHandler,
 		AdminHandler:     adminHandler,
+		UserHandler:      userHandler,
 		CustomerHandler:  customerHandler,
 		QuotationHandler: quotationHandler,
 		LeadHandler:      leadHandler,

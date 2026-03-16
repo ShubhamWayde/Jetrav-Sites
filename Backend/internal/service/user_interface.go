@@ -1,11 +1,10 @@
 package service
 
-import (
-	"Backend/internal/models"
-)
+import "Backend/internal/models"
 
+// UserService encapsulates user profile business logic.
 type UserService interface {
-	Register(user models.RegisterRequest) error
-	LoginWithEmail(email string, password string, deviceID string, deviceName string, browser string, ip string) (string,string,error)
-	LoginWithPhone(phoneNumber string, password string,deviceID string, deviceName string, browser string, ip string) (string,string, error)
+	GetProfile(userID uint) (*models.User, error)
+	UpdateProfile(userID uint, req models.UpdateAdminProfileRequest) error
+	SetPassword(userID uint, req models.SetPasswordRequest) error
 }

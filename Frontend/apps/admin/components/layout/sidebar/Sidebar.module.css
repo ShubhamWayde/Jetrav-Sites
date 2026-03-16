@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   background: #0d0d0d;
-  border-right: 1px solid var(--secondary-border);
+  border-right: 1px solid var(--jt-skyBlue-base);
   position: sticky;
   top: 0;
   height: 100%;
@@ -29,7 +29,7 @@
   padding: 9px 12px;
   border-radius: var(--radius-lg);
   font-size: var(--font-sm);
-  color: var(--primary-200);
+  color: var(--jt-light-base);
   text-decoration: none;
   transition: background 0.15s ease, color 0.15s ease;
   -webkit-border-radius: var(--radius-lg);
@@ -40,12 +40,12 @@
 
 .navItem:hover {
   background: rgba(255, 255, 255, 0.05);
-  color: var(--primary-100);
+  color: var(--jt-light-base);
 }
 
 .navItemActive {
   background: rgba(255, 255, 255, 0.08);
-  color: var(--primary-50);
+  color: var(--jt-light-base);
   font-weight: var(--font-weight-500);
 }
 

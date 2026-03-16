@@ -1,23 +1,8 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import { Outfit } from "next/font/google";
+import { outfit } from "@repo/fonts";
 import Providers from "./providers";
 import "../../../styles/css/base.css";
 import "./globals.css";
-
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-primary",
-});
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-});
 
 export const metadata: Metadata = {
   title: "Admin Panel",
@@ -31,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${outfit.variable} ${geistSans.variable} ${geistMono.variable}`}>
+      <body className={outfit.variable}>
         <Providers>{children}</Providers>
       </body>
     </html>

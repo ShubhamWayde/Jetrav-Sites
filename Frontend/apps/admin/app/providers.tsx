@@ -1,6 +1,6 @@
 'use client';
 
-import { AuthProvider } from '@/context/AuthContext';
+import { AuthProvider } from '@repo/auth';
 import type { ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

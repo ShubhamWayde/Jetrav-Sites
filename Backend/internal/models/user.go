@@ -65,18 +65,30 @@ func (u *User) CheckPassword(password string) bool {
 	) == nil
 }
 
-type RegisterRequest struct {
-	FirstName   string `json:"firstName" binding:"required"`
-	LastName    string `json:"lastName" binding:"required"`
-	Email       string `json:"email" binding:"required,email"`
-	PhoneNumber string `json:"phoneNumber" binding:"required"`
-	Password    string `json:"password" binding:"required,min=6"`
-	AccountName string `json:"accountName"`
+// ─── User Auth Requests ──────────────────────────────────────────────────────
+
+type UserSignupRequest struct {
+	FirstName    string `json:"firstName"    binding:"required"`
+	LastName     string `json:"lastName"     binding:"required"`
+	Email        string `json:"email"        binding:"omitempty,email"`
+	MobileNumber string `json:"mobileNumber" binding:"required"`
 }
 
-type LoginRequest struct {
-	Email    string `json:"email" `
-	PhoneNumber string `json:"phoneNumber"`
-	Password string `json:"password" binding:"required"`
-	DeviceID    string `json:"deviceID" binding:"required"`
-	}
+type UserLoginWithPasswordRequest struct {
+	MobileNumber string `json:"mobileNumber" binding:"required"`
+	Password     string `json:"password"     binding:"required"`
+	DeviceID     string `json:"deviceID"     binding:"required"`
+}
+
+// ─── User Profile Response ───────────────────────────────────────────────────
+
+type UserProfileResponse struct {
+	ID           uint   `json:"id"`
+	FirstName    string `json:"firstName"`
+	LastName     string `json:"lastName"`
+	Email        string `json:"email"`
+	MobileNumber string `json:"mobileNumber"`
+	IsVerified   bool   `json:"isVerified"`
+	HasPassword  bool   `json:"hasPassword"`
+	Role         string `json:"role"`
+}

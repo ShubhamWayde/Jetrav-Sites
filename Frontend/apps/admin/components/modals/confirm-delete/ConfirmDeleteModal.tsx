@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import Button from '@/components/ui/button/Button';
-import { TrashIcon } from '@/components/ui/icons-library/Icons';
+import Button from '@repo/ui/Button';
+import { TrashIcon } from '@repo/ui/Icons';
 import styles from './ConfirmDeleteModal.module.css';
 
 interface ConfirmDeleteModalProps {
@@ -58,7 +58,7 @@ export default function ConfirmDeleteModal({
 
         {/* Actions */}
         <div className={styles.actions}>
-          <Button variant="ghost" type="button" onClick={onClose} disabled={loading}>
+          <Button className='btn-md' variant="secondary" type="button" onClick={onClose} disabled={loading}>
             Cancel
           </Button>
           <Button

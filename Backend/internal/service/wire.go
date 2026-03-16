@@ -3,9 +3,13 @@ package service
 import "github.com/google/wire"
 
 var ProviderSet = wire.NewSet(
-	NewSessionService,
-	NewUserService,
-	NewOTPService,
+	NewAuthService,
 	NewAdminService,
+	NewUserService,
+	NewSessionService,
+	NewOTPService,
 	NewCustomerService,
+	NewQuotationService,
+	NewLeadService,
+	NewDashboardService,
 )

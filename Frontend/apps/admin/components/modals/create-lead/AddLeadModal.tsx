@@ -1,5 +1,6 @@
 'use client';
 
+import InputField from '@repo/ui/InputField';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { api } from '@/lib/api';
@@ -13,55 +14,9 @@ import {
   LeadStatus,
   LeadType,
 } from '@/app/types/lead';
+import SelectField from '@repo/ui/SelectField';
+import Button from '@repo/ui/Button';
 import styles from './AddLeadModal.module.css';
-
-// ── Shared field sub-components ───────────────────────────────────────────────
-
-interface FieldProps {
-  label:        string;
-  value:        string;
-  onChange:     (e: React.ChangeEvent<HTMLInputElement>) => void;
-  type?:        string;
-  placeholder?: string;
-  disabled?:    boolean;
-}
-
-function Field({ label, value, onChange, type = 'text', placeholder, disabled }: FieldProps) {
-  return (
-    <div className={styles.fieldWrap}>
-      <label className={styles.fieldLabel}>{label}</label>
-      <input
-        className={`${styles.input} ${disabled ? styles.inputDisabled : ''}`}
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        disabled={disabled}
-        readOnly={disabled}
-      />
-    </div>
-  );
-}
-
-interface SelectFieldProps {
-  label:    string;
-  value:    string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  options:  { value: string; label: string }[];
-}
-
-function SelectField({ label, value, onChange, options }: SelectFieldProps) {
-  return (
-    <div className={styles.fieldWrap}>
-      <label className={styles.fieldLabel}>{label}</label>
-      <select className={styles.select} value={value} onChange={onChange}>
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>{o.label}</option>
-        ))}
-      </select>
-    </div>
-  );
-}
 
 function countOptions(max: number) {
   return Array.from({ length: max + 1 }, (_, i) => ({ value: String(i), label: String(i) }));
@@ -244,12 +199,12 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         return (
           <>
             <div className={styles.row2}>
-              <Field label="Source"      value={details['source'] ?? ''}      onChange={handleDetailChange('source')}      placeholder="e.g. Mumbai (BOM)" />
-              <Field label="Destination" value={details['destination'] ?? ''} onChange={handleDetailChange('destination')} placeholder="e.g. Dubai (DXB)" />
+              <InputField label="Source"      value={details['source'] ?? ''}      onChange={handleDetailChange('source')}      placeholder="e.g. Mumbai (BOM)" />
+              <InputField label="Destination" value={details['destination'] ?? ''} onChange={handleDetailChange('destination')} placeholder="e.g. Dubai (DXB)" />
             </div>
             <div className={styles.row2}>
-              <Field label="Departure" type="date" value={details['departure'] ?? ''} onChange={handleDetailChange('departure')} />
-              <Field label="Return"    type="date" value={details['return'] ?? ''}    onChange={handleDetailChange('return')} />
+              <InputField label="Departure" type="date" value={details['departure'] ?? ''} onChange={handleDetailChange('departure')} />
+              <InputField label="Return"    type="date" value={details['return'] ?? ''}    onChange={handleDetailChange('return')} />
             </div>
             <div className={styles.row3}>
               <SelectField label="Adults"   value={details['adults'] ?? '1'}   onChange={handleDetailChange('adults')}   options={countOptions(10)} />
@@ -257,7 +212,7 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
               <SelectField label="Infant"   value={details['infant'] ?? '0'}   onChange={handleDetailChange('infant')}   options={countOptions(5)} />
             </div>
             <div className={styles.row1}>
-              <Field label="SSR (Special Service Request)" value={details['ssr'] ?? ''} onChange={handleDetailChange('ssr')} placeholder="e.g. Wheelchair, Vegan meal" />
+              <InputField label="SSR (Special Service Request)" value={details['ssr'] ?? ''} onChange={handleDetailChange('ssr')} placeholder="e.g. Wheelchair, Vegan meal" />
             </div>
           </>
         );
@@ -266,12 +221,12 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         return (
           <>
             <div className={styles.row2}>
-              <Field label="Source"      value={details['source'] ?? ''}      onChange={handleDetailChange('source')}      placeholder="e.g. Mumbai" />
-              <Field label="Destination" value={details['destination'] ?? ''} onChange={handleDetailChange('destination')} placeholder="e.g. Delhi" />
+              <InputField label="Source"      value={details['source'] ?? ''}      onChange={handleDetailChange('source')}      placeholder="e.g. Mumbai" />
+              <InputField label="Destination" value={details['destination'] ?? ''} onChange={handleDetailChange('destination')} placeholder="e.g. Delhi" />
             </div>
             <div className={styles.row2}>
-              <Field label="Departure" type="date" value={details['departure'] ?? ''} onChange={handleDetailChange('departure')} />
-              <Field label="Return"    type="date" value={details['return'] ?? ''}    onChange={handleDetailChange('return')} />
+              <InputField label="Departure" type="date" value={details['departure'] ?? ''} onChange={handleDetailChange('departure')} />
+              <InputField label="Return"    type="date" value={details['return'] ?? ''}    onChange={handleDetailChange('return')} />
             </div>
             <div className={styles.row2}>
               <SelectField label="Adults"   value={details['adults'] ?? '1'}   onChange={handleDetailChange('adults')}   options={countOptions(10)} />
@@ -284,11 +239,11 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         return (
           <>
             <div className={styles.row1}>
-              <Field label="City" value={details['city'] ?? ''} onChange={handleDetailChange('city')} placeholder="e.g. Dubai" />
+              <InputField label="City" value={details['city'] ?? ''} onChange={handleDetailChange('city')} placeholder="e.g. Dubai" />
             </div>
             <div className={styles.row2}>
-              <Field label="Check-In"  type="date" value={details['checkIn'] ?? ''}  onChange={handleDetailChange('checkIn')} />
-              <Field label="Check-Out" type="date" value={details['checkOut'] ?? ''} onChange={handleDetailChange('checkOut')} />
+              <InputField label="Check-In"  type="date" value={details['checkIn'] ?? ''}  onChange={handleDetailChange('checkIn')} />
+              <InputField label="Check-Out" type="date" value={details['checkOut'] ?? ''} onChange={handleDetailChange('checkOut')} />
             </div>
             <div className={styles.row3}>
               <SelectField label="Rooms"    value={details['rooms'] ?? '1'}    onChange={handleDetailChange('rooms')}    options={countOptions(10)} />
@@ -302,11 +257,11 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         return (
           <>
             <div className={styles.row2}>
-              <Field label="Country"   value={details['country'] ?? ''}   onChange={handleDetailChange('country')}   placeholder="e.g. UAE" />
-              <Field label="Visa Type" value={details['visaType'] ?? ''} onChange={handleDetailChange('visaType')} placeholder="e.g. Tourist" />
+              <InputField label="Country"   value={details['country'] ?? ''}   onChange={handleDetailChange('country')}   placeholder="e.g. UAE" />
+              <InputField label="Visa Type" value={details['visaType'] ?? ''} onChange={handleDetailChange('visaType')} placeholder="e.g. Tourist" />
             </div>
             <div className={styles.row1}>
-              <Field label="Travel Date" type="date" value={details['travelDate'] ?? ''} onChange={handleDetailChange('travelDate')} />
+              <InputField label="Travel Date" type="date" value={details['travelDate'] ?? ''} onChange={handleDetailChange('travelDate')} />
             </div>
             <div className={styles.row2}>
               <SelectField label="Adults"   value={details['adults'] ?? '1'}   onChange={handleDetailChange('adults')}   options={countOptions(10)} />
@@ -319,11 +274,11 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         return (
           <>
             <div className={styles.row1}>
-              <Field label="Country" value={details['country'] ?? ''} onChange={handleDetailChange('country')} placeholder="e.g. Europe" />
+              <InputField label="Country" value={details['country'] ?? ''} onChange={handleDetailChange('country')} placeholder="e.g. Europe" />
             </div>
             <div className={styles.row2}>
-              <Field label="Start Date" type="date" value={details['startDate'] ?? ''} onChange={handleDetailChange('startDate')} />
-              <Field label="End Date"   type="date" value={details['endDate'] ?? ''}   onChange={handleDetailChange('endDate')} />
+              <InputField label="Start Date" type="date" value={details['startDate'] ?? ''} onChange={handleDetailChange('startDate')} />
+              <InputField label="End Date"   type="date" value={details['endDate'] ?? ''}   onChange={handleDetailChange('endDate')} />
             </div>
             <div className={styles.row1}>
               <SelectField label="Adults" value={details['adults'] ?? '1'} onChange={handleDetailChange('adults')} options={countOptions(10)} />
@@ -335,11 +290,11 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         return (
           <>
             <div className={styles.row2}>
-              <Field label="Source"      value={details['source'] ?? ''}      onChange={handleDetailChange('source')}      placeholder="e.g. Mumbai" />
-              <Field label="Destination" value={details['destination'] ?? ''} onChange={handleDetailChange('destination')} placeholder="e.g. Pune" />
+              <InputField label="Source"      value={details['source'] ?? ''}      onChange={handleDetailChange('source')}      placeholder="e.g. Mumbai" />
+              <InputField label="Destination" value={details['destination'] ?? ''} onChange={handleDetailChange('destination')} placeholder="e.g. Pune" />
             </div>
             <div className={styles.row1}>
-              <Field label="Departure" type="date" value={details['departure'] ?? ''} onChange={handleDetailChange('departure')} />
+              <InputField label="Departure" type="date" value={details['departure'] ?? ''} onChange={handleDetailChange('departure')} />
             </div>
             <div className={styles.row2}>
               <SelectField label="Adults"   value={details['adults'] ?? '1'}   onChange={handleDetailChange('adults')}   options={countOptions(10)} />
@@ -352,15 +307,15 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         return (
           <>
             <div className={styles.row2}>
-              <Field label="Source"      value={details['source'] ?? ''}      onChange={handleDetailChange('source')}      placeholder="e.g. Mumbai" />
-              <Field label="Destination" value={details['destination'] ?? ''} onChange={handleDetailChange('destination')} placeholder="e.g. Pune" />
+              <InputField label="Source"      value={details['source'] ?? ''}      onChange={handleDetailChange('source')}      placeholder="e.g. Mumbai" />
+              <InputField label="Destination" value={details['destination'] ?? ''} onChange={handleDetailChange('destination')} placeholder="e.g. Pune" />
             </div>
             <div className={styles.row2}>
-              <Field label="Pickup Date" type="date" value={details['pickupDate'] ?? ''} onChange={handleDetailChange('pickupDate')} />
-              <Field label="Drop Date"   type="date" value={details['dropDate'] ?? ''}   onChange={handleDetailChange('dropDate')} />
+              <InputField label="Pickup Date" type="date" value={details['pickupDate'] ?? ''} onChange={handleDetailChange('pickupDate')} />
+              <InputField label="Drop Date"   type="date" value={details['dropDate'] ?? ''}   onChange={handleDetailChange('dropDate')} />
             </div>
             <div className={styles.row1}>
-              <Field label="Car Type" value={details['carType'] ?? ''} onChange={handleDetailChange('carType')} placeholder="e.g. Sedan, SUV" />
+              <InputField label="Car Type" value={details['carType'] ?? ''} onChange={handleDetailChange('carType')} placeholder="e.g. Sedan, SUV" />
             </div>
           </>
         );
@@ -369,11 +324,11 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         return (
           <>
             <div className={styles.row2}>
-              <Field label="Currency" value={details['currency'] ?? ''} onChange={handleDetailChange('currency')} placeholder="e.g. USD" />
-              <Field label="Amount"   type="number" value={details['amount'] ?? ''} onChange={handleDetailChange('amount')} placeholder="0" />
+              <InputField label="Currency" value={details['currency'] ?? ''} onChange={handleDetailChange('currency')} placeholder="e.g. USD" />
+              <InputField label="Amount"   type="number" value={details['amount'] ?? ''} onChange={handleDetailChange('amount')} placeholder="0" />
             </div>
             <div className={styles.row1}>
-              <Field label="Purpose" value={details['purpose'] ?? ''} onChange={handleDetailChange('purpose')} placeholder="e.g. Travel, Business" />
+              <InputField label="Purpose" value={details['purpose'] ?? ''} onChange={handleDetailChange('purpose')} placeholder="e.g. Travel, Business" />
             </div>
           </>
         );
@@ -382,26 +337,24 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         return (
           <>
             <div className={styles.row1}>
-              <Field label="Destination" value={details['destination'] ?? ''} onChange={handleDetailChange('destination')} placeholder="e.g. Dubai" />
+              <InputField label="Destination" value={details['destination'] ?? ''} onChange={handleDetailChange('destination')} placeholder="e.g. Dubai" />
             </div>
             <div className={styles.row2}>
-              <Field label="Start Date" type="date" value={details['startDate'] ?? ''} onChange={handleDetailChange('startDate')} />
-              <Field label="End Date"   type="date" value={details['endDate'] ?? ''}   onChange={handleDetailChange('endDate')} />
+              <InputField label="Start Date" type="date" value={details['startDate'] ?? ''} onChange={handleDetailChange('startDate')} />
+              <InputField label="End Date"   type="date" value={details['endDate'] ?? ''}   onChange={handleDetailChange('endDate')} />
             </div>
             <div className={styles.row3}>
               <SelectField label="Adults"   value={details['adults'] ?? '1'}   onChange={handleDetailChange('adults')}   options={countOptions(10)} />
               <SelectField label="Children" value={details['children'] ?? '0'} onChange={handleDetailChange('children')} options={countOptions(10)} />
-              <div className={styles.fieldWrap}>
-                <label className={styles.fieldLabel}>Package Type</label>
-                <select
-                  className={styles.select}
-                  value={details['packageType'] ?? 'domestic'}
-                  onChange={handleDetailChange('packageType')}
-                >
-                  <option value="domestic">Domestic</option>
-                  <option value="international">International</option>
-                </select>
-              </div>
+              <SelectField
+                label="Package Type"
+                value={details['packageType'] ?? 'domestic'}
+                onChange={handleDetailChange('packageType')}
+                options={[
+                  { value: 'domestic', label: 'Domestic' },
+                  { value: 'international', label: 'International' },
+                ]}
+              />
             </div>
           </>
         );
@@ -420,7 +373,7 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         {/* ── Header ───────────────────────────────────────────────────── */}
         <div className={styles.header}>
           <h2 className={styles.title}>Add Lead</h2>
-          <button className={styles.closeBtn} type="button" onClick={onClose}>Close</button>
+          <Button variant="ghost" type="button" onClick={onClose}>Close</Button>
         </div>
 
         {/* ── Type tab bar ─────────────────────────────────────────────── */}
@@ -466,63 +419,63 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
               <>
                 {/* Search input */}
                 <div className={styles.row1}>
-                  <div className={styles.fieldWrap}>
-                    <label className={styles.fieldLabel}>Search Customer</label>
-                    <input
-                      className={styles.input}
-                      type="text"
-                      placeholder="Search by name, mobile, or email…"
-                      value={customerSearch}
-                      onChange={(e) => setCustomerSearch(e.target.value)}
-                    />
-                  </div>
+                  <InputField
+                    label="Search Customer"
+                    type="text"
+                    placeholder="Search by name, mobile, or email…"
+                    value={customerSearch}
+                    onChange={(e) => setCustomerSearch(e.target.value)}
+                  />
                 </div>
 
                 {/* Customer select */}
                 <div className={styles.row1}>
-                  <div className={styles.fieldWrap}>
-                    <label className={styles.fieldLabel}>Select Customer</label>
-                    {customersLoading ? (
+                  {customersLoading ? (
+                    <div className={styles.fieldWrap}>
+                      <label className={styles.fieldLabel}>Select Customer</label>
                       <p className={styles.loadingText}>Loading customers…</p>
-                    ) : filteredCustomers.length === 0 ? (
+                    </div>
+                  ) : filteredCustomers.length === 0 ? (
+                    <div className={styles.fieldWrap}>
+                      <label className={styles.fieldLabel}>Select Customer</label>
                       <p className={styles.loadingText}>No customers found.</p>
-                    ) : (
-                      <select
-                        className={styles.select}
-                        value={existingCustomerId}
-                        onChange={(e) => setExistingCustomerId(Number(e.target.value))}
-                      >
-                        <option value={0} disabled>— Select a customer —</option>
-                        {filteredCustomers.map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.fullName} — {c.mobileNumber}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <SelectField
+                      label="Select Customer"
+                      placeholder="— Select a customer —"
+                      value={existingCustomerId === 0 ? '' : String(existingCustomerId)}
+                      onChange={(e) => setExistingCustomerId(Number(e.target.value))}
+                      options={filteredCustomers.map((c) => ({
+                        value: String(c.id),
+                        label: `${c.fullName} — ${c.mobileNumber}`,
+                      }))}
+                    />
+                  )}
                 </div>
               </>
             ) : (
               <>
                 <div className={styles.row2}>
-                  <Field label="First Name" value={newFirstName} onChange={(e) => setNewFirstName(e.target.value)} placeholder="First name" />
-                  <Field label="Last Name"  value={newLastName}  onChange={(e) => setNewLastName(e.target.value)}  placeholder="Last name" />
+                  <InputField label="First Name" value={newFirstName} onChange={(e) => setNewFirstName(e.target.value)} placeholder="First name" />
+                  <InputField label="Last Name"  value={newLastName}  onChange={(e) => setNewLastName(e.target.value)}  placeholder="Last name" />
                 </div>
                 <div className={styles.row2}>
-                  <div className={styles.fieldWrap}>
-                    <label className={styles.fieldLabel}>Gender</label>
-                    <select className={styles.select} value={newGender} onChange={(e) => setNewGender(e.target.value)}>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                  <Field label="Mobile Number" value={newMobile} onChange={(e) => setNewMobile(e.target.value)} placeholder="e.g. 9876543210" />
+                  <SelectField
+                    label="Gender"
+                    value={newGender}
+                    onChange={(e) => setNewGender(e.target.value)}
+                    options={[
+                      { value: 'Male', label: 'Male' },
+                      { value: 'Female', label: 'Female' },
+                      { value: 'Other', label: 'Other' },
+                    ]}
+                  />
+                  <InputField label="Mobile Number" value={newMobile} onChange={(e) => setNewMobile(e.target.value)} placeholder="e.g. 9876543210" />
                 </div>
                 <div className={styles.row2}>
-                  <Field label="Email"     value={newEmail}     onChange={(e) => setNewEmail(e.target.value)}     placeholder="email@example.com" />
-                  <Field label="Reference" value={newReference} onChange={(e) => setNewReference(e.target.value)} placeholder="e.g. Agent / Walk-in" />
+                  <InputField label="Email"     value={newEmail}     onChange={(e) => setNewEmail(e.target.value)}     placeholder="email@example.com" />
+                  <InputField label="Reference" value={newReference} onChange={(e) => setNewReference(e.target.value)} placeholder="e.g. Agent / Walk-in" />
                 </div>
               </>
             )}
@@ -544,7 +497,7 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
 
           {/* ── Assign To ────────────────────────────────────────────── */}
           <div className={styles.row1}>
-            <Field label="Assign To" value={assignTo} onChange={(e) => setAssignTo(e.target.value)} placeholder="e.g. John (Sales)" />
+            <InputField label="Assign To" value={assignTo} onChange={(e) => setAssignTo(e.target.value)} placeholder="e.g. John (Sales)" />
           </div>
 
           {/* ── Remark ───────────────────────────────────────────────── */}
@@ -563,12 +516,8 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
 
           {/* ── Footer ───────────────────────────────────────────────── */}
           <div className={styles.footer}>
-            <button className="btn btn-md" type="button" onClick={onClose} disabled={loading}>
-              Cancel
-            </button>
-            <button className="btn btn-primary btn-md" type="submit" disabled={loading}>
-              {loading ? 'Saving…' : 'Save Lead'}
-            </button>
+            <Button className='btn-md' variant="secondary" type="button" onClick={onClose} disabled={loading}>Cancel</Button>
+            <Button className='btn-md' type="submit" loading={loading}>Save Lead</Button>
           </div>
         </form>
       </div>
