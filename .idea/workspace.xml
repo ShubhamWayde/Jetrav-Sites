@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="91181458-c591-40bb-b421-baf1c5954518" name="Changes" comment="updated code">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/home/page.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/components/logo/logo.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/utilities.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/styles/css/utilities.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/home/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/home/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/page.module.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/styles/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/styles/css/base.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/styles/css/variable.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/styles/css/variable.css" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="252" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;ShubhamWayde&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/ShubhamWayde/Jetrav-Sites.git&quot;,
+    &quot;accountId&quot;: &quot;ef920b7a-d723-47d4-9d5e-270d5cda3a42&quot;
+  }
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="3A1Lu3QFdRN7SkRKcAVznPyMVBm" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "code.cleanup.on.save": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "javascript.preferred.runtime.type.id": "node",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "D:/Folder2/waydzo/Development/git/Jetrav-Sites",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "pnpm",
+    "rearrange.code.on.save": "true",
+    "settings.editor.selected.configurable": "preferences.sourceCode.CSS",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "D:\\Folder2\\waydzo\\Development\\git\\Jetrav-Sites\\Frontend\\packages\\ui\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="ReactDesignerToolWindowState">
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.intellij.reactbuddy.reactComponents" value="false" />
+        <entry key="com.intellij.reactbuddy.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.storybook" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Folder2\waydzo\Development\git\Jetrav-Sites\Frontend\apps\marketing\app\(pages)\home" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-WS-253.31033.133" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="91181458-c591-40bb-b421-baf1c5954518" name="Changes" comment="" />
+      <created>1771755349155</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1771755349155</updated>
+      <workItem from="1771755351999" duration="3619000" />
+      <workItem from="1771759031595" duration="19868000" />
+      <workItem from="1772884048542" duration="11577000" />
+      <workItem from="1773463187585" duration="40000" />
+      <workItem from="1773463240896" duration="28412000" />
+    </task>
+    <task id="LOCAL-00001" summary="updated code">
+      <option name="closed" value="true" />
+      <created>1771758900729</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1771758900729</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="updated code" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated code" />
+  </component>
+</project>

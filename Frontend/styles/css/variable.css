@@ -14,36 +14,27 @@
 	--l-950: 16%;
 
 	/* base colors */
-	--jt-skyBlue-base: oklch(62% 0.05 255); /* #778da9 */
-	--jt-yellow-base: oklch(85% 0.16 95); /* #F9C74F */
 	--jt-dark-base: oklch(14% 0 0); /* #080808 */
 	--jt-light-base: oklch(99.6% 0 0); /* #fefefe */
+	--jt-skyBlue-base: oklch(62% 0.05 255); /* #778da9 */
+	--jt-yellow-base: oklch(85% 0.16 95); /* #F9C74F */
 
-	/* dark palette */
 	--jt-dark-exact: var(--jt-dark-base); /* base color */
-	--jt-dark-50: oklch(from var(--jt-dark-base) var(--l-50) c h);
-	--jt-dark-100: oklch(from var(--jt-dark-base) var(--l-100) c h);
-	--jt-dark-200: oklch(from var(--jt-dark-base) var(--l-200) c h);
-	--jt-dark-300: oklch(from var(--jt-dark-base) var(--l-300) c h);
-	--jt-dark-400: oklch(from var(--jt-dark-base) var(--l-400) c h);
-	--jt-dark-500: oklch(from var(--jt-dark-base) var(--l-500) c h);
-	--jt-dark-600: oklch(from var(--jt-dark-base) var(--l-600) c h);
-	--jt-dark-700: oklch(from var(--jt-dark-base) var(--l-700) c h);
-	--jt-dark-800: oklch(from var(--jt-dark-base) var(--l-800) c h);
-	--jt-dark-900: oklch(from var(--jt-dark-base) var(--l-900) c h);
-
-	/* light palette */
 	--jt-light-exact: var(--jt-light-base); /* base color */
-	--jt-light-50: oklch(from var(--jt-light-base) var(--l-50) c h);
-	--jt-light-100: oklch(from var(--jt-light-base) var(--l-100) c h);
-	--jt-light-200: oklch(from var(--jt-light-base) var(--l-200) c h);
-	--jt-light-300: oklch(from var(--jt-light-base) var(--l-300) c h);
-	--jt-light-400: oklch(from var(--jt-light-base) var(--l-400) c h);
-	--jt-light-500: oklch(from var(--jt-light-base) var(--l-500) c h);
-	--jt-light-600: oklch(from var(--jt-light-base) var(--l-600) c h);
-	--jt-light-700: oklch(from var(--jt-light-base) var(--l-700) c h);
-	--jt-light-800: oklch(from var(--jt-light-base) var(--l-800) c h);
-	--jt-light-900: oklch(from var(--jt-light-base) var(--l-900) c h);
+
+	/* neutral palette */
+	--jt-neutral-50: oklch(from var(--jt-dark-base) var(--l-50) c h);
+	--jt-neutral-100: oklch(from var(--jt-dark-base) var(--l-100) c h);
+	--jt-neutral-200: oklch(from var(--jt-dark-base) var(--l-200) c h);
+	--jt-neutral-300: oklch(from var(--jt-dark-base) var(--l-300) c h);
+	--jt-neutral-400: oklch(from var(--jt-dark-base) var(--l-400) c h);
+	--jt-neutral-500: oklch(from var(--jt-dark-base) var(--l-500) c h);
+	--jt-neutral-600: oklch(from var(--jt-dark-base) var(--l-600) c h);
+	--jt-neutral-700: oklch(from var(--jt-dark-base) var(--l-700) c h);
+	--jt-neutral-800: oklch(from var(--jt-dark-base) var(--l-800) c h);
+	--jt-neutral-900: oklch(from var(--jt-dark-base) var(--l-900) c h);
+	--jt-neutral-950: oklch(from var(--jt-dark-base) var(--l-950) c h);
+
 
 	/* sky blue palette */
 	--jt-skyBlue-exact: var(--jt-skyBlue-base); /* base color */
@@ -57,6 +48,7 @@
 	--jt-skyBlue-700: oklch(from var(--jt-skyBlue-base) var(--l-700) c h);
 	--jt-skyBlue-800: oklch(from var(--jt-skyBlue-base) var(--l-800) c h);
 	--jt-skyBlue-900: oklch(from var(--jt-skyBlue-base) var(--l-900) c h);
+	--jt-skyBlue-950: oklch(from var(--jt-skyBlue-base) var(--l-950) c h);
 
 
 	/* yellow palette */
@@ -71,6 +63,7 @@
 	--jt-yellow-700: oklch(from var(--jt-yellow-base) var(--l-700) c h);
 	--jt-yellow-800: oklch(from var(--jt-yellow-base) var(--l-800) c h);
 	--jt-yellow-900: oklch(from var(--jt-yellow-base) var(--l-900) c h);
+	--jt-yellow-950: oklch(from var(--jt-yellow-base) var(--l-950) c h);
 
 
 	/* spacing */
@@ -109,19 +102,23 @@
 	--size-20: 5rem; /* 80px */
 	--size-24: 6rem; /* 96px */
 
+	/* font families */
+	--font-primary: sans-serif;
+	--font-secondary: serif;
+
 	/* font sizes */
 	--base-font: var(--font-md);
-    --h1-font: clamp(30px, 1.771vw, 34px);
-    --h2-font: clamp(24px, 1.667vw, 32px);
-    --h3-font: clamp(18px, 1.25vw, 24px);
-    --h4-font: clamp(14px, 1.042vw, 20px);
-    --h5-font: clamp(16px, 0.938vw, 18px);
-    --h6-font: clamp(14px, 0.833vw, 16px);
+	--h1-font: clamp(30px, 1.771vw, 34px);
+	--h2-font: clamp(24px, 1.667vw, 32px);
+	--h3-font: clamp(18px, 1.25vw, 24px);
+	--h4-font: clamp(14px, 1.042vw, 20px);
+	--h5-font: clamp(16px, 0.938vw, 18px);
+	--h6-font: clamp(14px, 0.833vw, 16px);
 
-    --font-md: clamp(14px, 0.833vw, 16px);
-    --font-sm: clamp(13px, 0.729vw, 14px);
-    --font-xs: clamp(12px, 0.625vw, 12px);
-    --font-xxs: 10px;
+	--font-md: clamp(14px, 0.833vw, 16px);
+	--font-sm: clamp(13px, 0.729vw, 14px);
+	--font-xs: clamp(12px, 0.625vw, 12px);
+	--font-xxs: 10px;
 
 	/* 	radius */
 	--radius-none: 0px;
@@ -143,11 +140,11 @@
 
 	/* font weights */
 	--font-weight-100: 100;
-    --font-weight-200: 200;
-    --font-weight-300: 300;
-    --font-weight-400: 400;
-    --font-weight-500: 500;
-    --font-weight-600: 600;
-    --font-weight-700: 700;
-    --font-weight-bold: bold;
+	--font-weight-200: 200;
+	--font-weight-300: 300;
+	--font-weight-400: 400;
+	--font-weight-500: 500;
+	--font-weight-600: 600;
+	--font-weight-700: 700;
+	--font-weight-bold: bold;
 }
