@@ -12,6 +12,7 @@ import type {
 } from '@/app/types/dashboard';
 import type { LeadResponse } from '@/app/types/lead';
 import Table, { Tr, Td } from '@repo/ui/Table';
+import Spinner from '@repo/ui/Spinner';
 import styles from './dashboard.module.css';
 import Button from '@repo/ui/Button';
 
@@ -245,7 +246,7 @@ export default function DashboardPage() {
       ) : error ? (
         <div className={styles.errorBanner}>
           <span>{error}</span>
-          <Button variant="secondary" onClick={fetchDashboard}>Retry</Button>
+          <Button title="Retry" variant="secondary" onClick={fetchDashboard}>Retry</Button>
         </div>
       ) : (
         <div className={styles.statsRow}>
@@ -270,7 +271,7 @@ export default function DashboardPage() {
           <Tabs options={TRIP_DATE_OPTS} active={airDateFilter} onChange={setAirDateFilter} />
         </div>
         {loading
-          ? <div className={styles.tableLoading}><div className={styles.spinner} /></div>
+          ? <div className={styles.tableLoading}><Spinner /></div>
           : <AirTripTable trips={airTrips} />}
       </div>
 
@@ -286,7 +287,7 @@ export default function DashboardPage() {
           <Tabs options={TRIP_DATE_OPTS} active={hotelDateFilter} onChange={setHotelDateFilter} />
         </div>
         {loading
-          ? <div className={styles.tableLoading}><div className={styles.spinner} /></div>
+          ? <div className={styles.tableLoading}><Spinner /></div>
           : <HotelTripTable trips={hotelTrips} />}
       </div>
 

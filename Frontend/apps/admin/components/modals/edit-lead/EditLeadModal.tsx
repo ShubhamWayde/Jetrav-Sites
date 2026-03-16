@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import InputField from '@repo/ui/InputField';
+import TextareaField from '@repo/ui/TextareaField';
 import { api } from '@/lib/api';
 import { ADMIN_API } from '@/lib/constants';
 import {
@@ -16,6 +17,7 @@ import {
 } from '@/app/types/lead';
 import SelectField from '@repo/ui/SelectField';
 import Button from '@repo/ui/Button';
+import Modal, { ModalFooter } from '@repo/ui/Modal';
 import styles from './EditLeadModal.module.css';
 
 function countOptions(max: number) {
@@ -59,20 +61,6 @@ export default function EditLeadModal({ isOpen, lead, onClose, onSuccess }: Edit
     setDetails({ ...LEAD_DEFAULT_DETAILS[lead.type], ...converted });
   }, [isOpen, lead]);
 
-  // ── Keyboard / scroll lock ────────────────────────────────────────────────
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [isOpen, onClose]);
-
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
-
   // ── Tab change ────────────────────────────────────────────────────────────
   // Must be defined before the early return to satisfy Rules of Hooks.
 
@@ -92,12 +80,11 @@ export default function EditLeadModal({ isOpen, lead, onClose, onSuccess }: Edit
     [],
   );
 
-  if (!isOpen || !lead) return null;
-
   // ── Submit ────────────────────────────────────────────────────────────────
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!lead) return;
     setLoading(true);
     try {
       const body: Record<string, unknown> = {
@@ -295,35 +282,24 @@ export default function EditLeadModal({ isOpen, lead, onClose, onSuccess }: Edit
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className={styles.overlay} onClick={onClose} role="dialog" aria-modal="true">
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+    <Modal isOpen={isOpen} onClose={onClose} title="Edit Lead" subtitle={`Edit ${lead?.customerName} lead data`} maxWidth={720}>
+      {/* ── Type tab bar ─────────────────────────────────────────────── */}
+      <div className={styles.tabBar}>
+        {LEAD_TYPES.map(({ value, label }) => (
+          <button
+            key={value}
+            type="button"
+            className={`${styles.tab} ${activeTab === value ? styles.tabActive : ''}`}
+            onClick={() => handleTabChange(value)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
-        {/* ── Header ───────────────────────────────────────────────────── */}
-        <div className={styles.header}>
-          <div>
-            <h2 className={styles.title}>Edit Lead</h2>
-            <p className={styles.subtitle}>{lead.customerName}</p>
-          </div>
-          <Button variant="ghost" type="button" onClick={onClose}>Close</Button>
-        </div>
-
-        {/* ── Type tab bar ─────────────────────────────────────────────── */}
-        <div className={styles.tabBar}>
-          {LEAD_TYPES.map(({ value, label }) => (
-            <button
-              key={value}
-              type="button"
-              className={`${styles.tab} ${activeTab === value ? styles.tabActive : ''}`}
-              onClick={() => handleTabChange(value)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {/* ── Form ─────────────────────────────────────────────────────── */}
-        <form onSubmit={handleSubmit} noValidate className={styles.form}>
-
+      {/* ── Form ─────────────────────────────────────────────────────── */}
+      <form onSubmit={handleSubmit} noValidate className={styles.form}>
+          <div className={styles.formWrapper}>
           {/* Type-specific fields */}
           {renderTypeFields()}
 
@@ -344,25 +320,22 @@ export default function EditLeadModal({ isOpen, lead, onClose, onSuccess }: Edit
 
           {/* Remark */}
           <div className={styles.row1}>
-            <div className={styles.fieldWrap}>
-              <label className={styles.fieldLabel}>Remark</label>
-              <textarea
-                className={styles.textarea}
-                value={remark}
-                onChange={(e) => setRemark(e.target.value)}
-                placeholder="Any additional notes…"
-                rows={3}
-              />
-            </div>
+            <TextareaField
+              label="Remark"
+              value={remark}
+              onChange={(e) => setRemark(e.target.value)}
+              placeholder="Any additional notes…"
+              rows={3}
+            />
           </div>
+        </div>
 
-          {/* Footer */}
-          <div className={styles.footer}>
-            <Button className='btn-md' variant="secondary" type="button" onClick={onClose} disabled={loading}>Cancel</Button>
-            <Button className='btn-md' type="submit" loading={loading}>Save Changes</Button>
-          </div>
-        </form>
-      </div>
-    </div>
+        {/* Footer */}
+        <ModalFooter>
+          <Button title="Cancel" className='btn-md' variant="secondary" type="button" onClick={onClose} disabled={loading}>Cancel</Button>
+          <Button title="Save Lead Changes" className='btn-md' type="submit" loading={loading}>Save Changes</Button>
+        </ModalFooter>
+      </form>
+    </Modal>
   );
 }

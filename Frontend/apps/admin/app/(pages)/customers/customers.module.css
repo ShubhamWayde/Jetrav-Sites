@@ -13,8 +13,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--jt-skyBlue-base);
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--jt-dark-800);
   flex-shrink: 0;
 }
 
@@ -37,19 +37,6 @@
   font-size: var(--font-sm);
   flex-direction: column;
   padding: 48px 24px;
-}
-
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--jt-skyBlue-base);
-  border-top-color: var(--jt-light-base);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 .errorText {
@@ -204,4 +191,3 @@
   background: rgba(255, 80, 80, 0.1);
   color: #ff6b6b;
 }
-

@@ -8,6 +8,7 @@ import { LEAD_TYPES, LeadResponse, LeadType } from '@/app/types/lead';
 import AddLeadModal from '@/components/modals/create-lead/AddLeadModal';
 import EditLeadModal from '@/components/modals/edit-lead/EditLeadModal';
 import ConfirmDeleteModal from '@/components/modals/confirm-delete/ConfirmDeleteModal';
+import Spinner from '@repo/ui/Spinner';
 import { LeadsIcon, PencilIcon, TrashIcon } from '@repo/ui/Icons';
 import Table, { Tr, Td, type Column } from '@repo/ui/Table';
 import styles from './leads.module.css';
@@ -202,7 +203,7 @@ export default function LeadsPage() {
       {/* ── Page header ─────────────────────────────────────────────────── */}
       <div className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>Leads</h1>
-        <Button className='btn-md' type="button" onClick={() => setShowAdd(true)}>
+        <Button title="Add Lead" className='btn-md' type="button" onClick={() => setShowAdd(true)}>
           + Add Lead
         </Button>
       </div>
@@ -224,13 +225,13 @@ export default function LeadsPage() {
       {/* ── Content ─────────────────────────────────────────────────────── */}
       {loading ? (
         <div className={styles.centered}>
-          <span className={styles.spinner} />
+          <Spinner />
           Loading leads…
         </div>
       ) : fetchError ? (
         <div className={styles.centered}>
           <span className={styles.errorText}>{fetchError}</span>
-          <Button variant="secondary" onClick={() => fetchLeads()}>Retry</Button>
+          <Button title="Retry" variant="secondary" onClick={() => fetchLeads()}>Retry</Button>
         </div>
       ) : leads.length === 0 ? (
         <div className={styles.empty}>

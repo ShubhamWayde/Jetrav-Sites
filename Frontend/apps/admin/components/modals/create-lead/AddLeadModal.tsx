@@ -1,6 +1,7 @@
 'use client';
 
 import InputField from '@repo/ui/InputField';
+import TextareaField from '@repo/ui/TextareaField';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { api } from '@/lib/api';
@@ -16,6 +17,7 @@ import {
 } from '@/app/types/lead';
 import SelectField from '@repo/ui/SelectField';
 import Button from '@repo/ui/Button';
+import Modal, { ModalFooter } from '@repo/ui/Modal';
 import styles from './AddLeadModal.module.css';
 
 function countOptions(max: number) {
@@ -90,20 +92,6 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
       .finally(() => setCustomersLoading(false));
   }, [isOpen]);
 
-  // ── Keyboard / scroll lock ────────────────────────────────────────────────
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [isOpen, onClose]);
-
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
-
   // ── Tab change ────────────────────────────────────────────────────────────
   // Must be defined before the early return to satisfy Rules of Hooks.
 
@@ -121,8 +109,6 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
       },
     [],
   );
-
-  if (!isOpen) return null;
 
   // ── Filtered customers ────────────────────────────────────────────────────
 
@@ -367,32 +353,24 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className={styles.overlay} onClick={onClose} role="dialog" aria-modal="true">
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+    <Modal isOpen={isOpen} onClose={onClose} title="Add Lead" maxWidth={720}>
+      {/* ── Type tab bar ─────────────────────────────────────────────── */}
+      <div className={styles.tabBar}>
+        {LEAD_TYPES.map(({ value, label }) => (
+          <button
+            key={value}
+            type="button"
+            className={`${styles.tab} ${activeTab === value ? styles.tabActive : ''}`}
+            onClick={() => handleTabChange(value)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
-        {/* ── Header ───────────────────────────────────────────────────── */}
-        <div className={styles.header}>
-          <h2 className={styles.title}>Add Lead</h2>
-          <Button variant="ghost" type="button" onClick={onClose}>Close</Button>
-        </div>
-
-        {/* ── Type tab bar ─────────────────────────────────────────────── */}
-        <div className={styles.tabBar}>
-          {LEAD_TYPES.map(({ value, label }) => (
-            <button
-              key={value}
-              type="button"
-              className={`${styles.tab} ${activeTab === value ? styles.tabActive : ''}`}
-              onClick={() => handleTabChange(value)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {/* ── Form ─────────────────────────────────────────────────────── */}
-        <form onSubmit={handleSubmit} noValidate className={styles.form}>
-
+      {/* ── Form ─────────────────────────────────────────────────────── */}
+      <form onSubmit={handleSubmit} noValidate className={styles.form}>
+        <div className={styles.formWrapper}>
           {/* ── Customer section ─────────────────────────────────────── */}
           <div className={styles.section}>
             <p className={styles.sectionLabel}>Customer</p>
@@ -502,25 +480,21 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
 
           {/* ── Remark ───────────────────────────────────────────────── */}
           <div className={styles.row1}>
-            <div className={styles.fieldWrap}>
-              <label className={styles.fieldLabel}>Remark</label>
-              <textarea
-                className={styles.textarea}
-                value={remark}
-                onChange={(e) => setRemark(e.target.value)}
-                placeholder="Any additional notes…"
-                rows={3}
-              />
-            </div>
+            <TextareaField
+              label="Remark"
+              value={remark}
+              onChange={(e) => setRemark(e.target.value)}
+              placeholder="Any additional notes…"
+              rows={3}
+            />
           </div>
-
-          {/* ── Footer ───────────────────────────────────────────────── */}
-          <div className={styles.footer}>
-            <Button className='btn-md' variant="secondary" type="button" onClick={onClose} disabled={loading}>Cancel</Button>
-            <Button className='btn-md' type="submit" loading={loading}>Save Lead</Button>
-          </div>
-        </form>
-      </div>
-    </div>
+        </div>
+        {/* ── Footer ───────────────────────────────────────────────── */}
+        <ModalFooter>
+          <Button title="Cancel" className='btn-md' variant="secondary" type="button" onClick={onClose} disabled={loading}>Cancel</Button>
+          <Button title="Save Lead" className='btn-md' type="submit" loading={loading}>Save Lead</Button>
+        </ModalFooter>
+      </form>
+    </Modal>
   );
 }

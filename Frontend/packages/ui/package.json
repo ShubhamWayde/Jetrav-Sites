@@ -9,7 +9,9 @@
     "./FormError":   "./src/FormError/FormError.tsx",
     "./SelectField": "./src/SelectField/SelectField.tsx",
     "./Icons":       "./src/Icons/Icons.tsx",
-    "./Table":       "./src/Table/Table.tsx",
+    "./Table":         "./src/Table/Table.tsx",
+    "./TextareaField": "./src/TextareaField/TextareaField.tsx",
+    "./Modal":         "./src/Modal/Modal.tsx",
     "./card":       "./src/card/card.tsx",
     "./code":       "./src/code/code.tsx"
   },

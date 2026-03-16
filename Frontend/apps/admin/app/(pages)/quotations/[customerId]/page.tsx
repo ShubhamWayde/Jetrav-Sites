@@ -8,6 +8,7 @@ import { ADMIN_API } from '@/lib/constants';
 import { QUOTATION_TYPES, QuotationResponse } from '@/app/types/quotation';
 import { CustomerResponse } from '@/app/types/customer';
 import ConfirmDeleteModal from '@/components/modals/confirm-delete/ConfirmDeleteModal';
+import Spinner from '@repo/ui/Spinner';
 import AddQuotationModal from '@/components/modals/create-quotation/AddQuotationModal';
 import { ClipboardIcon, TrashIcon } from '@repo/ui/Icons';
 import Table, { Tr, Td } from '@repo/ui/Table';
@@ -106,7 +107,7 @@ export default function QuotationsPage() {
       <div className={styles.pageHeader}>
         <div className={styles.headerLeft}>
          <div className={styles.breadCrumbs}>
-           <Button variant="ghost" type="button" onClick={() => router.push('/customers')}>
+           <Button title="Back to Customers" variant="ghost" type="button" onClick={() => router.push('/customers')}>
             ← Customers
           </Button>
           {customer && (
@@ -118,7 +119,7 @@ export default function QuotationsPage() {
          </div>
           <h1 className={styles.pageTitle}>Quotations</h1>
         </div>
-        <Button className='btn-md' type="button" onClick={() => setShowAdd(true)}>
+        <Button title="Add Quotation" className='btn-md' type="button" onClick={() => setShowAdd(true)}>
           + Add Quotation
         </Button>
       </div>
@@ -126,13 +127,13 @@ export default function QuotationsPage() {
       {/* ── Content ─────────────────────────────────────────────────────── */}
       {loading ? (
         <div className={styles.centered}>
-          <span className={styles.spinner} />
+          <Spinner />
           Loading quotations…
         </div>
       ) : fetchError ? (
         <div className={styles.centered}>
           <span className={styles.errorText}>{fetchError}</span>
-          <Button variant="secondary" onClick={fetchData}>Retry</Button>
+          <Button title="Retry" variant="secondary" onClick={fetchData}>Retry</Button>
         </div>
       ) : quotations.length === 0 ? (
         <div className={styles.empty}>

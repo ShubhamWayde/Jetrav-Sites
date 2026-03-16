@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import InputField from '@repo/ui/InputField';
+import TextareaField from '@repo/ui/TextareaField';
 import { api } from '@/lib/api';
 import { ADMIN_API } from '@/lib/constants';
 import {
@@ -13,6 +14,7 @@ import {
 } from '@/app/types/quotation';
 import SelectField from '@repo/ui/SelectField';
 import Button from '@repo/ui/Button';
+import Modal, { ModalFooter } from '@repo/ui/Modal';
 import styles from './AddQuotationModal.module.css';
 
 function countOptions(max: number) {
@@ -68,22 +70,6 @@ export default function AddQuotationModal({
       },
     [],
   );
-
-  // ── Keyboard / scroll lock ────────────────────────────────────────────────
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [isOpen, onClose]);
-
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
 
   // ── Submit ────────────────────────────────────────────────────────────────
 
@@ -280,32 +266,24 @@ export default function AddQuotationModal({
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className={styles.overlay} onClick={onClose} role="dialog" aria-modal="true">
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+    <Modal isOpen={isOpen} onClose={onClose} title="Add Quotation" maxWidth={720}>
+      {/* ── Tab bar ──────────────────────────────────────────────────── */}
+      <div className={styles.tabBar}>
+        {QUOTATION_TYPES.map(({ value, label }) => (
+          <button
+            key={value}
+            type="button"
+            className={`${styles.tab} ${activeTab === value ? styles.tabActive : ''}`}
+            onClick={() => handleTabChange(value)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
-        {/* ── Header ───────────────────────────────────────────────────── */}
-        <div className={styles.header}>
-          <h2 className={styles.title}>Add Quotation</h2>
-          <Button variant="ghost" type="button" onClick={onClose}>Close</Button>
-        </div>
-
-        {/* ── Tab bar ──────────────────────────────────────────────────── */}
-        <div className={styles.tabBar}>
-          {QUOTATION_TYPES.map(({ value, label }) => (
-            <button
-              key={value}
-              type="button"
-              className={`${styles.tab} ${activeTab === value ? styles.tabActive : ''}`}
-              onClick={() => handleTabChange(value)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {/* ── Form ─────────────────────────────────────────────────────── */}
-        <form onSubmit={handleSubmit} noValidate className={styles.form}>
-
+      {/* ── Form ─────────────────────────────────────────────────────── */}
+      <form onSubmit={handleSubmit} noValidate className={styles.form}>
+        <div className={styles.formWrapper}>
           {/* Customer name (read-only) */}
           <div className={styles.row1}>
             <InputField
@@ -332,25 +310,22 @@ export default function AddQuotationModal({
 
           {/* Remark */}
           <div className={styles.row1}>
-            <div className={styles.fieldWrap}>
-              <label className={styles.fieldLabel}>Remark</label>
-              <textarea
-                className={styles.textarea}
-                value={remark}
-                onChange={(e) => setRemark(e.target.value)}
-                placeholder="Any additional notes…"
-                rows={3}
-              />
-            </div>
+            <TextareaField
+              label="Remark"
+              value={remark}
+              onChange={(e) => setRemark(e.target.value)}
+              placeholder="Any additional notes…"
+              rows={3}
+            />
           </div>
+        </div>
 
-          {/* Footer */}
-          <div className={styles.footer}>
-            <Button className='btn-md' variant="secondary" type="button" onClick={onClose} disabled={loading}>Cancel</Button>
-            <Button className='btn-md' type="submit" loading={loading}>Save</Button>
-          </div>
-        </form>
-      </div>
-    </div>
+        {/* Footer */}
+        <ModalFooter>
+          <Button title="Cancel" className='btn-md' variant="secondary" type="button" onClick={onClose} disabled={loading}>Cancel</Button>
+          <Button title="Save Quotation" className='btn-md' type="submit" loading={loading}>Save</Button>
+        </ModalFooter>
+      </form>
+    </Modal>
   );
 }

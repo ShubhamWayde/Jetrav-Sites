@@ -64,12 +64,13 @@ export default function Header() {
         <h1>Admin site</h1>
       </div>
       <div className={styles.actions}>
-        <button className={styles.iconBtn} type="button" aria-label="Notifications">
+        <button title="Notifications" className={styles.iconBtn} type="button" aria-label="Notifications">
           <BellIcon size={17} />
         </button>
 
         <div className={styles.avatarWrap} ref={dropdownRef}>
           <button
+            title="Open user menu"
             className={styles.avatarBtn}
             type="button"
             aria-label="Open user menu"
@@ -116,6 +117,7 @@ export default function Header() {
 
               {/* Logout */}
               <button
+                title="Log out"
                 className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`}
                 type="button"
                 role="menuitem"

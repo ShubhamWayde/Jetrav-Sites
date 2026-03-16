@@ -1,65 +1,3 @@
-/* ── Overlay ──────────────────────────────────────────────────────────────── */
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(2px);
-  padding: 16px;
-  animation: fadeIn 0.15s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-/* ── Modal box ────────────────────────────────────────────────────────────── */
-
-.modal {
-  background: #1a1a1a;
-  border: 1px solid var(--jt-skyBlue-base);
-  border-radius: var(--radius-xl);
-  width: 100%;
-  max-width: 640px;
-  max-height: 90dvh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  animation: slideUp 0.2s ease;
-  -webkit-border-radius: var(--radius-xl);
-  -moz-border-radius: var(--radius-xl);
-  -ms-border-radius: var(--radius-xl);
-  -o-border-radius: var(--radius-xl);
-}
-
-@keyframes slideUp {
-  from { transform: translateY(16px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-
-/* ── Header ───────────────────────────────────────────────────────────────── */
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--jt-skyBlue-base);
-  flex-shrink: 0;
-}
-
-.title {
-  font-size: var(--h5-font);
-  font-weight: var(--font-weight-600);
-color: var(--jt-light-base);
-  margin: 0;
-}
-
 /* ── Loading state ────────────────────────────────────────────────────────── */
 
 .loading {
@@ -69,20 +7,6 @@ color: var(--jt-light-base);
   padding: 40px 24px;
   color: var(--jt-light-base);
   font-size: var(--font-sm);
-}
-
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid var(--jt-skyBlue-base);
-  border-top-color: var(--jt-light-base);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex-shrink: 0;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 /* ── Form ─────────────────────────────────────────────────────────────────── */
@@ -136,12 +60,3 @@ color: var(--jt-light-base);
 }
 
 /* ── Footer ───────────────────────────────────────────────────────────────── */
-
-.footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 16px 24px 20px;
-  border-top: 1px solid var(--jt-skyBlue-base);
-  flex-shrink: 0;
-}

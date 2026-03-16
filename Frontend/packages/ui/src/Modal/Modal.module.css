@@ -1,0 +1,93 @@
+/* ── Overlay ──────────────────────────────────────────────────────────────── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+  padding: 16px;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Modal box ────────────────────────────────────────────────────────────── */
+
+.modal {
+  background: #1a1a1a;
+  border: 1px solid #1a1a1a;
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-height: 92dvh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.2s ease;
+  -webkit-border-radius: var(--radius-xl);
+  -moz-border-radius: var(--radius-xl);
+  -ms-border-radius: var(--radius-xl);
+  -o-border-radius: var(--radius-xl);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+
+.modal::-webkit-scrollbar       { width: 5px; }
+.modal::-webkit-scrollbar-track { background: transparent; }
+.modal::-webkit-scrollbar-thumb {
+  background: var(--jt-skyBlue-base);
+  border-radius: 3px;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--jt-dark-800);
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: var(--h5-font);
+  font-weight: var(--font-weight-600);
+  color: var(--jt-light-base);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: var(--font-sm);
+  color: var(--jt-light-base);
+  opacity: 0.6;
+  margin: 2px 0 0;
+}
+
+.closeButton{
+  padding: 0;
+  border: 0;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--jt-dark-800);
+  flex-shrink: 0;
+  margin-top: 1rem;
+}

@@ -6,6 +6,7 @@ import { useAuth } from '@repo/auth';
 import { api } from '@/lib/api';
 import { ADMIN_API } from '@/lib/constants';
 import Button from '@repo/ui/Button';
+import Spinner from '@repo/ui/Spinner';
 import InputField from '@repo/ui/InputField';
 import { EyeOffIcon, EyeOpenIcon, LockIcon, PencilIcon } from '@repo/ui/Icons';
 import styles from './profile.module.css';
@@ -158,7 +159,7 @@ export default function ProfilePage() {
   if (authLoading || fetching) {
     return (
       <div className={styles.centered}>
-        <span className={styles.spinner} />
+        <Spinner />
         Loading profile…
       </div>
     );
@@ -178,7 +179,7 @@ export default function ProfilePage() {
           </p>
         </div>
         {!editMode && (
-          <Button type="button" onClick={startEdit} className="btn-md">
+          <Button title="Edit Profile" type="button" onClick={startEdit} className="btn-md">
             <PencilIcon size={14} />
             Edit
           </Button>
@@ -224,10 +225,10 @@ export default function ProfilePage() {
         {/* Edit-mode footer */}
         {editMode && (
           <div className={styles.cardFooter}>
-            <Button variant="ghost" type="button" onClick={cancelEdit} disabled={infoSaving}>
+            <Button title="Cancel" variant="ghost" type="button" onClick={cancelEdit} disabled={infoSaving}>
               Cancel
             </Button>
-            <Button
+            <Button title="Save Profile"
               type="button"
               loading={infoSaving}
               disabled={!isInfoValid || infoSaving}
@@ -298,7 +299,7 @@ export default function ProfilePage() {
 
         {/* Password footer */}
         <div className={styles.cardFooter}>
-          <Button type="button" loading={pwdSaving} disabled={pwdSaving} onClick={savePwd} className='btn-md'>
+          <Button title="Save Password" type="button" loading={pwdSaving} disabled={pwdSaving} onClick={savePwd} className='btn-md'>
             {profile?.hasPassword ? 'Change Password' : 'Set Password'}
           </Button>
         </div>

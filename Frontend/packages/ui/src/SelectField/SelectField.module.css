@@ -19,7 +19,7 @@
 .select {
   width: 100%;
   background: transparent;
-  border: 1px solid var(--jt-skyBlue-base);
+  border: 1px solid var(--jt-dark-800);
   border-radius: var(--radius-lg);
   color: var(--jt-light-base);
   font-size: var(--base-font);
@@ -38,7 +38,7 @@
 
 .select:hover,
 .select:focus {
-  border-color: var(--jt-light-base);
+  border-color: var(--jt-dark-400);
 }
 
 .select.hasError {

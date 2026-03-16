@@ -20,18 +20,9 @@
   font-size: var(--font-sm);
 }
 
-.spinner {
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--secondary-border);
-  border-top-color: var(--primary-100);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex-shrink: 0;
-}
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+
+
 }
 
 /* ── Page header ─────────────────────────────────────────────────────────── */

@@ -10,6 +10,7 @@ import ConfirmDeleteModal from '@/components/modals/confirm-delete/ConfirmDelete
 import AddQuotationModal from '@/components/modals/create-quotation/AddQuotationModal';
 import { PencilIcon, TrashIcon, UsersIcon } from '@repo/ui/Icons';
 import Table, { Tr, Td } from '@repo/ui/Table';
+import Spinner from '@repo/ui/Spinner';
 import styles from './customers.module.css';
 import { CustomerResponse } from '@/app/types/customer';
 import Button from '@repo/ui/Button';
@@ -85,7 +86,7 @@ export default function CustomersPage() {
       {/* ── Page header ─────────────────────────────────────────────────── */}
       <div className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>Customers</h1>
-        <Button className='btn-md' type="button" onClick={() => { setEditId(undefined); setShowCreate(true); }}>
+        <Button title="Add Customer" className='btn-md' type="button" onClick={() => { setEditId(undefined); setShowCreate(true); }}>
           + Add Customer
         </Button>
       </div>
@@ -93,13 +94,13 @@ export default function CustomersPage() {
       {/* ── Content ─────────────────────────────────────────────────────── */}
       {loading ? (
         <div className={styles.centered}>
-          <span className={styles.spinner} />
+          <Spinner />
           Loading customers…
         </div>
       ) : fetchError ? (
         <div className={styles.centered}>
           <span className={styles.errorText}>{fetchError}</span>
-          <Button variant="secondary" onClick={fetchCustomers}>Retry</Button>
+          <Button title="Retry" variant="secondary" onClick={fetchCustomers}>Retry</Button>
         </div>
       ) : customers.length === 0 ? (
         <div className={styles.empty}>
