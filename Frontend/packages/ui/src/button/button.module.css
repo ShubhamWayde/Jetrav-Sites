@@ -13,6 +13,10 @@
   line-height: 1.25;
   border: 1px solid transparent;
   white-space: nowrap;
+  -webkit-border-radius: var(--radius-lg);
+  -moz-border-radius: var(--radius-lg);
+  -ms-border-radius: var(--radius-lg);
+  -o-border-radius: var(--radius-lg);
 }
 
 /* Variants */
