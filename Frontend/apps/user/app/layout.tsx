@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { outfit } from "@repo/fonts";
 import Providers from "./providers";
+import "../../../styles/css/base.css";
 import "./globals.css";
 
 export const metadata: Metadata = {

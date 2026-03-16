@@ -52,15 +52,31 @@ func (s *authService) Signup(req models.SignupRequest) error {
 	return s.userRepo.Create(user)
 }
 
+// ─── Check User Role ─────────────────────────────────────────────────────────
+
+func (s *authService) CheckUserRole(mobileNumber, role string) error {
+	user, err := s.userRepo.FindByNumber(mobileNumber)
+	if err != nil || user == nil {
+		return errors.New("no " + role + " account found for this mobile number")
+	}
+	if user.Role != role {
+		return errors.New("no " + role + " account found for this mobile number")
+	}
+	return nil
+}
+
 // ─── OTP Login ───────────────────────────────────────────────────────────────
 
 func (s *authService) LoginWithOTP(
-	mobileNumber, deviceID, deviceName, browser, ip string,
-) (string, string, error) {
+	mobileNumber, deviceID, deviceName, browser, ip, expectedRole string,
+) (string, string, string, error) {
 
 	user, err := s.userRepo.FindByNumber(mobileNumber)
 	if err != nil || user == nil {
-		return "", "", errors.New("account not found with this mobile number")
+		return "", "", "", errors.New("account not found with this mobile number")
+	}
+	if user.Role != expectedRole {
+		return "", "", "", errors.New("no " + expectedRole + " account found for this mobile number")
 	}
 
 	return s.createSession(user, deviceID, deviceName, browser, ip)
@@ -69,18 +85,21 @@ func (s *authService) LoginWithOTP(
 // ─── Password Login ───────────────────────────────────────────────────────────
 
 func (s *authService) LoginWithPassword(
-	mobileNumber, password, deviceID, deviceName, browser, ip string,
-) (string, string, error) {
+	mobileNumber, password, deviceID, deviceName, browser, ip, expectedRole string,
+) (string, string, string, error) {
 
 	user, err := s.userRepo.FindByNumber(mobileNumber)
 	if err != nil || user == nil {
-		return "", "", errors.New("invalid credentials")
+		return "", "", "", errors.New("invalid credentials")
+	}
+	if user.Role != expectedRole {
+		return "", "", "", errors.New("no " + expectedRole + " account found for this mobile number")
 	}
 	if user.Password == "" {
-		return "", "", errors.New("password not set — please sign in with OTP first and set a password from your profile")
+		return "", "", "", errors.New("password not set — please sign in with OTP first and set a password from your profile")
 	}
 	if !user.CheckPassword(password) {
-		return "", "", errors.New("invalid credentials")
+		return "", "", "", errors.New("invalid credentials")
 	}
 
 	return s.createSession(user, deviceID, deviceName, browser, ip)
@@ -91,21 +110,21 @@ func (s *authService) LoginWithPassword(
 func (s *authService) createSession(
 	user *models.User,
 	deviceID, deviceName, browser, ip string,
-) (string, string, error) {
+) (string, string, string, error) {
 
 	count, _ := s.sessionRepo.CountActive(user.ID)
 	if count >= 3 {
-		return "", "", errors.New("device limit reached — maximum 3 active sessions allowed")
+		return "", "", "", errors.New("device limit reached — maximum 3 active sessions allowed")
 	}
 
 	accessToken, err := utils.GenerateAccessToken(user.ID, user.Email, user.Role)
 	if err != nil {
-		return "", "", errors.New("failed to generate access token")
+		return "", "", "", errors.New("failed to generate access token")
 	}
 
 	refreshToken, err := utils.GenerateRefreshToken(user.ID, user.Email, user.Role)
 	if err != nil {
-		return "", "", errors.New("failed to generate refresh token")
+		return "", "", "", errors.New("failed to generate refresh token")
 	}
 
 	session := &models.UserSession{
@@ -119,12 +138,12 @@ func (s *authService) createSession(
 		ExpiresAt:    time.Now().Add(7 * 24 * time.Hour),
 	}
 	if err := s.sessionRepo.Create(session); err != nil {
-		return "", "", errors.New("failed to create session")
+		return "", "", "", errors.New("failed to create session")
 	}
 
 	if !user.IsVerified {
 		_ = s.userRepo.MarkVerified(user.ID)
 	}
 
-	return accessToken, refreshToken, nil
+	return accessToken, refreshToken, user.Role, nil
 }

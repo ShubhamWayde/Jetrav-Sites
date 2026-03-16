@@ -14,4 +14,5 @@ type LoginWithPasswordRequest struct {
 	MobileNumber string `json:"mobileNumber" binding:"required"`
 	Password     string `json:"password"     binding:"required"`
 	DeviceID     string `json:"deviceID"     binding:"required"`
+	Role         string `json:"role"         binding:"required,oneof=admin user"`
 }

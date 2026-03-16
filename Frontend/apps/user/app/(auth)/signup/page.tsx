@@ -3,8 +3,8 @@ import type { AuthConfig } from '@repo/auth';
 
 const config: AuthConfig = {
   role:              'user',
-  afterAuthRedirect: '/',
-  appLabel:          'your account',
+ afterAuthRedirect: '/dashboard',
+  appLabel: 'your account',
 };
 
 export default function SignupPage() {

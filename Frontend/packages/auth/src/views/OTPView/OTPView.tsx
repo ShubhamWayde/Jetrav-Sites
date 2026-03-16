@@ -90,6 +90,7 @@ export default function OTPView({ config }: Props) {
         mobileNumber: mobile,
         otp:          digits,
         deviceID:     getOrCreateDeviceId(),
+        role:         config.role,
       });
       if (res.data?.accessToken) {
         saveToken(res.data.accessToken);
@@ -112,7 +113,7 @@ export default function OTPView({ config }: Props) {
     try {
       const res = await api.post<{ mobileNumber: string; otp?: string }>(
         AUTH_API.SEND_OTP,
-        { mobileNumber: mobile, purpose }
+        { mobileNumber: mobile, purpose, role: config.role }
       );
       if (res.data?.otp) { storeDevOTP(res.data.otp); setIsDevMode(true); }
       toast.success(res.message ?? 'A new OTP has been sent to your mobile.');

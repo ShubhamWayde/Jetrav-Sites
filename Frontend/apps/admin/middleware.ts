@@ -9,7 +9,7 @@ const AUTH_ROUTES = ['/signin', '/signup', '/otp'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token        = request.cookies.get('token')?.value;
+  const token        = request.cookies.get("admin_refresh_token")?.value;
 
   const isAuthRoute = AUTH_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(route + '/')

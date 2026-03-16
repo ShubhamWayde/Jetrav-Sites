@@ -56,7 +56,7 @@ export default function SigninView({ config }: Props) {
     try {
       const res = await api.post<{ mobileNumber: string; otp?: string }>(
         AUTH_API.SEND_OTP,
-        { mobileNumber: otpMobile.trim(), purpose: 'signin' }
+        { mobileNumber: otpMobile.trim(), purpose: 'signin', role: config.role }
       );
       if (res.data?.otp) storeDevOTP(res.data.otp);
       storeOTPContext(otpMobile.trim(), 'signin');
@@ -87,6 +87,7 @@ export default function SigninView({ config }: Props) {
         mobileNumber: pwMobile.trim(),
         password,
         deviceID: getOrCreateDeviceId(),
+        role: config.role,
       });
       if (res.data?.accessToken) {
         saveToken(res.data.accessToken);

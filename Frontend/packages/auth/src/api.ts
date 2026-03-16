@@ -40,7 +40,10 @@ async function request<T>(
     const refreshed = await attemptRefresh();
     if (refreshed) return request<T>(url, options, true);
 
+    // Clear local state then ask the backend to clear the httpOnly cookie so
+    // the Next.js middleware won't redirect back to /dashboard.
     clearAuth();
+    await fetch(AUTH_API.LOGOUT, { method: 'POST', credentials: 'include' }).catch(() => {});
     if (typeof window !== 'undefined') window.location.href = '/signin';
     throw new Error('Session expired. Please sign in again.');
   }

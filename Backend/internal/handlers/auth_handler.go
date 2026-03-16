@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 
@@ -32,7 +33,6 @@ func NewAuthHandler(
 }
 
 // ─── POST /api/auth/signup ────────────────────────────────────────────────────
-// Creates an account (role: "admin" | "user") and sends an OTP.
 func (h *AuthHandler) Signup(c *gin.Context) {
 	var req models.SignupRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -61,11 +61,15 @@ func (h *AuthHandler) Signup(c *gin.Context) {
 }
 
 // ─── POST /api/auth/send-otp ──────────────────────────────────────────────────
-// Sends (or re-sends) a login OTP.
 func (h *AuthHandler) SendOTP(c *gin.Context) {
 	var req models.SendOTPRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		utils.Error(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := h.authService.CheckUserRole(req.MobileNumber, req.Role); err != nil {
+		utils.Error(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 
@@ -85,7 +89,6 @@ func (h *AuthHandler) SendOTP(c *gin.Context) {
 }
 
 // ─── POST /api/auth/verify-otp ────────────────────────────────────────────────
-// Verifies the OTP and returns access + refresh tokens on success.
 func (h *AuthHandler) VerifyOTP(c *gin.Context) {
 	var req models.VerifyOTPRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -93,7 +96,6 @@ func (h *AuthHandler) VerifyOTP(c *gin.Context) {
 		return
 	}
 
-	// Try signup purpose first, fall back to signin
 	if err := h.otpService.Verify(req.MobileNumber, req.OTP, service.OTPPurposeSignup); err != nil {
 		if err := h.otpService.Verify(req.MobileNumber, req.OTP, service.OTPPurposeSignin); err != nil {
 			utils.Error(c, http.StatusUnauthorized, "Invalid or expired OTP")
@@ -106,20 +108,19 @@ func (h *AuthHandler) VerifyOTP(c *gin.Context) {
 	deviceName := ua.OS()
 	ip := c.ClientIP()
 
-	accessToken, refreshToken, err := h.authService.LoginWithOTP(
-		req.MobileNumber, req.DeviceID, deviceName, browser, ip,
+	accessToken, refreshToken, role, err := h.authService.LoginWithOTP(
+		req.MobileNumber, req.DeviceID, deviceName, browser, ip, req.Role,
 	)
 	if err != nil {
 		utils.Error(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 
-	h.setRefreshCookie(c, refreshToken)
+	h.setRefreshCookie(c, refreshToken, role)
 	utils.Success(c, http.StatusOK, "Login successful", gin.H{"accessToken": accessToken})
 }
 
 // ─── POST /api/auth/login ─────────────────────────────────────────────────────
-// Password-based login.
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req models.LoginWithPasswordRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -132,22 +133,21 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	deviceName := ua.OS()
 	ip := c.ClientIP()
 
-	accessToken, refreshToken, err := h.authService.LoginWithPassword(
-		req.MobileNumber, req.Password, req.DeviceID, deviceName, browser, ip,
+	accessToken, refreshToken, role, err := h.authService.LoginWithPassword(
+		req.MobileNumber, req.Password, req.DeviceID, deviceName, browser, ip, req.Role,
 	)
 	if err != nil {
 		utils.Error(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 
-	h.setRefreshCookie(c, refreshToken)
+	h.setRefreshCookie(c, refreshToken, role)
 	utils.Success(c, http.StatusOK, "Login successful", gin.H{"accessToken": accessToken})
 }
 
 // ─── POST /api/auth/refresh ───────────────────────────────────────────────────
-// Issues a new access token from the httpOnly refresh-token cookie.
 func (h *AuthHandler) Refresh(c *gin.Context) {
-	refreshToken, err := c.Cookie("refresh_token")
+	refreshToken, _, err := h.getRefreshToken(c)
 	if err != nil {
 		utils.Error(c, http.StatusUnauthorized, "Refresh token missing")
 		return
@@ -174,25 +174,25 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 }
 
 // ─── POST /api/auth/logout ────────────────────────────────────────────────────
-// Deactivates the current session and clears the refresh-token cookie.
 func (h *AuthHandler) Logout(c *gin.Context) {
-	refreshToken, err := c.Cookie("refresh_token")
+	refreshToken, cookieName, err := h.getRefreshToken(c)
 	if err != nil {
-		utils.Error(c, http.StatusUnauthorized, "No active session")
+		// No cookie — already logged out; return success so frontend can proceed.
+		utils.Success(c, http.StatusOK, "Logged out successfully", nil)
 		return
 	}
 
-	if err := h.sessionService.LogoutByToken(refreshToken); err != nil {
-		utils.Error(c, http.StatusInternalServerError, "Failed to logout")
-		return
-	}
+	// Clear the cookie first — regardless of DB outcome the browser must not
+	// retain a stale token that would block the /signin redirect.
+	h.clearCookieByName(c, cookieName)
 
-	h.clearRefreshCookie(c)
+	// Best-effort DB cleanup; if the session was already expired it's fine.
+	_ = h.sessionService.LogoutByToken(refreshToken)
+
 	utils.Success(c, http.StatusOK, "Logged out successfully", nil)
 }
 
 // ─── POST /api/auth/logout-all ────────────────────────────────────────────────
-// Deactivates all sessions for the authenticated account (requires Bearer token).
 func (h *AuthHandler) LogoutAll(c *gin.Context) {
 	userIDRaw, exists := c.Get("userID")
 	if !exists {
@@ -200,22 +200,44 @@ func (h *AuthHandler) LogoutAll(c *gin.Context) {
 		return
 	}
 
+	roleRaw, _ := c.Get("role")
+	role, _ := roleRaw.(string)
+
 	userID := userIDRaw.(uint)
 	if err := h.sessionService.LogoutAll(userID); err != nil {
 		utils.Error(c, http.StatusInternalServerError, "Failed to logout from all devices")
 		return
 	}
 
-	h.clearRefreshCookie(c)
+	h.clearCookieByName(c, refreshCookieName(role))
 	utils.Success(c, http.StatusOK, "Logged out from all devices", nil)
 }
 
 // ─── Cookie helpers ───────────────────────────────────────────────────────────
 
-func (h *AuthHandler) setRefreshCookie(c *gin.Context, refreshToken string) {
-	c.SetCookie("refresh_token", refreshToken, 60*60*24*7, "/", "", false, true)
+// refreshCookieName returns the role-specific cookie name so admin and user
+// sessions never bleed into each other even on the same domain.
+func refreshCookieName(role string) string {
+	if role == "admin" {
+		return "admin_refresh_token"
+	}
+	return "user_refresh_token"
 }
 
-func (h *AuthHandler) clearRefreshCookie(c *gin.Context) {
-	c.SetCookie("refresh_token", "", -1, "/", "", false, true)
+func (h *AuthHandler) setRefreshCookie(c *gin.Context, refreshToken, role string) {
+	c.SetCookie(refreshCookieName(role), refreshToken, 60*60*24*7, "/", "", false, true)
+}
+
+// getRefreshToken tries each role-specific cookie and returns the first valid one.
+func (h *AuthHandler) getRefreshToken(c *gin.Context) (token, cookieName string, err error) {
+	for _, name := range []string{"admin_refresh_token", "user_refresh_token"} {
+		if t, e := c.Cookie(name); e == nil {
+			return t, name, nil
+		}
+	}
+	return "", "", fmt.Errorf("refresh token missing")
+}
+
+func (h *AuthHandler) clearCookieByName(c *gin.Context, cookieName string) {
+	c.SetCookie(cookieName, "", -1, "/", "", false, true)
 }
