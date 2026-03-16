@@ -1,45 +1,7 @@
-/* ── Overlay ──────────────────────────────────────────────────────────────── */
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(2px);
-  animation: fadeIn 0.15s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-/* ── Modal box ────────────────────────────────────────────────────────────── */
-
-.modal {
-  background: #1a1a1a;
-  border: 1px solid var(--secondary-border);
-  border-radius: var(--radius-xl);
+.body {
   padding: 32px 28px 24px;
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 12px;
-  animation: slideUp 0.2s ease;
-  -webkit-border-radius: var(--radius-xl);
-  -moz-border-radius: var(--radius-xl);
-  -ms-border-radius: var(--radius-xl);
-  -o-border-radius: var(--radius-xl);
-}
-
-@keyframes slideUp {
-  from { transform: translateY(12px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
 }
 
 /* ── Icon ─────────────────────────────────────────────────────────────────── */
@@ -67,14 +29,14 @@
 .title {
   font-size: var(--h5-font);
   font-weight: var(--font-weight-600);
-  color: var(--primary-50);
+color: var(--jt-light-base);
   text-align: center;
   margin: 0;
 }
 
 .description {
   font-size: var(--font-sm);
-  color: var(--primary-200);
+  color: var(--jt-light-base);
   text-align: center;
   line-height: 1.55;
   margin: 0;

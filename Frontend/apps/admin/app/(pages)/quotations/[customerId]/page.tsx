@@ -8,10 +8,13 @@ import { ADMIN_API } from '@/lib/constants';
 import { QUOTATION_TYPES, QuotationResponse } from '@/app/types/quotation';
 import { CustomerResponse } from '@/app/types/customer';
 import ConfirmDeleteModal from '@/components/modals/confirm-delete/ConfirmDeleteModal';
+import Spinner from '@repo/ui/Spinner';
 import AddQuotationModal from '@/components/modals/create-quotation/AddQuotationModal';
-import { ClipboardIcon, TrashIcon } from '@/components/ui/icons-library/Icons';
+import { ClipboardIcon, TrashIcon } from '@repo/ui/Icons';
+import Table, { Tr, Td } from '@repo/ui/Table';
 import styles from './quotations.module.css';
 import { formatDate } from '@/utility/date';
+import Button from '@repo/ui/Button';
 
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -103,40 +106,34 @@ export default function QuotationsPage() {
       {/* ── Page header ─────────────────────────────────────────────────── */}
       <div className={styles.pageHeader}>
         <div className={styles.headerLeft}>
-          <button
-            className={styles.backBtn}
-            type="button"
-            onClick={() => router.push('/customers')}
-          >
+         <div className={styles.breadCrumbs}>
+           <Button title="Back to Customers" variant="ghost" type="button" onClick={() => router.push('/customers')}>
             ← Customers
-          </button>
+          </Button>
           {customer && (
             <span className={styles.breadCrumb}>
               <span className={styles.breadSep}>/</span>
               <span className={styles.breadName}>{customer.fullName}</span>
             </span>
           )}
+         </div>
           <h1 className={styles.pageTitle}>Quotations</h1>
         </div>
-        <button
-          className="btn btn-primary btn-sm"
-          type="button"
-          onClick={() => setShowAdd(true)}
-        >
+        <Button title="Add Quotation" className='btn-md' type="button" onClick={() => setShowAdd(true)}>
           + Add Quotation
-        </button>
+        </Button>
       </div>
 
       {/* ── Content ─────────────────────────────────────────────────────── */}
       {loading ? (
         <div className={styles.centered}>
-          <span className={styles.spinner} />
+          <Spinner />
           Loading quotations…
         </div>
       ) : fetchError ? (
         <div className={styles.centered}>
           <span className={styles.errorText}>{fetchError}</span>
-          <button className={styles.retryBtn} onClick={fetchData}>Retry</button>
+          <Button title="Retry" variant="secondary" onClick={fetchData}>Retry</Button>
         </div>
       ) : quotations.length === 0 ? (
         <div className={styles.empty}>
@@ -144,56 +141,49 @@ export default function QuotationsPage() {
           <p>No quotations yet for this customer.</p>
         </div>
       ) : (
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th className={styles.th}>#</th>
-                <th className={styles.th}>Type</th>
-                <th className={styles.th}>Details</th>
-                <th className={styles.th}>Assign To</th>
-                <th className={styles.th}>Remark</th>
-                <th className={styles.th}>Created On</th>
-                <th className={styles.th}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {quotations.map((q, i) => (
-                <tr key={q.id} className={styles.row}>
-                  <td className={styles.td}>{i + 1}</td>
-                  <td className={styles.td}>
-                    <span className={`${styles.typeBadge} ${styles[`type_${q.type}`] ?? ''}`}>
-                      {getTypeLabel(q.type)}
-                    </span>
-                  </td>
-                  <td className={styles.td}>
-                    <DetailsList details={q.details as Record<string, unknown>} />
-                  </td>
-                  <td className={styles.td}>
-                    {q.assignTo || <span className={styles.muted}>—</span>}
-                  </td>
-                  <td className={styles.td}>
-                    {q.remark
-                      ? <span className={styles.remarkText}>{q.remark}</span>
-                      : <span className={styles.muted}>—</span>
-                    }
-                  </td>
-                  <td className={styles.td}>{formatDate(q.createdAt)}</td>
-                  <td className={styles.td}>
-                    <button
-                      className={styles.deleteBtn}
-                      type="button"
-                      title="Delete quotation"
-                      onClick={() => setDeleteTarget(q)}
-                    >
-                      <TrashIcon size={14} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table columns={[
+          { header: '#' },
+          { header: 'Type' },
+          { header: 'Details' },
+          { header: 'Assign To' },
+          { header: 'Remark' },
+          { header: 'Created On' },
+          { header: 'Actions' },
+        ]}>
+          {quotations.map((q, i) => (
+            <Tr key={q.id}>
+              <Td>{i + 1}</Td>
+              <Td>
+                <span className={`${styles.typeBadge} ${styles[`type_${q.type}`] ?? ''}`}>
+                  {getTypeLabel(q.type)}
+                </span>
+              </Td>
+              <Td>
+                <DetailsList details={q.details as Record<string, unknown>} />
+              </Td>
+              <Td>
+                {q.assignTo || <span className={styles.muted}>—</span>}
+              </Td>
+              <Td>
+                {q.remark
+                  ? <span className={styles.remarkText}>{q.remark}</span>
+                  : <span className={styles.muted}>—</span>
+                }
+              </Td>
+              <Td>{formatDate(q.createdAt)}</Td>
+              <Td>
+                <button
+                  className={styles.deleteBtn}
+                  type="button"
+                  title="Delete quotation"
+                  onClick={() => setDeleteTarget(q)}
+                >
+                  <TrashIcon size={14} />
+                </button>
+              </Td>
+            </Tr>
+          ))}
+        </Table>
       )}
 
       {/* ── Add Quotation modal ──────────────────────────────────────────── */}

@@ -11,16 +11,24 @@ func Register(r *gin.Engine, app *bootstrap.App) {
 	api := r.Group("/api")
 
 	// =========================================================================
-	// USER AUTH ROUTES
+	// SHARED AUTH ROUTES  (admin and user both use these)
 	// =========================================================================
 
 	auth := api.Group("/auth")
 	{
-		auth.POST("/signup",    app.AuthHandler.Register)
-		auth.POST("/login",     app.AuthHandler.Login)
-		auth.POST("/refresh",   app.AuthHandler.Refresh)
-		auth.POST("/logout",    app.AuthHandler.Logout)
+		// Public — Signup → OTP flow
+		auth.POST("/signup",     app.AuthHandler.Signup)
+		auth.POST("/send-otp",   app.AuthHandler.SendOTP)
+		auth.POST("/verify-otp", app.AuthHandler.VerifyOTP)
 
+		// Public — Password login (after setting password via profile)
+		auth.POST("/login",      app.AuthHandler.Login)
+
+		// Token management
+		auth.POST("/refresh",    app.AuthHandler.Refresh)
+		auth.POST("/logout",     app.AuthHandler.Logout)
+
+		// Protected — logout all devices
 		authProtected := auth.Group("/")
 		authProtected.Use(middleware.AuthMiddleware())
 		{
@@ -29,57 +37,50 @@ func Register(r *gin.Engine, app *bootstrap.App) {
 	}
 
 	// =========================================================================
-	// ADMIN ROUTES
+	// ADMIN PROTECTED ROUTES  (role=admin required)
 	// =========================================================================
 
 	admin := api.Group("/admin")
+	admin.Use(middleware.AuthMiddleware())
+	admin.Use(middleware.AdminOnly())
 	{
-		adminAuth := admin.Group("/auth")
-		{
-			// Public — Signup → OTP flow
-			adminAuth.POST("/signup",     app.AdminHandler.Signup)
-			adminAuth.POST("/send-otp",   app.AdminHandler.SendOTP)
-			adminAuth.POST("/verify-otp", app.AdminHandler.VerifyOTP)
+		// Profile
+		admin.GET("/profile",               app.AdminHandler.GetProfile)
+		admin.PUT("/profile",               app.AdminHandler.UpdateProfile)
+		admin.POST("/profile/set-password", app.AdminHandler.SetPassword)
 
-			// Public — Password login (after setting password via profile)
-			adminAuth.POST("/login",      app.AdminHandler.LoginWithPassword)
+		// ── Customer CRUD ──────────────────────────────────────────────────
+		admin.POST("/customers",       app.CustomerHandler.Create)
+		admin.GET("/customers",        app.CustomerHandler.List)
+		admin.GET("/customers/:id",    app.CustomerHandler.GetByID)
+		admin.PUT("/customers/:id",    app.CustomerHandler.Update)
+		admin.DELETE("/customers/:id", app.CustomerHandler.Delete)
 
-			// Token management
-			adminAuth.POST("/refresh",    app.AdminHandler.Refresh)
-			adminAuth.POST("/logout",     app.AdminHandler.Logout)
-		}
+		// ── Quotations (nested under customer) ─────────────────────────────
+		admin.POST("/customers/:id/quotations",                app.QuotationHandler.Create)
+		admin.GET("/customers/:id/quotations",                 app.QuotationHandler.ListByCustomer)
+		admin.DELETE("/customers/:id/quotations/:quotationId", app.QuotationHandler.Delete)
 
-		// Protected — require valid JWT with role=admin
-		adminProtected := admin.Group("/")
-		adminProtected.Use(middleware.AuthMiddleware())
-		adminProtected.Use(middleware.AdminOnly())
-		{
-			adminProtected.POST("/auth/logout-all",      app.AdminHandler.LogoutAll)
-			adminProtected.GET("/profile",               app.AdminHandler.GetProfile)
-			adminProtected.PUT("/profile",               app.AdminHandler.UpdateProfile)
-			adminProtected.POST("/profile/set-password", app.AdminHandler.SetPassword)
+		// ── Leads CRUD ────────────────────────────────────────────────────
+		admin.POST("/leads",       app.LeadHandler.Create)
+		admin.GET("/leads",        app.LeadHandler.List)
+		admin.GET("/leads/:id",    app.LeadHandler.GetByID)
+		admin.PUT("/leads/:id",    app.LeadHandler.Update)
+		admin.DELETE("/leads/:id", app.LeadHandler.Delete)
 
-			// ── Customer CRUD ──────────────────────────────────────────────
-			adminProtected.POST("/customers",       app.CustomerHandler.Create)
-			adminProtected.GET("/customers",        app.CustomerHandler.List)
-			adminProtected.GET("/customers/:id",    app.CustomerHandler.GetByID)
-			adminProtected.PUT("/customers/:id",    app.CustomerHandler.Update)
-			adminProtected.DELETE("/customers/:id", app.CustomerHandler.Delete)
+		// ── Dashboard ─────────────────────────────────────────────────────
+		admin.GET("/dashboard", app.DashboardHandler.Get)
+	}
 
-			// ── Quotations (nested under customer) ─────────────────────────
-			adminProtected.POST("/customers/:id/quotations",                        app.QuotationHandler.Create)
-			adminProtected.GET("/customers/:id/quotations",                         app.QuotationHandler.ListByCustomer)
-			adminProtected.DELETE("/customers/:id/quotations/:quotationId",         app.QuotationHandler.Delete)
+	// =========================================================================
+	// USER PROTECTED ROUTES  (any authenticated user)
+	// =========================================================================
 
-			// ── Leads CRUD ────────────────────────────────────────────────
-			adminProtected.POST("/leads",       app.LeadHandler.Create)
-			adminProtected.GET("/leads",        app.LeadHandler.List)
-			adminProtected.GET("/leads/:id",    app.LeadHandler.GetByID)
-			adminProtected.PUT("/leads/:id",    app.LeadHandler.Update)
-			adminProtected.DELETE("/leads/:id", app.LeadHandler.Delete)
-
-			// ── Dashboard ─────────────────────────────────────────────────
-			adminProtected.GET("/dashboard", app.DashboardHandler.Get)
-		}
+	user := api.Group("/user")
+	user.Use(middleware.AuthMiddleware())
+	{
+		user.GET("/profile",               app.UserHandler.GetProfile)
+		user.PUT("/profile",               app.UserHandler.UpdateProfile)
+		user.POST("/profile/set-password", app.UserHandler.SetPassword)
 	}
 }

@@ -3,28 +3,28 @@
 *,
 :after,
 :before {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html {
-	-ms-text-size-adjust: 100%;
-	-webkit-text-size-adjust: 100%;
-	-webkit-tap-highlight-color: transparent;
-	-webkit-font-smoothing: antialiased;
-	scroll-behavior: smooth;
-	font-size: 16px;
-	font-family: var(--font-primary), sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+  font-size: 16px;
+  font-family: var(--font-primary), sans-serif;
 }
 
 body {
-	margin: 0;
-	box-sizing: border-box;
-	color: var(--jt-neutral-50);
-	font-size: var(--base-font);
-	line-height: 1.35;
-	overflow-x: hidden;
-	font-weight: var(--font-weight-400);
-	background: var(--jt-dark-exact);
+  margin: 0;
+  box-sizing: border-box;
+  color: var(--jt-neutral-50);
+  font-size: var(--base-font);
+  line-height: 1.35;
+  overflow-x: hidden;
+  font-weight: var(--font-weight-400);
+  background: var(--jt-dark-exact);
 }

@@ -22,10 +22,12 @@ func (OTP) TableName() string {
 
 type SendOTPRequest struct {
 	MobileNumber string `json:"mobileNumber" binding:"required"`
+	Role         string `json:"role"         binding:"required,oneof=admin user"`
 }
 
 type VerifyOTPRequest struct {
 	MobileNumber string `json:"mobileNumber" binding:"required"`
 	OTP          string `json:"otp"          binding:"required,len=6"`
 	DeviceID     string `json:"deviceID"     binding:"required"`
+	Role         string `json:"role"         binding:"required,oneof=admin user"`
 }

@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { DashboardIcon, LeadsIcon, ReportsIcon, UsersIcon } from '@/components/ui/icons-library/Icons';
+import { DashboardIcon, LeadsIcon, ReportsIcon, UsersIcon } from '@repo/ui/Icons';
 import styles from './Sidebar.module.css';
 
 // ── Nav items — extend this list as you add pages ─────────────────────────

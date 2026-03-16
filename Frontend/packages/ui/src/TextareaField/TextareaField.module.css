@@ -1,0 +1,32 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: var(--font-sm);
+  color: var(--jt-light-base);
+  font-weight: var(--font-weight-500);
+}
+
+.textarea {
+  width: 100%;
+  background: none;
+  border: 1px solid var(--jt-dark-800);
+  border-radius: var(--radius-lg);
+  color: var(--jt-light-base);
+  font-size: var(--font-sm);
+  font-family: var(--font-primary);
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.15s ease;
+  resize: vertical;
+  min-height: 76px;
+  box-sizing: border-box;
+}
+
+.textarea:hover,
+.textarea:focus {
+  border-color: var(--jt-dark-400);
+}

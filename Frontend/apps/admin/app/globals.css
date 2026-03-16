@@ -1,0 +1,91 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-primary);
+  line-height: 1.45;
+  font-weight: var(--font-weight-500);
+  margin-bottom: 1rem;
+  color: var(--jt-light-base);
+}
+
+h1 {
+  font-size: var(--h1-font);
+}
+
+h2 {
+  font-size: var(--h2-font);
+}
+
+h3 {
+  font-size: var(--h3-font);
+}
+
+h4 {
+  font-size: var(--h4-font);
+}
+
+h5 {
+  font-size: var(--h5-font);
+}
+
+h6 {
+  font-size: var(--h6-font);
+}
+
+a {
+  display: inline-block;
+  text-decoration: none;
+  outline: none;
+  cursor: pointer;
+  color: var(--jt-skyBlue-base);
+}
+
+a:hover,
+a:focus {
+  color: var(--jt-light-base);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: var(--font-primary);
+}
+
+p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  color: var(--jt-light-base);
+}
+
+input,
+select,
+textarea,
+button,
+a {
+  text-decoration: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.btn-md {
+  padding: 8px 16px;
+}
+
+.btn-sm {
+  padding: 4px 10px;
+  font-size: var(--font-xs);
+  border-radius: var(--radius-md);
+  -webkit-border-radius: var(--radius-md);
+  -moz-border-radius: var(--radius-md);
+  -ms-border-radius: var(--radius-md);
+  -o-border-radius: var(--radius-md);
+}

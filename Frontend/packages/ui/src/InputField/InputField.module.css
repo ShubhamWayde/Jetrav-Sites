@@ -1,0 +1,75 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: var(--font-sm);
+  font-weight: var(--font-weight-400);
+  color: var(--jt-light-base);
+  letter-spacing: 0.2px;
+}
+
+.required {
+  color: var(--jt-yellow-base);
+  margin-left: 2px;
+}
+
+.inputWrap {
+  position: relative;
+}
+
+.input {
+  border: 1px solid var(--jt-dark-800);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  background: transparent;
+  font-size: var(--base-font);
+  font-family: var(--font-primary);
+  color: var(--jt-light-base);
+  transition: border-color 0.2s ease, background 0.2s ease;
+  width: 100%;
+}
+
+.input::placeholder {
+  color: var(--jt-dark-400);
+}
+
+.input:hover,
+.input:focus {
+  border-color: var(--jt-dark-400);
+  outline: none;
+}
+
+.input.hasError {
+  border-color: var(--jt-yellow-base);
+}
+
+.input.hasError:focus {
+  border-color: var(--jt-yellow-base);
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.hasSuffix {
+  padding-right: 44px;
+}
+
+.suffix {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+}
+
+.errorText {
+  font-size: var(--font-xs);
+  color: var(--jt-yellow-base);
+  letter-spacing: 0.2px;
+}

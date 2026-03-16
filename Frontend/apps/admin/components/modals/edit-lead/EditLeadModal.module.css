@@ -1,108 +1,19 @@
-/* Same base styles as AddLeadModal — edit context */
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.78);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(2px);
-  padding: 16px;
-  animation: fadeIn 0.15s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-.modal {
-  background: #1a1a1a;
-  border: 1px solid var(--secondary-border);
-  border-radius: var(--radius-xl);
-  width: 100%;
-  max-width: 700px;
-  max-height: 92dvh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  animation: slideUp 0.2s ease;
-  -webkit-border-radius: var(--radius-xl);
-  -moz-border-radius: var(--radius-xl);
-  -ms-border-radius: var(--radius-xl);
-  -o-border-radius: var(--radius-xl);
-}
-
-@keyframes slideUp {
-  from { transform: translateY(16px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-
-.modal::-webkit-scrollbar        { width: 5px; }
-.modal::-webkit-scrollbar-track  { background: transparent; }
-.modal::-webkit-scrollbar-thumb  { background: var(--secondary-border); border-radius: 3px; }
-
-.header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--secondary-border);
-  flex-shrink: 0;
-  gap: 12px;
-}
-
-.title {
-  font-size: var(--h5-font);
-  font-weight: var(--font-weight-600);
-  color: var(--primary-50);
-  margin: 0 0 2px;
-}
-
-.subtitle {
-  font-size: var(--font-sm);
-  color: var(--primary-300);
-  margin: 0;
-}
-
-.closeBtn {
-  background: transparent;
-  border: none;
-  color: var(--primary-200);
-  font-size: var(--font-sm);
-  cursor: pointer;
-  padding: 4px 10px;
-  border-radius: var(--radius-md);
-  transition: color 0.15s ease, background 0.15s ease;
-  font-family: var(--font-primary);
-  flex-shrink: 0;
-  -webkit-border-radius: var(--radius-md);
-  -moz-border-radius: var(--radius-md);
-  -ms-border-radius: var(--radius-md);
-  -o-border-radius: var(--radius-md);
-}
-
-.closeBtn:hover {
-  color: var(--primary-50);
-  background: rgba(255, 255, 255, 0.06);
-}
+/* ── Tab bar ──────────────────────────────────────────────────────────────── */
 
 .tabBar {
   display: flex;
   gap: 6px;
   padding: 14px 24px;
-  border-bottom: 1px solid var(--secondary-border);
+  border-bottom: 1px solid var(--jt-dark-800);
   flex-shrink: 0;
   flex-wrap: wrap;
 }
 
 .tab {
   background: transparent;
-  border: 1px solid var(--secondary-border);
+  border: 1px solid var(--jt-dark-800);
   border-radius: 99px;
-  color: var(--primary-200);
+  color: var(--jt-light-base);
   font-size: var(--font-xs);
   font-family: var(--font-primary);
   font-weight: var(--font-weight-500);
@@ -112,26 +23,25 @@
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-.tab:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--primary-100);
-  border-color: var(--primary-200);
+.tabActive, .tab:hover {
+  background: var(--jt-light-base);
+  border-color: var(--jt-light-base);
+  color: var(--jt-dark-base);
 }
 
-.tabActive {
-  background: #fff;
-  border-color: #fff;
-  color: #111;
-  font-weight: var(--font-weight-600);
-}
+/* ── Form ─────────────────────────────────────────────────────────────────── */
 
 .form {
   display: flex;
   flex-direction: column;
-  padding: 20px 24px;
   gap: 0;
   flex: 1;
 }
+.formWrapper{
+  padding: 20px 24px;
+}
+
+/* ── Grid layouts ─────────────────────────────────────────────────────────── */
 
 .row1 {
   display: grid;
@@ -161,106 +71,4 @@
   }
 }
 
-.fieldWrap {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.fieldLabel {
-  font-size: var(--font-sm);
-  color: var(--primary-100);
-  font-weight: var(--font-weight-500);
-}
-
-.input {
-  width: 100%;
-  background: #111;
-  border: 1px solid var(--secondary-border);
-  border-radius: var(--radius-lg);
-  color: var(--primary-50);
-  font-size: var(--font-sm);
-  font-family: var(--font-primary);
-  padding: 10px 12px;
-  outline: none;
-  transition: border-color 0.15s ease;
-  box-sizing: border-box;
-  -webkit-border-radius: var(--radius-lg);
-  -moz-border-radius: var(--radius-lg);
-  -ms-border-radius: var(--radius-lg);
-  -o-border-radius: var(--radius-lg);
-}
-
-.input:hover,
-.input:focus {
-  border-color: var(--primary-200);
-}
-
-.input[type="date"] {
-  color-scheme: dark;
-}
-
-.select {
-  width: 100%;
-  background: #111;
-  border: 1px solid var(--secondary-border);
-  border-radius: var(--radius-lg);
-  color: var(--primary-50);
-  font-size: var(--font-sm);
-  font-family: var(--font-primary);
-  padding: 10px 36px 10px 12px;
-  outline: none;
-  cursor: pointer;
-  transition: border-color 0.15s ease;
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvgxmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  box-sizing: border-box;
-  -webkit-border-radius: var(--radius-lg);
-  -moz-border-radius: var(--radius-lg);
-  -ms-border-radius: var(--radius-lg);
-  -o-border-radius: var(--radius-lg);
-}
-
-.select:hover,
-.select:focus {
-  border-color: var(--primary-200);
-}
-
-.select option {
-  background: #1a1a1a;
-  color: var(--primary-50);
-}
-
-.textarea {
-  width: 100%;
-  background: #111;
-  border: 1px solid var(--secondary-border);
-  border-radius: var(--radius-lg);
-  color: var(--primary-50);
-  font-size: var(--font-sm);
-  font-family: var(--font-primary);
-  padding: 10px 12px;
-  outline: none;
-  transition: border-color 0.15s ease;
-  resize: vertical;
-  min-height: 76px;
-  box-sizing: border-box;
-}
-
-.textarea:hover,
-.textarea:focus {
-  border-color: var(--primary-200);
-}
-
-.footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 16px 0 4px;
-  border-top: 1px solid var(--secondary-border);
-  margin-top: 8px;
-  flex-shrink: 0;
-}
+/* ── Footer ───────────────────────────────────────────────────────────────── */

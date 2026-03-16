@@ -8,9 +8,12 @@ import { LEAD_TYPES, LeadResponse, LeadType } from '@/app/types/lead';
 import AddLeadModal from '@/components/modals/create-lead/AddLeadModal';
 import EditLeadModal from '@/components/modals/edit-lead/EditLeadModal';
 import ConfirmDeleteModal from '@/components/modals/confirm-delete/ConfirmDeleteModal';
-import { LeadsIcon, PencilIcon, TrashIcon } from '@/components/ui/icons-library/Icons';
+import Spinner from '@repo/ui/Spinner';
+import { LeadsIcon, PencilIcon, TrashIcon } from '@repo/ui/Icons';
+import Table, { Tr, Td, type Column } from '@repo/ui/Table';
 import styles from './leads.module.css';
 import { formatDate } from '@/utility/date';
+import Button from '@repo/ui/Button';
 
 /** Extract a display value from a lead's details map, trying multiple keys. */
 function detailVal(details: Record<string, unknown>, ...keys: string[]): string {
@@ -181,6 +184,17 @@ export default function LeadsPage() {
   const typeCols: ColDef[] = TYPE_COLUMNS[activeFilter] ?? [];
   const showTypeCol = activeFilter === '';
 
+  const columns: Column[] = [
+    { header: 'Name' },
+    ...(showTypeCol ? [{ header: 'Type' }] : []),
+    { header: 'Status' },
+    ...typeCols.map(col => ({ header: col.header })),
+    { header: 'Mobile No.' },
+    { header: 'Updated On' },
+    { header: 'Assign To' },
+    { header: 'Actions' },
+  ];
+
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
@@ -189,13 +203,9 @@ export default function LeadsPage() {
       {/* ── Page header ─────────────────────────────────────────────────── */}
       <div className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>Leads</h1>
-        <button
-          className="btn btn-primary btn-sm"
-          type="button"
-          onClick={() => setShowAdd(true)}
-        >
+        <Button title="Add Lead" className='btn-md' type="button" onClick={() => setShowAdd(true)}>
           + Add Lead
-        </button>
+        </Button>
       </div>
 
       {/* ── Type filter tabs ─────────────────────────────────────────────── */}
@@ -215,13 +225,13 @@ export default function LeadsPage() {
       {/* ── Content ─────────────────────────────────────────────────────── */}
       {loading ? (
         <div className={styles.centered}>
-          <span className={styles.spinner} />
+          <Spinner />
           Loading leads…
         </div>
       ) : fetchError ? (
         <div className={styles.centered}>
           <span className={styles.errorText}>{fetchError}</span>
-          <button className={styles.retryBtn} onClick={() => fetchLeads()}>Retry</button>
+          <Button title="Retry" variant="secondary" onClick={() => fetchLeads()}>Retry</Button>
         </div>
       ) : leads.length === 0 ? (
         <div className={styles.empty}>
@@ -229,92 +239,74 @@ export default function LeadsPage() {
           <p>No leads yet{activeFilter ? ` for ${getTypeLabel(activeFilter)}` : ''}.</p>
         </div>
       ) : (
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th className={styles.th}>Name</th>
-                {showTypeCol && <th className={styles.th}>Type</th>}
-                <th className={styles.th}>Status</th>
+        <Table columns={columns}>
+          {leads.map((lead) => {
+            const d = lead.details ?? {};
+            const statusClass = styles[`status${lead.status}` as keyof typeof styles];
+            return (
+              <Tr key={lead.id}>
+                {/* Name */}
+                <Td>
+                  <span className={styles.name}>{lead.customerName}</span>
+                </Td>
+
+                {/* Type — only shown on All tab */}
+                {showTypeCol && (
+                  <Td>{getTypeLabel(lead.type)}</Td>
+                )}
+
+                {/* Status */}
+                <Td>
+                  <span className={`${styles.statusBadge} ${statusClass ?? ''}`}>
+                    {lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}
+                  </span>
+                </Td>
+
+                {/* Dynamic detail columns */}
                 {typeCols.map((col) => (
-                  <th key={col.header} className={styles.th}>{col.header}</th>
+                  <Td key={col.header}>
+                    {detailVal(d, ...col.keys)}
+                  </Td>
                 ))}
-                <th className={styles.th}>Mobile No.</th>
-                <th className={styles.th}>Updated On</th>
-                <th className={styles.th}>Assign To</th>
-                <th className={styles.th}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leads.map((lead) => {
-                const d = lead.details ?? {};
-                const statusClass = styles[`status${lead.status}` as keyof typeof styles];
-                return (
-                  <tr key={lead.id} className={styles.row}>
-                    {/* Name */}
-                    <td className={styles.td}>
-                      <span className={styles.name}>{lead.customerName}</span>
-                    </td>
 
-                    {/* Type — only shown on All tab */}
-                    {showTypeCol && (
-                      <td className={styles.td}>{getTypeLabel(lead.type)}</td>
-                    )}
+                {/* Mobile */}
+                <Td>
+                  {lead.mobileNumber || <span className={styles.muted}>—</span>}
+                </Td>
 
-                    {/* Status */}
-                    <td className={styles.td}>
-                      <span className={`${styles.statusBadge} ${statusClass ?? ''}`}>
-                        {lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}
-                      </span>
-                    </td>
+                {/* Updated On */}
+                <Td>{formatDate(lead.updatedAt)}</Td>
 
-                    {/* Dynamic detail columns */}
-                    {typeCols.map((col) => (
-                      <td key={col.header} className={styles.td}>
-                        {detailVal(d, ...col.keys)}
-                      </td>
-                    ))}
+                {/* Assign To */}
+                <Td>
+                  {lead.assignTo || <span className={styles.muted}>—</span>}
+                </Td>
 
-                    {/* Mobile */}
-                    <td className={styles.td}>
-                      {lead.mobileNumber || <span className={styles.muted}>—</span>}
-                    </td>
-
-                    {/* Updated On */}
-                    <td className={styles.td}>{formatDate(lead.updatedAt)}</td>
-
-                    {/* Assign To */}
-                    <td className={styles.td}>
-                      {lead.assignTo || <span className={styles.muted}>—</span>}
-                    </td>
-
-                    {/* Actions */}
-                    <td className={styles.td}>
-                      <div className={styles.actions}>
-                        <button
-                          className={styles.editBtn}
-                          type="button"
-                          title="Edit lead"
-                          onClick={() => setEditTarget(lead)}
-                        >
-                          <PencilIcon size={14} />
-                        </button>
-                        <button
-                          className={styles.deleteBtn}
-                          type="button"
-                          title="Delete lead"
-                          onClick={() => setDeleteTarget(lead)}
-                        >
-                          <TrashIcon size={14} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                {/* Actions */}
+                <Td>
+                  <div className={styles.actions}>
+                    <button
+                      className={styles.editBtn}
+                      type="button"
+                      title="Edit lead"
+                      onClick={() => setEditTarget(lead)}
+                    >
+                      <PencilIcon size={14} />
+                    </button>
+                    <button
+                      className={styles.deleteBtn}
+                      type="button"
+                      title="Delete lead"
+                      onClick={() => setDeleteTarget(lead)}
+                    >
+                      <TrashIcon size={14} />
+                    </button>
+                  </div>
+                </Td>
+              </Tr>
+            );
+          })}
+        </Table>
       )}
 
       {/* ── Add Lead modal ────────────────────────────────────────────────── */}

@@ -2,154 +2,37 @@ package service
 
 import (
 	"errors"
-	"time"
 
 	"Backend/internal/models"
 	"Backend/internal/repository"
-	"Backend/pkg/utils"
 )
 
 type userService struct {
-	repo        repository.UserRepository
-	sessionRepo repository.SessionRepository
+	userRepo repository.UserRepository
 }
 
-func NewUserService(r repository.UserRepository, sr repository.SessionRepository) UserService {
-	return &userService{
-		repo:        r,
-		sessionRepo: sr,
-	}
+func NewUserService(userRepo repository.UserRepository) UserService {
+	return &userService{userRepo: userRepo}
 }
 
-func (s *userService) Register(req models.RegisterRequest) error {
-	// Optional: check duplicate email
-	_, err := s.repo.FindByEmail(req.Email)
-	if err == nil {
-		return errors.New("email already exists")
+func (s *userService) GetProfile(userID uint) (*models.User, error) {
+	user, err := s.userRepo.GetByID(userID)
+	if err != nil {
+		return nil, errors.New("user profile not found")
 	}
-
-	_, err = s.repo.FindByNumber(req.PhoneNumber)
-	if err == nil {
-		return errors.New("phone number already exists")
-	}
-
-	user := models.User{
-		FirstName:   req.FirstName,
-		LastName:    req.LastName,
-		Email:       req.Email,
-		PhoneNumber: req.PhoneNumber,
-		Password:    req.Password, // hashed by hook
-		AccountName: req.AccountName,
-	}
-
-	return s.repo.Create(&user)
+	return user, nil
 }
 
-func (s *userService) LoginWithPhone(phoneNumber string, password string, deviceID string, deviceName string, browser string, ip string) (string, string, error) {
-
-	user, err := s.repo.GetByPhone(phoneNumber)
-	if err != nil {
-		return "", "", errors.New("invalid credentials")
-	}
-
-	if !user.CheckPassword(password) {
-		return "", "", errors.New("invalid credentials")
-	}
-
-	count, _ := s.sessionRepo.CountActive(user.ID)
-
-	if count >= 3 {
-		return "", "", errors.New("device limit reached")
-	}
-
-	accessToken, err := utils.GenerateAccessToken(user.ID, user.Email, user.Role)
-	if err != nil {
-		return "", "", err
-	}
-
-	refreshToken, err := utils.GenerateRefreshToken(user.ID, user.Email, user.Role)
-	if err != nil {
-		return "", "", err
-	}
-	// =========================
-	// Create Session
-	// =========================
-	session := &models.UserSession{
-		UserID:       user.ID,
-		RefreshToken: refreshToken,
-		DeviceID:     deviceID,
-		DeviceName:   deviceName,
-		Browser:      browser,
-		IPAddress:    ip,
-		IsActive:     true,
-		ExpiresAt:    time.Now().Add(7 * 24 * time.Hour),
-	}
-
-	err = s.sessionRepo.Create(session)
-	if err != nil {
-		return "", "", err
-	}
-
-	// =========================
-	// Mark Verified
-	// =========================
-	if !user.IsVerified {
-		_ = s.repo.MarkVerified(user.ID)
-	}
-	return accessToken, refreshToken, nil
+func (s *userService) UpdateProfile(userID uint, req models.UpdateAdminProfileRequest) error {
+	return s.userRepo.UpdateProfile(userID, req.FirstName, req.LastName)
 }
 
-func (s *userService) LoginWithEmail(email string, password string, deviceID string, deviceName string, browser string, ip string) (string, string, error) {
-
-	user, err := s.repo.GetByEmail(email)
-	if err != nil {
-		return "", "", errors.New("invalid credentials")
+func (s *userService) SetPassword(userID uint, req models.SetPasswordRequest) error {
+	if req.Password != req.ConfirmPassword {
+		return errors.New("password and confirm password do not match")
 	}
-
-	if !user.CheckPassword(password) {
-		return "", "", errors.New("invalid credentials")
+	if len(req.Password) < 8 {
+		return errors.New("password must be at least 8 characters long")
 	}
-
-	count, _ := s.sessionRepo.CountActive(user.ID)
-
-	if count >= 3 {
-		return "", "", errors.New("device limit reached")
-	}
-
-	accessToken, err := utils.GenerateAccessToken(user.ID, user.Email, user.Role)
-	if err != nil {
-		return "", "", err
-	}
-
-	refreshToken, err := utils.GenerateRefreshToken(user.ID, user.Email, user.Role)
-	if err != nil {
-		return "", "", err
-	}
-
-	// =========================
-	// Create Session
-	// =========================
-	session := &models.UserSession{
-		UserID:       user.ID,
-		RefreshToken: refreshToken,
-		DeviceID:     deviceID,
-		DeviceName:   deviceName,
-		Browser:      browser,
-		IPAddress:    ip,
-		IsActive:     true,
-		ExpiresAt:    time.Now().Add(7 * 24 * time.Hour),
-	}
-
-	err = s.sessionRepo.Create(session)
-	if err != nil {
-		return "", "", err
-	}
-
-	// =========================
-	// Mark Verified
-	// =========================
-	if !user.IsVerified {
-		_ = s.repo.MarkVerified(user.ID)
-	}
-	return accessToken, refreshToken, nil
+	return s.userRepo.SetPassword(userID, req.Password)
 }

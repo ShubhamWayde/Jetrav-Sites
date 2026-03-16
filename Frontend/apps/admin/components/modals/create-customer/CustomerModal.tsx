@@ -2,8 +2,11 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import Button from '@/components/ui/button/Button';
-import InputField from '@/components/ui/input-field/InputField';
+import Button from '@repo/ui/Button';
+import InputField from '@repo/ui/InputField';
+import SelectField from '@repo/ui/SelectField';
+import Modal, { ModalFooter } from '@repo/ui/Modal';
+import Spinner from '@repo/ui/Spinner';
 import { api } from '@/lib/api';
 import { ADMIN_API } from '@/lib/constants';
 import styles from './CustomerModal.module.css';
@@ -102,13 +105,6 @@ export default function CustomerModal({
     return () => window.removeEventListener('keydown', handler);
   }, [isOpen, onClose]);
 
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
-
   // ── Field helpers ─────────────────────────────────────────────────────────
 
   const handleChange =
@@ -183,138 +179,113 @@ export default function CustomerModal({
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className={styles.overlay} onClick={onClose} role="dialog" aria-modal="true">
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-
-        {/* Header */}
-        <div className={styles.header}>
-          <h2 className={styles.title}>
-            {isEdit ? 'Edit Customer' : 'Add Customer'}
-          </h2>
-          <button className={styles.closeBtn} type="button" onClick={onClose}>
-            Close
-          </button>
+    <Modal isOpen={isOpen} onClose={onClose} title={isEdit ? 'Edit Customer' : 'Add Customer'} maxWidth={560}>
+      {/* Body */}
+      {fetching ? (
+        <div className={styles.loading}>
+          <Spinner />
+          Loading customer data…
         </div>
+      ) : (
+        <form onSubmit={handleSubmit} noValidate className={styles.form}>
+          <div className={styles.grid}>
+            <InputField
+              label="First Name"
+              name="firstName"
+              placeholder="John"
+              value={form.firstName}
+              onChange={handleChange('firstName')}
+              error={fieldErrors.firstName}
+              required
+              autoComplete="given-name"
+            />
+            <InputField
+              label="Last Name"
+              name="lastName"
+              placeholder="Doe"
+              value={form.lastName}
+              onChange={handleChange('lastName')}
+              error={fieldErrors.lastName}
+              required
+              autoComplete="family-name"
+            />
+            <InputField
+              label="Mobile Number"
+              name="mobileNumber"
+              type="tel"
+              placeholder="9876543210"
+              value={form.mobileNumber}
+              onChange={handleChange('mobileNumber')}
+              error={fieldErrors.mobileNumber}
+              required
+              autoComplete="tel"
+              maxLength={10}
+            />
+            <InputField
+              label="Email"
+              name="email"
+              type="email"
+              placeholder="john@example.com"
+              value={form.email}
+              onChange={handleChange('email')}
+              error={fieldErrors.email}
+              autoComplete="email"
+            />
 
-        {/* Body */}
-        {fetching ? (
-          <div className={styles.loading}>
-            <span className={styles.spinner} />
-            Loading customer data…
+            <SelectField
+              label="Plan Type"
+              required
+              value={form.planType}
+              onChange={handleChange('planType')}
+              error={fieldErrors.planType}
+              options={PLAN_TYPES.map((p) => ({ value: p, label: p }))}
+            />
+
+            <InputField
+              label="Reference"
+              name="reference"
+              placeholder="Referred by"
+              value={form.reference}
+              onChange={handleChange('reference')}
+            />
+            <InputField
+              label="Jetcoins"
+              name="jetcoins"
+              type="number"
+              placeholder="0"
+              value={form.jetcoins}
+              onChange={handleChange('jetcoins')}
+              min={0}
+            />
+            <InputField
+              label="Total Trips"
+              name="totalTrips"
+              type="number"
+              placeholder="0"
+              value={form.totalTrips}
+              onChange={handleChange('totalTrips')}
+              min={0}
+            />
+            <InputField
+              label="Total Stays"
+              name="totalStays"
+              type="number"
+              placeholder="0"
+              value={form.totalStays}
+              onChange={handleChange('totalStays')}
+              min={0}
+            />
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} noValidate className={styles.form}>
-            <div className={styles.grid}>
-              <InputField
-                label="First Name"
-                name="firstName"
-                placeholder="John"
-                value={form.firstName}
-                onChange={handleChange('firstName')}
-                error={fieldErrors.firstName}
-                required
-                autoComplete="given-name"
-              />
-              <InputField
-                label="Last Name"
-                name="lastName"
-                placeholder="Doe"
-                value={form.lastName}
-                onChange={handleChange('lastName')}
-                error={fieldErrors.lastName}
-                required
-                autoComplete="family-name"
-              />
-              <InputField
-                label="Mobile Number"
-                name="mobileNumber"
-                type="tel"
-                placeholder="9876543210"
-                value={form.mobileNumber}
-                onChange={handleChange('mobileNumber')}
-                error={fieldErrors.mobileNumber}
-                required
-                autoComplete="tel"
-                maxLength={10}
-              />
-              <InputField
-                label="Email"
-                name="email"
-                type="email"
-                placeholder="john@example.com"
-                value={form.email}
-                onChange={handleChange('email')}
-                error={fieldErrors.email}
-                autoComplete="email"
-              />
 
-              {/* Plan Type — custom select styled like InputField */}
-              <div className={styles.fieldWrap}>
-                <label className={styles.fieldLabel}>
-                  Plan Type <span className={styles.required}>*</span>
-                </label>
-                <select
-                  className={`${styles.select} ${fieldErrors.planType ? styles.selectError : ''}`}
-                  value={form.planType}
-                  onChange={handleChange('planType')}
-                >
-                  {PLAN_TYPES.map((p) => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-                {fieldErrors.planType && (
-                  <span className={styles.errorText}>{fieldErrors.planType}</span>
-                )}
-              </div>
-
-              <InputField
-                label="Reference"
-                name="reference"
-                placeholder="Referred by"
-                value={form.reference}
-                onChange={handleChange('reference')}
-              />
-              <InputField
-                label="Jetcoins"
-                name="jetcoins"
-                type="number"
-                placeholder="0"
-                value={form.jetcoins}
-                onChange={handleChange('jetcoins')}
-                min={0}
-              />
-              <InputField
-                label="Total Trips"
-                name="totalTrips"
-                type="number"
-                placeholder="0"
-                value={form.totalTrips}
-                onChange={handleChange('totalTrips')}
-                min={0}
-              />
-              <InputField
-                label="Total Stays"
-                name="totalStays"
-                type="number"
-                placeholder="0"
-                value={form.totalStays}
-                onChange={handleChange('totalStays')}
-                min={0}
-              />
-            </div>
-
-            {/* Footer */}
-            <div className={styles.footer}>
-              <Button className="btn-md" variant="ghost" type="button" onClick={onClose} disabled={loading}>
-                Cancel
-              </Button>
-              <Button  className="btn-md" type="submit" loading={loading} disabled={!isFormValid || loading}>
-                {isEdit ? 'Update Customer' : 'Save Customer'}
-              </Button>
-            </div>
-          </form>
-        )}
-      </div>
-    </div>
+          {/* Footer */}
+        <ModalFooter>
+            <Button title="Cancel" className='btn-md' variant="secondary" type="button" onClick={onClose} disabled={loading}>Cancel</Button>
+            <Button title="Save Customer" className='btn-md' type="submit" loading={loading} disabled={!isFormValid || loading}>
+              {isEdit ? 'Update Customer' : 'Save Customer'}
+            </Button>
+          </ModalFooter>
+        </form>
+      )}
+    </Modal>
   );
 }

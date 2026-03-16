@@ -1,7 +1,7 @@
-import type {Metadata} from "next";
-import "../../../styles/css/base.css"
+import type { Metadata } from "next";
+import "../../../styles/css/base.css";
 import "./globals.css";
-import {fontOutfit} from "@repo/ui/fonts";
+import { fontOutfit } from "@repo/ui/fonts";
 
 export const metadata: Metadata = {
   title: "Jetrav | Travel agency",
@@ -9,15 +9,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-                                     children,
-                                   }: Readonly<{
+  children,
+}: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fontOutfit.variable}`}>
-      <body>
-        {children}
-      </body>
+    <html lang="en">
+      <body className={`${fontOutfit.variable}`}>{children}</body>
     </html>
   );
 }

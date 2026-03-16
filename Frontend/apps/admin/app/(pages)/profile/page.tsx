@@ -2,11 +2,13 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@repo/auth';
 import { api } from '@/lib/api';
 import { ADMIN_API } from '@/lib/constants';
-import Button from '@/components/ui/button/Button';
-import { EyeOffIcon, EyeOpenIcon, LockIcon, PencilIcon } from '@/components/ui/icons-library/Icons';
+import Button from '@repo/ui/Button';
+import Spinner from '@repo/ui/Spinner';
+import InputField from '@repo/ui/InputField';
+import { EyeOffIcon, EyeOpenIcon, LockIcon, PencilIcon } from '@repo/ui/Icons';
 import styles from './profile.module.css';
 import { AdminProfile } from '@/app/types/profile';
 
@@ -157,7 +159,7 @@ export default function ProfilePage() {
   if (authLoading || fetching) {
     return (
       <div className={styles.centered}>
-        <span className={styles.spinner} />
+        <Spinner />
         Loading profile…
       </div>
     );
@@ -177,7 +179,7 @@ export default function ProfilePage() {
           </p>
         </div>
         {!editMode && (
-          <Button type="button" onClick={startEdit} className="btn-md">
+          <Button title="Edit Profile" type="button" onClick={startEdit} className="btn-md">
             <PencilIcon size={14} />
             Edit
           </Button>
@@ -190,64 +192,43 @@ export default function ProfilePage() {
 
         {/* Fields */}
         <div className={styles.fieldsGrid}>
-          {/* First Name */}
-          <div className={styles.fieldRow}>
-            <label className={styles.fieldLabel}>FIRST NAME</label>
-            <input
-              className={`${styles.fieldInput} ${infoErrors.firstName ? styles.fieldInputError : ''} ${!editMode ? styles.fieldInputDisabled : ''}`}
-              value={form.firstName}
-              onChange={handleInfoChange('firstName')}
-              disabled={!editMode}
-              autoComplete="given-name"
-              placeholder="First name"
-            />
-            {infoErrors.firstName && (
-              <span className={styles.errorText}>{infoErrors.firstName}</span>
-            )}
-          </div>
+          <InputField
+            label="FIRST NAME"
+            value={form.firstName}
+            onChange={handleInfoChange('firstName')}
+            disabled={!editMode}
+            autoComplete="given-name"
+            placeholder="First name"
+            error={infoErrors.firstName}
+          />
 
-          {/* Last Name */}
-          <div className={styles.fieldRow}>
-            <label className={styles.fieldLabel}>LAST NAME</label>
-            <input
-              className={`${styles.fieldInput} ${infoErrors.lastName ? styles.fieldInputError : ''} ${!editMode ? styles.fieldInputDisabled : ''}`}
-              value={form.lastName}
-              onChange={handleInfoChange('lastName')}
-              disabled={!editMode}
-              autoComplete="family-name"
-              placeholder="Last name"
-            />
-            {infoErrors.lastName && (
-              <span className={styles.errorText}>{infoErrors.lastName}</span>
-            )}
-          </div>
+          <InputField
+            label="LAST NAME"
+            value={form.lastName}
+            onChange={handleInfoChange('lastName')}
+            disabled={!editMode}
+            autoComplete="family-name"
+            placeholder="Last name"
+            error={infoErrors.lastName}
+          />
 
-          {/* Email — always read-only */}
-          <div className={styles.fieldRow}>
-            <label className={styles.fieldLabel}>
-              EMAIL
-              {/* <span className={styles.readOnlyBadge}>
-                <LockIcon size={13} /> read-only
-              </span> */}
-            </label>
-            <input
-              className={`${styles.fieldInput} ${styles.fieldInputDisabled}`}
-              value={profile?.email ?? ''}
-              disabled
-              autoComplete="email"
-              placeholder="—"
-            />
-          </div>
+          <InputField
+            label="EMAIL"
+            value={profile?.email ?? ''}
+            disabled
+            autoComplete="email"
+            placeholder="—"
+          />
 
         </div>
 
         {/* Edit-mode footer */}
         {editMode && (
           <div className={styles.cardFooter}>
-            <Button variant="ghost" type="button" onClick={cancelEdit} disabled={infoSaving}>
+            <Button title="Cancel" variant="ghost" type="button" onClick={cancelEdit} disabled={infoSaving}>
               Cancel
             </Button>
-            <Button
+            <Button title="Save Profile"
               type="button"
               loading={infoSaving}
               disabled={!isInfoValid || infoSaving}
@@ -268,89 +249,57 @@ export default function ProfilePage() {
 
           {/* Old Password — only shown when a password already exists */}
           {profile?.hasPassword && (
-            <div className={styles.fieldRow}>
-              <label className={styles.fieldLabel}>OLD PASSWORD</label>
-              <div className={styles.pwdWrap}>
-                <input
-                  className={`${styles.fieldInput} ${styles.pwdInput} ${pwdErrors.oldPwd ? styles.fieldInputError : ''}`}
-                  type={showPwd.oldPwd ? 'text' : 'password'}
-                  value={pwdForm.oldPwd}
-                  onChange={handlePwdChange('oldPwd')}
-                  placeholder="Enter Old Password"
-                  autoComplete="current-password"
-                />
-                <button
-                  className={styles.eyeBtn}
-                  type="button"
-                  onClick={() => toggleShow('oldPwd')}
-                  aria-label={showPwd.oldPwd ? 'Hide password' : 'Show password'}
-                >
+            <InputField
+              label="OLD PASSWORD"
+              type={showPwd.oldPwd ? 'text' : 'password'}
+              value={pwdForm.oldPwd}
+              onChange={handlePwdChange('oldPwd')}
+              placeholder="Enter Old Password"
+              autoComplete="current-password"
+              error={pwdErrors.oldPwd}
+              suffix={
+                <button className={styles.eyeBtn} type="button" onClick={() => toggleShow('oldPwd')} aria-label={showPwd.oldPwd ? 'Hide password' : 'Show password'}>
                   {showPwd.oldPwd ? <EyeOpenIcon /> : <EyeOffIcon />}
                 </button>
-              </div>
-              {pwdErrors.oldPwd && (
-                <span className={styles.errorText}>{pwdErrors.oldPwd}</span>
-              )}
-            </div>
+              }
+            />
           )}
 
-          {/* New Password */}
-          <div className={styles.fieldRow}>
-            <label className={styles.fieldLabel}>NEW PASSWORD</label>
-            <div className={styles.pwdWrap}>
-              <input
-                className={`${styles.fieldInput} ${styles.pwdInput} ${pwdErrors.newPwd ? styles.fieldInputError : ''}`}
-                type={showPwd.newPwd ? 'text' : 'password'}
-                value={pwdForm.newPwd}
-                onChange={handlePwdChange('newPwd')}
-                placeholder="Enter New Password"
-                autoComplete="new-password"
-              />
-              <button
-                className={styles.eyeBtn}
-                type="button"
-                onClick={() => toggleShow('newPwd')}
-                aria-label={showPwd.newPwd ? 'Hide password' : 'Show password'}
-              >
+          <InputField
+            label="NEW PASSWORD"
+            type={showPwd.newPwd ? 'text' : 'password'}
+            value={pwdForm.newPwd}
+            onChange={handlePwdChange('newPwd')}
+            placeholder="Enter New Password"
+            autoComplete="new-password"
+            error={pwdErrors.newPwd}
+            suffix={
+              <button className={styles.eyeBtn} type="button" onClick={() => toggleShow('newPwd')} aria-label={showPwd.newPwd ? 'Hide password' : 'Show password'}>
                 {showPwd.newPwd ? <EyeOpenIcon /> : <EyeOffIcon />}
               </button>
-            </div>
-            {pwdErrors.newPwd && (
-              <span className={styles.errorText}>{pwdErrors.newPwd}</span>
-            )}
-          </div>
+            }
+          />
 
-          {/* Confirm Password */}
-          <div className={styles.fieldRow}>
-            <label className={styles.fieldLabel}>CONFIRM PASSWORD</label>
-            <div className={styles.pwdWrap}>
-              <input
-                className={`${styles.fieldInput} ${styles.pwdInput} ${pwdErrors.confirmPwd ? styles.fieldInputError : ''}`}
-                type={showPwd.confirmPwd ? 'text' : 'password'}
-                value={pwdForm.confirmPwd}
-                onChange={handlePwdChange('confirmPwd')}
-                placeholder="Confirm New Password"
-                autoComplete="new-password"
-              />
-              <button
-                className={styles.eyeBtn}
-                type="button"
-                onClick={() => toggleShow('confirmPwd')}
-                aria-label={showPwd.confirmPwd ? 'Hide password' : 'Show password'}
-              >
+          <InputField
+            label="CONFIRM PASSWORD"
+            type={showPwd.confirmPwd ? 'text' : 'password'}
+            value={pwdForm.confirmPwd}
+            onChange={handlePwdChange('confirmPwd')}
+            placeholder="Confirm New Password"
+            autoComplete="new-password"
+            error={pwdErrors.confirmPwd}
+            suffix={
+              <button className={styles.eyeBtn} type="button" onClick={() => toggleShow('confirmPwd')} aria-label={showPwd.confirmPwd ? 'Hide password' : 'Show password'}>
                 {showPwd.confirmPwd ? <EyeOpenIcon /> : <EyeOffIcon />}
               </button>
-            </div>
-            {pwdErrors.confirmPwd && (
-              <span className={styles.errorText}>{pwdErrors.confirmPwd}</span>
-            )}
-          </div>
+            }
+          />
 
         </div>
 
         {/* Password footer */}
         <div className={styles.cardFooter}>
-          <Button type="button" loading={pwdSaving} disabled={pwdSaving} onClick={savePwd} className='btn-md'>
+          <Button title="Save Password" type="button" loading={pwdSaving} disabled={pwdSaving} onClick={savePwd} className='btn-md'>
             {profile?.hasPassword ? 'Change Password' : 'Set Password'}
           </Button>
         </div>
