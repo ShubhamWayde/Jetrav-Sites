@@ -5,22 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="91181458-c591-40bb-b421-baf1c5954518" name="Changes" comment="updated code">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/home/page.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/components/logo/logo.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/utilities.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/styles/css/utilities.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/home/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/home/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/admin/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/admin/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/admin/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/admin/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/page.module.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/user/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/user/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/user/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/user/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/fonts.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/fonts/fonts.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/tsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/styles/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/styles/css/base.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/styles/css/variable.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/styles/css/variable.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/styles/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/base.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/styles/css/utilities.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/utilities.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/styles/css/variable.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/variable.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +89,7 @@
     "rearrange.code.on.save": "true",
     "settings.editor.selected.configurable": "preferences.sourceCode.CSS",
     "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "D:\\Folder2\\waydzo\\Development\\git\\Jetrav-Sites\\Frontend\\packages\\ui\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "D:\\Folder2\\waydzo\\Development\\git\\Jetrav-Sites\\Frontend\\packages\\auth\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -105,6 +104,8 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Folder2\waydzo\Development\git\Jetrav-Sites\Frontend\packages\ui" />
+      <recent name="D:\Folder2\waydzo\Development\git\Jetrav-Sites\Frontend\packages\ui\src\fonts" />
       <recent name="D:\Folder2\waydzo\Development\git\Jetrav-Sites\Frontend\apps\marketing\app\(pages)\home" />
     </key>
   </component>
@@ -126,7 +127,7 @@
       <workItem from="1771759031595" duration="19868000" />
       <workItem from="1772884048542" duration="11577000" />
       <workItem from="1773463187585" duration="40000" />
-      <workItem from="1773463240896" duration="28412000" />
+      <workItem from="1773463240896" duration="32750000" />
     </task>
     <task id="LOCAL-00001" summary="updated code">
       <option name="closed" value="true" />
@@ -136,7 +137,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771758900729</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="updated code">
+      <option name="closed" value="true" />
+      <created>1773673630332</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1773673630332</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

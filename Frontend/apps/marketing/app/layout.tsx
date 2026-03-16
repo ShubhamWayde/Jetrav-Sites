@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
-import "../../../styles/css/base.css";
+import type {Metadata} from "next";
+import "@repo/ui/styles/css/base.css";
 import "./globals.css";
-import { fontOutfit } from "@repo/ui/fonts";
+import {fontOutfit} from "@repo/ui/fonts/fonts";
 
 export const metadata: Metadata = {
   title: "Jetrav | Travel agency",
@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
+                                     children,
+                                   }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (

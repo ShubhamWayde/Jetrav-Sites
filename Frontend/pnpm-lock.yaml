@@ -23,9 +23,6 @@ importers:
       '@repo/auth':
         specifier: workspace:*
         version: link:../../packages/auth
-      '@repo/fonts':
-        specifier: workspace:*
-        version: link:../../packages/fonts
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -66,9 +63,6 @@ importers:
 
   apps/marketing:
     dependencies:
-      '@repo/fonts':
-        specifier: workspace:*
-        version: link:../../packages/fonts
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -109,9 +103,6 @@ importers:
       '@repo/auth':
         specifier: workspace:*
         version: link:../../packages/auth
-      '@repo/fonts':
-        specifier: workspace:*
-        version: link:../../packages/fonts
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -219,22 +210,6 @@ importers:
       typescript-eslint:
         specifier: ^8.50.0
         version: 8.56.0(eslint@10.0.1)(typescript@5.9.3)
-
-  packages/fonts:
-    dependencies:
-      next:
-        specifier: '*'
-        version: 16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-    devDependencies:
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@types/react':
-        specifier: 19.2.14
-        version: 19.2.14
-      typescript:
-        specifier: 5.9.3
-        version: 5.9.3
 
   packages/typescript-config: {}
 

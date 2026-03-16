@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
-import { fontOutfit } from "@repo/ui/fonts";
+import type {Metadata} from "next";
+import {fontOutfit} from "@repo/ui/fonts/fonts";
 import Providers from "./providers";
-import "../../../styles/css/base.css";
+import "@repo/ui/styles/css/base.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
+                                     children,
+                                   }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
