@@ -55,3 +55,32 @@
   vertical-align: middle;
   white-space: nowrap;
 }
+
+/* ── State rows (loading / error / empty) ────────────────────────────────── */
+
+.stateCell {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--jt-light-muted);
+  font-size: var(--font-sm);
+}
+
+.errorText {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--jt-error, #f87171);
+}
+
+.retryBtn {
+  padding: 6px 16px;
+  border: 1px solid var(--jt-neutral-700);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--jt-light-base);
+  font-size: var(--font-sm);
+  cursor: pointer;
+}
+
+.retryBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}

@@ -11,6 +11,5 @@ export function Logo({className}: { className?: string }) {
         fill="var(--jt-light-exact)"
       />
     </svg>
-
   )
 }

@@ -5,7 +5,7 @@ import {clx} from "@repo/ui/utilities";
 import styles from "./header.module.css";
 import "@repo/ui/styles/css/utilities.css"
 import "@repo/ui/styles/css/base.css"
-import {Logo} from "@repo/ui/components/logo/logo";
+import {Logo} from "@repo/ui/Logo";
 
 function header() {
   return (

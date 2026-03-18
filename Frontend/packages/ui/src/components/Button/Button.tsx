@@ -2,7 +2,7 @@
 
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import Spinner from '../Spinner/Spinner';
-import styles from './button.module.css';
+import styles from './Button.module.css';
 
 type Variant = 'primary' | 'secondary' | 'ghost';
 

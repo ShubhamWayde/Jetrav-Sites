@@ -98,10 +98,6 @@
   --size-20: 5rem; /* 80px */
   --size-24: 6rem; /* 96px */
 
-  /* font families */
-  --font-primary: sans-serif;
-  --font-secondary: serif;
-
   /* font sizes */
   --base-font: var(--font-md);
   --h1-font: clamp(30px, 1.771vw, 34px);

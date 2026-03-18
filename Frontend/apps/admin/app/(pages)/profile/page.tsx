@@ -8,7 +8,7 @@ import { ADMIN_API } from '@/lib/constants';
 import Button from '@repo/ui/Button';
 import Spinner from '@repo/ui/Spinner';
 import InputField from '@repo/ui/InputField';
-import { EyeOffIcon, EyeOpenIcon, LockIcon, PencilIcon } from '@repo/ui/Icons';
+import { EyeOffIcon, EyeOpenIcon, PencilIcon } from '@repo/ui/Icons';
 import styles from './profile.module.css';
 import { AdminProfile } from '@/app/types/profile';
 

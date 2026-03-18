@@ -66,7 +66,7 @@
   color: var(--jt-light-base, #f5f5f5);
   font-size: 12px;
   font-weight: var(--font-weight-600, 600);
-  font-family: var(--Outfit-font, inherit);
+
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease;
   display: flex;
@@ -131,7 +131,7 @@
   justify-content: center;
   font-size: 22px;
   font-weight: var(--font-weight-600, 600);
-  font-family: var(--Outfit-font, inherit);
+
   color: var(--primary-50, #f5f5f5);
   margin-bottom: 10px;
   user-select: none;
@@ -193,7 +193,7 @@
   width: 100%;
   padding: 11px 16px;
   font-size: var(--font-sm, 14px);
-  font-family: var(--Outfit-font, inherit);
+
   color: var(--primary-100, #d0d0d0);
   background: transparent;
   border: none;

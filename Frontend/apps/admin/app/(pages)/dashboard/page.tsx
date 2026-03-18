@@ -11,9 +11,9 @@ import type {
   TripFilter,
 } from '@/app/types/dashboard';
 import type { LeadResponse } from '@/app/types/lead';
-import Table, { Tr, Td } from '@repo/ui/Table';
-import Spinner from '@repo/ui/Spinner';
 import styles from './dashboard.module.css';
+import Table, { type Column } from '@repo/ui/Table';
+import Spinner from '@repo/ui/Spinner';
 import Button from '@repo/ui/Button';
 
 function fmt(val: string): string {
@@ -61,73 +61,53 @@ function Tabs<T extends string>({ options, active, onChange }: TabsProps<T>) {
   );
 }
 
+const AIR_COLUMNS: Column<LeadResponse>[] = [
+  { key: 'customerName', header: 'Name',        render: (t) => <span className={styles.name}>{t.customerName}</span> },
+  { key: 'mobileNumber', header: 'Mobile no.',  render: (t) => t.mobileNumber || '—' },
+  { key: 'source',       header: 'Origin',      render: (t) => det(t, 'source') },
+  { key: 'destination',  header: 'Destination', render: (t) => det(t, 'destination') },
+  { key: 'departure',    header: 'Departure',   render: (t) => fmt(det(t, 'departure')) },
+  { key: 'return',       header: 'Return',      render: (t) => fmt(det(t, 'return')) },
+  { key: 'adults',       header: 'Adults',      render: (t) => det(t, 'adults') },
+  { key: 'children',     header: 'Children',    render: (t) => det(t, 'children') },
+  { key: 'infant',       header: 'Infant',      render: (t) => det(t, 'infant') },
+  { key: 'ssr',          header: 'SSR',         render: (t) => det(t, 'ssr') },
+  { key: 'updatedAt',    header: 'Updated on',  render: (t) => fmt(t.updatedAt) },
+  { key: 'assignTo',     header: 'Assign to',   render: (t) => t.assignTo || '—' },
+];
+
+const HOTEL_COLUMNS: Column<LeadResponse>[] = [
+  { key: 'customerName', header: 'Name',       render: (t) => <span className={styles.name}>{t.customerName}</span> },
+  { key: 'mobileNumber', header: 'Mobile no.', render: (t) => t.mobileNumber || '—' },
+  { key: 'city',         header: 'City',       render: (t) => det(t, 'city') },
+  { key: 'checkIn',      header: 'Check-in',   render: (t) => fmt(det(t, 'checkIn')) },
+  { key: 'checkOut',     header: 'Check-out',  render: (t) => fmt(det(t, 'checkOut')) },
+  { key: 'rooms',        header: 'Rooms',      render: (t) => det(t, 'rooms') },
+  { key: 'adults',       header: 'Adults',     render: (t) => det(t, 'adults') },
+  { key: 'children',     header: 'Children',   render: (t) => det(t, 'children') },
+  { key: 'updatedAt',    header: 'Updated on', render: (t) => fmt(t.updatedAt) },
+  { key: 'assignTo',     header: 'Assign to',  render: (t) => t.assignTo || '—' },
+];
+
 function AirTripTable({ trips }: { trips: LeadResponse[] }) {
-  if (trips.length === 0) return <div className={styles.emptyTrips}>No upcoming air trips.</div>;
   return (
-    <Table columns={[
-      { header: 'Name' },
-      { header: 'Mobile no.' },
-      { header: 'Origin' },
-      { header: 'Destination' },
-      { header: 'Departure' },
-      { header: 'Return' },
-      { header: 'Adults' },
-      { header: 'Children' },
-      { header: 'Infant' },
-      { header: 'SSR' },
-      { header: 'Updated on' },
-      { header: 'Assign to' },
-    ]}>
-      {trips.map(t => (
-        <Tr key={t.id}>
-          <Td className={styles.name}>{t.customerName}</Td>
-          <Td>{t.mobileNumber || '—'}</Td>
-          <Td>{det(t, 'source')}</Td>
-          <Td>{det(t, 'destination')}</Td>
-          <Td>{fmt(det(t, 'departure'))}</Td>
-          <Td>{fmt(det(t, 'return'))}</Td>
-          <Td>{det(t, 'adults')}</Td>
-          <Td>{det(t, 'children')}</Td>
-          <Td>{det(t, 'infant')}</Td>
-          <Td>{det(t, 'ssr')}</Td>
-          <Td>{fmt(t.updatedAt)}</Td>
-          <Td>{t.assignTo || '—'}</Td>
-        </Tr>
-      ))}
-    </Table>
+    <Table
+      columns={AIR_COLUMNS}
+      rows={trips}
+      rowKey={(t) => t.id}
+      empty={<div className={styles.emptyTrips}>No upcoming air trips.</div>}
+    />
   );
 }
 
 function HotelTripTable({ trips }: { trips: LeadResponse[] }) {
-  if (trips.length === 0) return <div className={styles.emptyTrips}>No upcoming hotel trips.</div>;
   return (
-    <Table columns={[
-      { header: 'Name' },
-      { header: 'Mobile no.' },
-      { header: 'City' },
-      { header: 'Check-in' },
-      { header: 'Check-out' },
-      { header: 'Rooms' },
-      { header: 'Adults' },
-      { header: 'Children' },
-      { header: 'Updated on' },
-      { header: 'Assign to' },
-    ]}>
-      {trips.map(t => (
-        <Tr key={t.id}>
-          <Td className={styles.name}>{t.customerName}</Td>
-          <Td>{t.mobileNumber || '—'}</Td>
-          <Td>{det(t, 'city')}</Td>
-          <Td>{fmt(det(t, 'checkIn'))}</Td>
-          <Td>{fmt(det(t, 'checkOut'))}</Td>
-          <Td>{det(t, 'rooms')}</Td>
-          <Td>{det(t, 'adults')}</Td>
-          <Td>{det(t, 'children')}</Td>
-          <Td>{fmt(t.updatedAt)}</Td>
-          <Td>{t.assignTo || '—'}</Td>
-        </Tr>
-      ))}
-    </Table>
+    <Table
+      columns={HOTEL_COLUMNS}
+      rows={trips}
+      rowKey={(t) => t.id}
+      empty={<div className={styles.emptyTrips}>No upcoming hotel trips.</div>}
+    />
   );
 }
 

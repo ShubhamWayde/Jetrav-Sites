@@ -21,7 +21,7 @@ import { AUTH_API, OTP_LENGTH, OTP_RESEND_SECONDS } from '../../constants';
 import type { AuthConfig, VerifyOTPData } from '../../types';
 
 import styles from './OTPView.module.css';
-import Button from '@repo/ui/button/button';
+import Button from '@repo/ui/Button';
 
 interface Props {
   config: AuthConfig;

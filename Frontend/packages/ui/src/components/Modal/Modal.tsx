@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, type CSSProperties, type ReactNode } from 'react';
-import Button from '../button/button';
+import Button from '../Button/Button';
 import styles from './Modal.module.css';
 
 export interface ModalProps {

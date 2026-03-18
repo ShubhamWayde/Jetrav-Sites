@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 
-import Button from '@repo/ui/button/button';
+import Button from '@repo/ui/Button';
 import AuthCard from '../../components/AuthCard/AuthCard';
 import { api } from '../../api';
 import { storeDevOTP, storeOTPContext } from '../../auth';
@@ -13,7 +13,7 @@ import { AUTH_API } from '../../constants';
 import type { AuthConfig, SignupFormType } from '../../types';
 
 import styles from './SignupView.module.css';
-import InputField from '@repo/ui/InputField/InputField';
+import InputField from '@repo/ui/InputField';
 
 type FieldErrors = Partial<SignupFormType>;
 

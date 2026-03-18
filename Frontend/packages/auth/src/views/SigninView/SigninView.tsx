@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 
-import Button from '@repo/ui/button/button';
+import Button from '@repo/ui/Button';
 import AuthCard from '../../components/AuthCard/AuthCard';
 import { useAuth } from '../../AuthContext';
 import { api } from '../../api';
@@ -14,7 +14,7 @@ import { AUTH_API } from '../../constants';
 import type { AuthConfig } from '../../types';
 
 import styles from './SigninView.module.css';
-import InputField from '@repo/ui/InputField/InputField';
+import InputField from '@repo/ui/InputField';
 
 type Tab = 'otp' | 'password';
 const MOBILE_RE = /^[6-9]\d{9}$/;

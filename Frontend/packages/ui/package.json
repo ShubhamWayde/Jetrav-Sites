@@ -4,8 +4,9 @@
   "private": true,
   "exports": {
     "./styles/css/*": "./styles/css/*",
-    "./components/*": "./src/components/*.tsx",
-    "./*": "./src/*.tsx"
+    "./utilities": "./src/utils/utils.ts",
+    "./fonts":     "./src/fonts/index.ts",
+    "./*":         "./src/components/*/index.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
