@@ -41,7 +41,7 @@
 }
 
 .footer a {
-  color: var(--jt-dark-400);
+  color: var(--jt-neutral-400);
   font-weight: var(--font-weight-500);
   text-decoration: underline;
   text-underline-offset: 2px;

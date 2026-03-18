@@ -34,7 +34,7 @@
 .box:focus {
   outline: none;
   border-color: var(--jt-light-base);
-  background: var(--jt-dark-base);
+  background: var(--jt-neutral-base);
 }
 
 .box.filled {

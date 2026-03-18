@@ -13,26 +13,26 @@
   --l-950: 16%;
 
   /* base colors */
-  --jt-dark-base: oklch(14% 0 0); /* #080808 */
+  --jt-neutral-base: oklch(14% 0 0); /* #080808 */
   --jt-light-base: oklch(99.6% 0 0); /* #fefefe */
   --jt-skyBlue-base: oklch(62% 0.05 255); /* #778da9 */
   --jt-yellow-base: oklch(85% 0.16 95); /* #F9C74F */
 
-  --jt-dark-exact: var(--jt-dark-base); /* base color */
+  --jt-neutral-exact: var(--jt-neutral-base); /* base color */
   --jt-light-exact: var(--jt-light-base); /* base color */
 
   /* neutral palette */
-  --jt-neutral-50: oklch(from var(--jt-dark-base) var(--l-50) c h);
-  --jt-neutral-100: oklch(from var(--jt-dark-base) var(--l-100) c h);
-  --jt-neutral-200: oklch(from var(--jt-dark-base) var(--l-200) c h);
-  --jt-neutral-300: oklch(from var(--jt-dark-base) var(--l-300) c h);
-  --jt-neutral-400: oklch(from var(--jt-dark-base) var(--l-400) c h);
-  --jt-neutral-500: oklch(from var(--jt-dark-base) var(--l-500) c h);
-  --jt-neutral-600: oklch(from var(--jt-dark-base) var(--l-600) c h);
-  --jt-neutral-700: oklch(from var(--jt-dark-base) var(--l-700) c h);
-  --jt-neutral-800: oklch(from var(--jt-dark-base) var(--l-800) c h);
-  --jt-neutral-900: oklch(from var(--jt-dark-base) var(--l-900) c h);
-  --jt-neutral-950: oklch(from var(--jt-dark-base) var(--l-950) c h);
+  --jt-neutral-50: oklch(from var(--jt-neutral-base) var(--l-50) c h);
+  --jt-neutral-100: oklch(from var(--jt-neutral-base) var(--l-100) c h);
+  --jt-neutral-200: oklch(from var(--jt-neutral-base) var(--l-200) c h);
+  --jt-neutral-300: oklch(from var(--jt-neutral-base) var(--l-300) c h);
+  --jt-neutral-400: oklch(from var(--jt-neutral-base) var(--l-400) c h);
+  --jt-neutral-500: oklch(from var(--jt-neutral-base) var(--l-500) c h);
+  --jt-neutral-600: oklch(from var(--jt-neutral-base) var(--l-600) c h);
+  --jt-neutral-700: oklch(from var(--jt-neutral-base) var(--l-700) c h);
+  --jt-neutral-800: oklch(from var(--jt-neutral-base) var(--l-800) c h);
+  --jt-neutral-900: oklch(from var(--jt-neutral-base) var(--l-900) c h);
+  --jt-neutral-950: oklch(from var(--jt-neutral-base) var(--l-950) c h);
 
   /* sky blue palette */
   --jt-skyBlue-exact: var(--jt-skyBlue-base); /* base color */

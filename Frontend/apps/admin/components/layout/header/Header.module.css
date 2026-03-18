@@ -8,7 +8,7 @@
   height: 55px;
   padding: 0 24px;
   background: #0d0d0d;
-  border-bottom: 1px solid var(--jt-dark-800);
+  border-bottom: 1px solid var(--jt-neutral-800);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -92,7 +92,7 @@
   right: 0;
   width: 248px;
   background: #161616;
-  border: 1px solid var(--jt-dark-800);
+  border: 1px solid var(--jt-neutral-800);
   border-radius: var(--radius-xl, 12px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
   overflow: hidden;
@@ -180,7 +180,7 @@
 
 .divider {
   height: 1px;
-  background: var(--jt-dark-800);
+  background: var(--jt-neutral-800);
   margin: 0;
 }
 

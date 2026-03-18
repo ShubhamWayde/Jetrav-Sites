@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 
-import Button from '@repo/ui/Button';
 import AuthCard from '../../components/AuthCard/AuthCard';
 import OTPInput from '../../components/OTPInput/OTPInput';
 import { useAuth } from '../../AuthContext';
@@ -22,6 +21,7 @@ import { AUTH_API, OTP_LENGTH, OTP_RESEND_SECONDS } from '../../constants';
 import type { AuthConfig, VerifyOTPData } from '../../types';
 
 import styles from './OTPView.module.css';
+import Button from '@repo/ui/button/button';
 
 interface Props {
   config: AuthConfig;

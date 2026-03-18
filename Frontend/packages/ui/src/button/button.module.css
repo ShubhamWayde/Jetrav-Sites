@@ -22,7 +22,7 @@
 /* Variants */
 .primary {
   background: var(--jt-light-base);
-  color: var(--jt-dark-base);
+  color: var(--jt-neutral-base);
   border-color: var(--jt-light-base);
 }
 
@@ -38,7 +38,7 @@
 }
 
 .secondary:hover:not(:disabled) {
-  background: var(--jt-dark-base);
+  background: var(--jt-neutral-base);
 }
 
 .ghost {

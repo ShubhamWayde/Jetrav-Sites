@@ -26,5 +26,5 @@ body {
   line-height: 1.35;
   overflow-x: hidden;
   font-weight: var(--font-weight-400);
-  background: var(--jt-dark-exact);
+  background: var(--jt-neutral-exact);
 }
