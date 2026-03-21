@@ -26,18 +26,21 @@ export {
   storeDevOTP,
   getDevOTP,
   clearDevOTP,
-} from './auth';
+} from './utils/auth';
 
 // ─── API wrapper ──────────────────────────────────────────────────────────────
 export { api } from './api';
 export type { ApiResponse } from './api';
 
 // ─── Context ──────────────────────────────────────────────────────────────────
-export { AuthProvider, useAuth } from './AuthContext';
+export { AuthProvider, useAuth } from './context/AuthContext';
 
 // ─── Components ───────────────────────────────────────────────────────────────
 export { default as AuthCard } from './components/AuthCard/AuthCard';
 export { default as OTPInput } from './components/OTPInput/OTPInput';
+
+// ─── Toast helpers ────────────────────────────────────────────────────────────
+export { showSuccess, showError, showInfo, showWarning, getErrorMessage } from './utils/toast';
 
 // ─── Views ────────────────────────────────────────────────────────────────────
 export { default as SigninView } from './views/SigninView/SigninView';

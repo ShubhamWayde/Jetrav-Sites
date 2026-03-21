@@ -3,11 +3,11 @@
 import { SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { toast } from 'react-toastify';
 
+import Button from '@repo/ui/Button';
 import AuthCard from '../../components/AuthCard/AuthCard';
 import OTPInput from '../../components/OTPInput/OTPInput';
-import { useAuth } from '../../AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { api } from '../../api';
 import {
   clearDevOTP,
@@ -16,12 +16,12 @@ import {
   getOTPContext,
   getOrCreateDeviceId,
   storeDevOTP,
-} from '../../auth';
+} from '../../utils/auth';
 import { AUTH_API, OTP_LENGTH, OTP_RESEND_SECONDS } from '../../constants';
+import { showSuccess, showError, getErrorMessage } from '../../utils/toast';
 import type { AuthConfig, VerifyOTPData } from '../../types';
 
 import styles from './OTPView.module.css';
-import Button from '@repo/ui/Button';
 
 interface Props {
   config: AuthConfig;
@@ -63,7 +63,7 @@ export default function OTPView({ config }: Props) {
 
   useEffect(
     () => () => { if (timerRef.current) clearInterval(timerRef.current); },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -76,9 +76,11 @@ export default function OTPView({ config }: Props) {
     startTimer();
   }, [router, startTimer]);
 
-  const handleVerify = async (e: React.FormEvent) => {
+  // ── Verify ────────────────────────────────────────────────────────────────
+  const handleVerify = async (e: { preventDefault(): void }) => {
     e.preventDefault();
     const digits = otp.replace(/\D/g, '');
+    // Client-side length check → inline under boxes
     if (digits.length !== OTP_LENGTH) {
       setOtpError(`Please enter all ${OTP_LENGTH} digits.`);
       return;
@@ -96,11 +98,12 @@ export default function OTPView({ config }: Props) {
         saveToken(res.data.accessToken);
         clearOTPContext();
         clearDevOTP();
-        toast.success(res.message ?? 'OTP verified! Welcome back.');
+        showSuccess(res.message ?? 'OTP verified! Welcome back.');
         router.replace(config.afterAuthRedirect);
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Invalid or expired OTP. Please try again.');
+      // API error → inline under boxes (directly tied to the digits entered) + clear input
+      setOtpError(getErrorMessage(err, 'Invalid or expired OTP. Please try again.'));
       setOtp('');
       setIsDevMode(false);
     } finally {
@@ -108,18 +111,20 @@ export default function OTPView({ config }: Props) {
     }
   };
 
+  // ── Resend ────────────────────────────────────────────────────────────────
   const handleResend = async () => {
     setResendLoading(true);
     try {
       const res = await api.post<{ mobileNumber: string; otp?: string }>(
         AUTH_API.SEND_OTP,
-        { mobileNumber: mobile, purpose, role: config.role }
+        { mobileNumber: mobile, purpose, role: config.role },
       );
       if (res.data?.otp) { storeDevOTP(res.data.otp); setIsDevMode(true); }
-      toast.success(res.message ?? 'A new OTP has been sent to your mobile.');
+      showSuccess(res.message ?? 'A new OTP has been sent to your mobile.');
       startTimer();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to resend OTP.');
+      // API error → toast
+      showError(getErrorMessage(err, 'Failed to resend OTP. Please try again.'));
     } finally {
       setResendLoading(false);
     }

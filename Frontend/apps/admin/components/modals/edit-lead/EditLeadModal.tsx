@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { showSuccess, showError } from '@repo/auth';
 import InputField from '@repo/ui/InputField';
 import TextareaField from '@repo/ui/TextareaField';
 import { api } from '@/lib/api';
@@ -82,7 +82,7 @@ export default function EditLeadModal({ isOpen, lead, onClose, onSuccess }: Edit
 
   // ── Submit ────────────────────────────────────────────────────────────────
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: { preventDefault(): void }) => {
     e.preventDefault();
     if (!lead) return;
     setLoading(true);
@@ -96,11 +96,11 @@ export default function EditLeadModal({ isOpen, lead, onClose, onSuccess }: Edit
       };
 
       const res = await api.put(ADMIN_API.LEAD_BY_ID(lead.id), body);
-      toast.success(res.message ?? 'Lead updated successfully.');
+      showSuccess(res.message ?? 'Lead updated successfully.');
       onSuccess();
       onClose();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to update lead.');
+      showError(err instanceof Error ? err.message : 'Failed to update lead.');
     } finally {
       setLoading(false);
     }

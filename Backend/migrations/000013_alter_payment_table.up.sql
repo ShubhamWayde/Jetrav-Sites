@@ -1,0 +1,4 @@
+ALTER TABLE payment
+  ADD COLUMN IF NOT EXISTS "razorpayOrderID"   VARCHAR,
+  ADD COLUMN IF NOT EXISTS "razorpayPaymentID" VARCHAR,
+  ADD COLUMN IF NOT EXISTS "razorpaySignature" VARCHAR;

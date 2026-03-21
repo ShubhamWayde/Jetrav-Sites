@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
+import { showSuccess, showError } from '@repo/auth';
 import { api } from '@/lib/api';
 import { ADMIN_API } from '@/lib/constants';
 import { QUOTATION_TYPES, QuotationResponse } from '@/app/types/quotation';
@@ -67,7 +67,7 @@ export default function QuotationsPage() {
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to load quotations.';
       setFetchError(msg);
-      toast.error(msg);
+      showError(msg);
     } finally {
       setLoading(false);
     }
@@ -82,11 +82,11 @@ export default function QuotationsPage() {
     setDeleteLoading(true);
     try {
       const res = await api.delete(ADMIN_API.QUOTATION_BY_ID(customerId, deleteTarget.id));
-      toast.success(res.message ?? 'Quotation deleted successfully.');
+      showSuccess(res.message ?? 'Quotation deleted successfully.');
       setDeleteTarget(null);
       fetchData();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to delete quotation.');
+      showError(err instanceof Error ? err.message : 'Failed to delete quotation.');
     } finally {
       setDeleteLoading(false);
     }

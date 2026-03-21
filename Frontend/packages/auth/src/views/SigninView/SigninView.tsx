@@ -3,20 +3,21 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { toast } from 'react-toastify';
 
 import Button from '@repo/ui/Button';
+import InputField from '@repo/ui/InputField';
 import AuthCard from '../../components/AuthCard/AuthCard';
-import { useAuth } from '../../AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { api } from '../../api';
-import { getOrCreateDeviceId, storeDevOTP, storeOTPContext } from '../../auth';
+import { getOrCreateDeviceId, storeDevOTP, storeOTPContext } from '../../utils/auth';
 import { AUTH_API } from '../../constants';
+import { showSuccess, showError, getErrorMessage } from '../../utils/toast';
 import type { AuthConfig } from '../../types';
 
 import styles from './SigninView.module.css';
-import InputField from '@repo/ui/InputField';
 
 type Tab = 'otp' | 'password';
+
 const MOBILE_RE = /^[6-9]\d{9}$/;
 
 interface Props {
@@ -29,10 +30,12 @@ export default function SigninView({ config }: Props) {
 
   const [activeTab, setActiveTab] = useState<Tab>('otp');
 
+  // OTP tab
   const [otpMobile, setOtpMobile]       = useState('');
   const [otpMobileErr, setOtpMobileErr] = useState('');
   const [otpLoading, setOtpLoading]     = useState(false);
 
+  // Password tab
   const [pwMobile, setPwMobile]         = useState('');
   const [pwMobileErr, setPwMobileErr]   = useState('');
   const [password, setPassword]         = useState('');
@@ -46,8 +49,10 @@ export default function SigninView({ config }: Props) {
     setPasswordErr('');
   };
 
-  const handleOTPLogin = async (e: React.FormEvent) => {
+  // ── OTP Login ──────────────────────────────────────────────────────────────
+  const handleOTPLogin = async (e: { preventDefault(): void }) => {
     e.preventDefault();
+    // Client-side validation → show inline
     if (!MOBILE_RE.test(otpMobile.trim())) {
       setOtpMobileErr('Enter a valid 10-digit mobile number.');
       return;
@@ -56,21 +61,24 @@ export default function SigninView({ config }: Props) {
     try {
       const res = await api.post<{ mobileNumber: string; otp?: string }>(
         AUTH_API.SEND_OTP,
-        { mobileNumber: otpMobile.trim(), purpose: 'signin', role: config.role }
+        { mobileNumber: otpMobile.trim(), purpose: 'signin', role: config.role },
       );
       if (res.data?.otp) storeDevOTP(res.data.otp);
       storeOTPContext(otpMobile.trim(), 'signin');
-      toast.success(res.message ?? 'OTP sent to your mobile number.');
+      showSuccess(res.message ?? 'OTP sent to your mobile number.');
       router.push('/otp');
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to send OTP. Please try again.');
+      // API error → toast (shows the exact message from backend e.g. "no user account found")
+      showError(getErrorMessage(err, 'Failed to send OTP. Please try again.'));
     } finally {
       setOtpLoading(false);
     }
   };
 
-  const handlePasswordLogin = async (e: React.FormEvent) => {
+  // ── Password Login ─────────────────────────────────────────────────────────
+  const handlePasswordLogin = async (e: { preventDefault(): void }) => {
     e.preventDefault();
+    // Client-side validation → show inline
     let valid = true;
     if (!MOBILE_RE.test(pwMobile.trim())) {
       setPwMobileErr('Enter a valid 10-digit mobile number.');
@@ -81,21 +89,23 @@ export default function SigninView({ config }: Props) {
       valid = false;
     }
     if (!valid) return;
+
     setPwLoading(true);
     try {
       const res = await api.post<{ accessToken: string }>(AUTH_API.LOGIN, {
         mobileNumber: pwMobile.trim(),
         password,
         deviceID: getOrCreateDeviceId(),
-        role: config.role,
+        role:     config.role,
       });
       if (res.data?.accessToken) {
         saveToken(res.data.accessToken);
-        toast.success(res.message ?? 'Signed in successfully!');
+        showSuccess(res.message ?? 'Signed in successfully!');
         router.replace(config.afterAuthRedirect);
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Invalid credentials. Please try again.');
+      // API error → toast (shows the exact message from backend)
+      showError(getErrorMessage(err, 'Sign in failed. Please try again.'));
     } finally {
       setPwLoading(false);
     }

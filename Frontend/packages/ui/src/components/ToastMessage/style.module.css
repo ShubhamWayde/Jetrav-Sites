@@ -1,0 +1,17 @@
+.toasterWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toasterHeader {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.toasterDesc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+}

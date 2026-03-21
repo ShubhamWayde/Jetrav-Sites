@@ -8,9 +8,9 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { api } from './api';
-import { clearAuth, getAccessToken, storeAccessToken } from './auth';
-import { AUTH_API } from './constants';
+import { api } from '../api';
+import { clearAuth, getAccessToken, storeAccessToken } from '../utils/auth';
+import { AUTH_API } from '../constants';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

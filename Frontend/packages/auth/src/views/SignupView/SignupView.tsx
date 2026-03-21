@@ -3,17 +3,17 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { toast } from 'react-toastify';
 
 import Button from '@repo/ui/Button';
+import InputField from '@repo/ui/InputField';
 import AuthCard from '../../components/AuthCard/AuthCard';
 import { api } from '../../api';
-import { storeDevOTP, storeOTPContext } from '../../auth';
+import { storeDevOTP, storeOTPContext } from '../../utils/auth';
 import { AUTH_API } from '../../constants';
+import { showSuccess, showError, getErrorMessage } from '../../utils/toast';
 import type { AuthConfig, SignupFormType } from '../../types';
 
 import styles from './SignupView.module.css';
-import InputField from '@repo/ui/InputField';
 
 type FieldErrors = Partial<SignupFormType>;
 
@@ -38,8 +38,8 @@ export default function SignupView({ config }: Props) {
   const handleChange =
     (field: keyof SignupFormType) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setForm((prev) => ({ ...prev, [field]: e.target.value }));
-      setFieldErrors((prev) => ({ ...prev, [field]: '' }));
+      setForm(prev => ({ ...prev, [field]: e.target.value }));
+      setFieldErrors(prev => ({ ...prev, [field]: '' }));
     };
 
   const validate = (): boolean => {
@@ -52,12 +52,13 @@ export default function SignupView({ config }: Props) {
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: { preventDefault(): void }) => {
     e.preventDefault();
+    // Client-side validation → show inline under each field
     if (!validate()) return;
     setLoading(true);
     try {
-      const signupRes = await api.post<{ mobileNumber: string; otp?: string }>(
+      const res = await api.post<{ mobileNumber: string; otp?: string }>(
         AUTH_API.SIGNUP,
         {
           firstName:    form.firstName.trim(),
@@ -65,14 +66,15 @@ export default function SignupView({ config }: Props) {
           mobileNumber: form.mobileNumber.trim(),
           role:         config.role,
           ...(form.email.trim() ? { email: form.email.trim() } : {}),
-        }
+        },
       );
-      if (signupRes.data?.otp) storeDevOTP(signupRes.data.otp);
+      if (res.data?.otp) storeDevOTP(res.data.otp);
       storeOTPContext(form.mobileNumber.trim(), 'signup');
-      toast.success(signupRes.message ?? 'Account created! OTP sent to your mobile.');
+      showSuccess(res.message ?? 'Account created! OTP sent to your mobile.');
       router.push('/otp');
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      // API error → toast (e.g. "mobile number is already registered")
+      showError(getErrorMessage(err, 'Sign up failed. Please try again.'));
     } finally {
       setLoading(false);
     }
@@ -115,6 +117,7 @@ export default function SignupView({ config }: Props) {
           placeholder="john@example.com"
           value={form.email}
           onChange={handleChange('email')}
+          error={fieldErrors.email}
           autoComplete="email"
         />
 

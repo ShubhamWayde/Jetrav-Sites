@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { showSuccess, showError } from '@repo/auth';
 import { api } from '@/lib/api';
 import { ADMIN_API } from '@/lib/constants';
 import { LEAD_TYPES, LeadResponse, LeadType } from '@/app/types/lead';
@@ -142,7 +142,7 @@ export default function LeadsPage() {
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to fetch leads.';
       setFetchError(msg);
-      toast.error(msg);
+      showError(msg);
     } finally {
       setLoading(false);
     }
@@ -162,11 +162,11 @@ export default function LeadsPage() {
     setDeleteLoading(true);
     try {
       const res = await api.delete(ADMIN_API.LEAD_BY_ID(deleteTarget.id));
-      toast.success(res.message ?? 'Lead deleted successfully.');
+      showSuccess(res.message ?? 'Lead deleted successfully.');
       setDeleteTarget(null);
       fetchLeads();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to delete lead.');
+      showError(err instanceof Error ? err.message : 'Failed to delete lead.');
     } finally {
       setDeleteLoading(false);
     }

@@ -3,7 +3,7 @@
 import InputField from '@repo/ui/InputField';
 import TextareaField from '@repo/ui/TextareaField';
 import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { showSuccess, showError } from '@repo/auth';
 import { api } from '@/lib/api';
 import { ADMIN_API } from '@/lib/constants';
 import { CustomerResponse } from '@/app/types/customer';
@@ -88,7 +88,7 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
         setCustomers(list);
         if (list.length > 0) setExistingCustomerId(list[0]?.id ?? 0);
       })
-      .catch(() => toast.error('Failed to load customers.'))
+      .catch(() => showError('Failed to load customers.'))
       .finally(() => setCustomersLoading(false));
   }, [isOpen]);
 
@@ -123,17 +123,17 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
 
   // ── Submit ────────────────────────────────────────────────────────────────
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: { preventDefault(): void }) => {
     e.preventDefault();
 
     // Validate customer selection
     if (mode === 'existing' && !existingCustomerId) {
-      toast.error('Please select a customer.');
+      showError('Please select a customer.');
       return;
     }
     if (mode === 'new') {
       if (!newFirstName.trim() || !newLastName.trim() || !newMobile.trim()) {
-        toast.error('First name, last name, and mobile number are required.');
+        showError('First name, last name, and mobile number are required.');
         return;
       }
     }
@@ -167,11 +167,11 @@ export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModa
             };
 
       const res = await api.post(ADMIN_API.LEADS, body);
-      toast.success(res.message ?? 'Lead created successfully.');
+      showSuccess(res.message ?? 'Lead created successfully.');
       onSuccess();
       onClose();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to create lead.');
+      showError(err instanceof Error ? err.message : 'Failed to create lead.');
     } finally {
       setLoading(false);
     }

@@ -79,8 +79,16 @@ func Register(r *gin.Engine, app *bootstrap.App) {
 	user := api.Group("/user")
 	user.Use(middleware.AuthMiddleware())
 	{
+		// Profile
 		user.GET("/profile",               app.UserHandler.GetProfile)
 		user.PUT("/profile",               app.UserHandler.UpdateProfile)
 		user.POST("/profile/set-password", app.UserHandler.SetPassword)
+
+		// ── Plans & Subscription ──────────────────────────────────────────
+		user.GET("/plans",                      app.PlanHandler.GetPlans)
+		user.GET("/subscription",               app.PlanHandler.GetSubscription)
+		user.POST("/plans/subscribe",           app.PlanHandler.Subscribe)
+		user.POST("/plans/create-order",        app.PlanHandler.CreateOrder)
+		user.POST("/plans/verify-payment",      app.PlanHandler.VerifyPayment)
 	}
 }

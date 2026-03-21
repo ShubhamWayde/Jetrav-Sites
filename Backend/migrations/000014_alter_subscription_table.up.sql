@@ -1,0 +1,2 @@
+ALTER TABLE subscription
+  ADD COLUMN IF NOT EXISTS "planID" INT REFERENCES plan("ID");

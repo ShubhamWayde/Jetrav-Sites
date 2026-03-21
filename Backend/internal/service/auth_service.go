@@ -12,15 +12,18 @@ import (
 type authService struct {
 	userRepo    repository.UserRepository
 	sessionRepo repository.SessionRepository
+	rewardRepo  repository.RewardRepository
 }
 
 func NewAuthService(
 	userRepo repository.UserRepository,
 	sessionRepo repository.SessionRepository,
+	rewardRepo repository.RewardRepository,
 ) AuthService {
 	return &authService{
 		userRepo:    userRepo,
 		sessionRepo: sessionRepo,
+		rewardRepo:  rewardRepo,
 	}
 }
 
@@ -49,7 +52,16 @@ func (s *authService) Signup(req models.SignupRequest) error {
 		IsVerified:  false,
 	}
 
-	return s.userRepo.Create(user)
+	if err := s.userRepo.Create(user); err != nil {
+		return err
+	}
+
+	// Grant 200 welcome coins to every new user account
+	if req.Role == "user" {
+		_ = s.rewardRepo.CreateForUser(user.ID, 200)
+	}
+
+	return nil
 }
 
 // ─── Check User Role ─────────────────────────────────────────────────────────

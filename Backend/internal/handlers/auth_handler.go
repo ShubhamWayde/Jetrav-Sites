@@ -69,7 +69,7 @@ func (h *AuthHandler) SendOTP(c *gin.Context) {
 	}
 
 	if err := h.authService.CheckUserRole(req.MobileNumber, req.Role); err != nil {
-		utils.Error(c, http.StatusUnauthorized, err.Error())
+		utils.Error(c, http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 

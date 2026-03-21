@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { toast } from 'react-toastify';
+import { showSuccess, showError } from '@repo/auth';
 import { useAuth } from '@repo/auth';
 import { api } from '@/lib/api';
 import { ADMIN_API } from '@/lib/constants';
@@ -63,7 +63,7 @@ export default function ProfilePage() {
           setForm({ firstName: res.data.firstName, lastName: res.data.lastName });
         }
       })
-      .catch((err) => toast.error(err instanceof Error ? err.message : 'Failed to load profile.'))
+      .catch((err) => showError(err instanceof Error ? err.message : 'Failed to load profile.'))
       .finally(() => setFetching(false));
   }, [authLoading]);
 
@@ -103,10 +103,10 @@ export default function ProfilePage() {
       setProfile((prev) =>
         prev ? { ...prev, firstName: form.firstName.trim(), lastName: form.lastName.trim() } : prev,
       );
-      toast.success(res.message ?? 'Profile updated successfully.');
+      showSuccess(res.message ?? 'Profile updated successfully.');
       setEditMode(false);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to update profile.');
+      showError(err instanceof Error ? err.message : 'Failed to update profile.');
     } finally {
       setInfoSaving(false);
     }
@@ -146,9 +146,9 @@ export default function ProfilePage() {
       });
       setProfile((prev) => prev ? { ...prev, hasPassword: true } : prev);
       setPwdForm({ oldPwd: '', newPwd: '', confirmPwd: '' });
-      toast.success(res.message ?? 'Password saved successfully.');
+      showSuccess(res.message ?? 'Password saved successfully.');
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to save password.');
+      showError(err instanceof Error ? err.message : 'Failed to save password.');
     } finally {
       setPwdSaving(false);
     }

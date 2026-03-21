@@ -8,7 +8,7 @@ import {
   SESSION_DAYS,
   STORAGE_ACCESS_TOKEN,
   STORAGE_DEVICE_ID,
-} from './constants';
+} from '../constants';
 
 // ─── Cookie helpers ───────────────────────────────────────────────────────────
 

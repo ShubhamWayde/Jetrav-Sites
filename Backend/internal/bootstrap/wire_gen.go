@@ -26,10 +26,12 @@ func InitializeApp(db *gorm.DB) (*App, error) {
 	quotationRepository := repository.NewQuotationRepository(db)
 	leadRepository := repository.NewLeadRepository(db)
 	dashboardRepository := repository.NewDashboardRepository(db)
+	rewardRepository := repository.NewRewardRepository(db)
+	planRepository := repository.NewPlanRepository(db)
 
 	// ── Services ──────────────────────────────────────────────────────────
 	smsService := sms.NewSMSService()
-	authService := service.NewAuthService(userRepository, sessionRepository)
+	authService := service.NewAuthService(userRepository, sessionRepository, rewardRepository)
 	adminService := service.NewAdminService(userRepository, sessionRepository)
 	userService := service.NewUserService(userRepository)
 	sessionService := service.NewSessionService(sessionRepository)
@@ -38,6 +40,7 @@ func InitializeApp(db *gorm.DB) (*App, error) {
 	quotationService := service.NewQuotationService(quotationRepository, customerRepository)
 	leadService := service.NewLeadService(leadRepository, customerRepository)
 	dashboardService := service.NewDashboardService(dashboardRepository)
+	planService := service.NewPlanService(planRepository, rewardRepository)
 
 	// ── Handlers ──────────────────────────────────────────────────────────
 	authHandler := handlers.NewAuthHandler(authService, otpService, sessionService)
@@ -47,7 +50,8 @@ func InitializeApp(db *gorm.DB) (*App, error) {
 	quotationHandler := handlers.NewQuotationHandler(quotationService)
 	leadHandler := handlers.NewLeadHandler(leadService)
 	dashboardHandler := handlers.NewDashboardHandler(dashboardService)
+	planHandler := handlers.NewPlanHandler(planService)
 
-	app := NewApp(authHandler, adminHandler, userHandler, customerHandler, quotationHandler, leadHandler, dashboardHandler)
+	app := NewApp(authHandler, adminHandler, userHandler, customerHandler, quotationHandler, leadHandler, dashboardHandler, planHandler)
 	return app, nil
 }

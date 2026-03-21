@@ -3,7 +3,7 @@
  * and silent token-refresh on 401 responses.
  */
 
-import { clearAuth, getAccessToken, storeAccessToken } from './auth';
+import { clearAuth, getAccessToken, storeAccessToken } from './utils/auth';
 import { AUTH_API } from './constants';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -36,7 +36,13 @@ async function request<T>(
   });
 
   // ── Auto-refresh on 401 ───────────────────────────────────────────────────
-  if (res.status === 401 && !retried) {
+  // Public auth routes (signup, send-otp, verify-otp, login) can legitimately
+  // return 401 for business reasons (e.g. "user not found"). Do NOT treat those
+  // as expired sessions — only protected endpoints should trigger a token refresh.
+  const PUBLIC_AUTH_ROUTES = [AUTH_API.SIGNUP, AUTH_API.SEND_OTP, AUTH_API.VERIFY_OTP, AUTH_API.LOGIN];
+  const isPublicAuthRoute  = PUBLIC_AUTH_ROUTES.some(endpoint => url.startsWith(endpoint));
+
+  if (res.status === 401 && !retried && !isPublicAuthRoute) {
     const refreshed = await attemptRefresh();
     if (refreshed) return request<T>(url, options, true);
 

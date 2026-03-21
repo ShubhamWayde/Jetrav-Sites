@@ -1,0 +1,2 @@
+ALTER TABLE subscription
+  DROP COLUMN IF EXISTS "planID";

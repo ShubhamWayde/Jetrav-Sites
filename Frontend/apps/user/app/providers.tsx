@@ -24,7 +24,7 @@ export default function Providers({ children }: { children: ReactNode }) {
           border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: '10px',
           fontSize: '14px',
-          fontFamily: 'var(--Outfit-font, inherit)',
+          fontFamily: 'inherit',
         }}
       />
     </AuthProvider>

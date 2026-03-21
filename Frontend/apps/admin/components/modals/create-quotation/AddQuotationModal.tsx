@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { showSuccess, showError } from '@repo/auth';
 import InputField from '@repo/ui/InputField';
 import TextareaField from '@repo/ui/TextareaField';
 import { api } from '@/lib/api';
@@ -73,7 +73,7 @@ export default function AddQuotationModal({
 
   // ── Submit ────────────────────────────────────────────────────────────────
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: { preventDefault(): void }) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -83,11 +83,11 @@ export default function AddQuotationModal({
         remark:   remark.trim(),
         details,
       });
-      toast.success(res.message ?? 'Quotation created successfully.');
+      showSuccess(res.message ?? 'Quotation created successfully.');
       onSuccess();
       onClose();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to create quotation.');
+      showError(err instanceof Error ? err.message : 'Failed to create quotation.');
     } finally {
       setLoading(false);
     }

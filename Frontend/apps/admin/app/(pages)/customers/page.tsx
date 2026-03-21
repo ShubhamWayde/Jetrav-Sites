@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
+import { showSuccess, showError } from '@repo/auth';
 import { api } from '@/lib/api';
 import { ADMIN_API } from '@/lib/constants';
 import CustomerModal from '@/components/modals/create-customer/CustomerModal';
@@ -40,7 +40,7 @@ export default function CustomersPage() {
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to fetch customers.';
       setFetchError(msg);
-      toast.error(msg);
+      showError(msg);
     } finally {
       setLoading(false);
     }
@@ -55,11 +55,11 @@ export default function CustomersPage() {
     setDeleteLoading(true);
     try {
       const res = await api.delete(ADMIN_API.CUSTOMER_BY_ID(deleteTarget.id));
-      toast.success(res.message ?? `${deleteTarget.fullName} deleted successfully.`);
+      showSuccess(res.message ?? `${deleteTarget.fullName} deleted successfully.`);
       setDeleteTarget(null);
       fetchCustomers();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to delete customer.');
+      showError(err instanceof Error ? err.message : 'Failed to delete customer.');
     } finally {
       setDeleteLoading(false);
     }
