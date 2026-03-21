@@ -1,4 +1,4 @@
-/* ── Sidebar container ────────────────────────────────────────────────────── */
+/* ── Sidebar container ─────────────────────────────────────────────────────── */
 
 .sidebar {
   width: 220px;
@@ -12,7 +12,8 @@
   height: 100%;
   overflow-y: auto;
 }
-/* ── Nav links ────────────────────────────────────────────────────────────── */
+
+/* ── Nav links ─────────────────────────────────────────────────────────────── */
 
 .nav {
   flex: 1;
@@ -32,10 +33,6 @@
   color: var(--jt-light-base);
   text-decoration: none;
   transition: background 0.15s ease, color 0.15s ease;
-  -webkit-border-radius: var(--radius-lg);
-  -moz-border-radius: var(--radius-lg);
-  -ms-border-radius: var(--radius-lg);
-  -o-border-radius: var(--radius-lg);
 }
 
 .navItem:hover {

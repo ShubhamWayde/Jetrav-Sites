@@ -1,14 +1,16 @@
 .shell {
   min-height: 100dvh;
 }
+
 .mainWrapper {
   display: flex;
-  height: calc(100dvh - 56px);
+  height: calc(100dvh - 55px);
 }
 
 .main {
-  width: calc(100% - 220px);
+  flex: 1;
+  min-width: 0;
   padding: 8px;
-  height: calc(100dvh - 56px);
+  height: calc(100dvh - 55px);
   overflow-y: auto;
 }

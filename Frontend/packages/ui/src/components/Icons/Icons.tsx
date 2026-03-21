@@ -171,6 +171,26 @@ export function CheckCircleIcon({ size = 16, className }: IconProps) {
   );
 }
 
+// ── Home ──────────────────────────────────────────────────────────────────────
+export function HomeIcon({ size = 16, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} {...base}>
+      <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z" />
+      <path d="M9 21V12h6v9" />
+    </svg>
+  );
+}
+
+// ── Account / Person ──────────────────────────────────────────────────────────
+export function AccountIcon({ size = 16, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} {...base}>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" />
+    </svg>
+  );
+}
+
 // ── Bar chart / Reports ───────────────────────────────────────────────────────
 export function ReportsIcon({ size = 16, className }: IconProps) {
   return (

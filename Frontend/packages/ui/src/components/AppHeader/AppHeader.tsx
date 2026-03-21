@@ -2,40 +2,47 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@repo/auth';
-import { api } from '@/lib/api';
-import { ADMIN_API } from '@/lib/constants';
-import { BellIcon, GearIcon, LogoutIcon } from '@repo/ui/Icons';
-import styles from './Header.module.css';
-import { AdminProfile } from '@/app/types/profile';
+import { BellIcon, GearIcon, LogoutIcon } from '../Icons/Icons';
+import styles from './AppHeader.module.css';
 
+// ── Types ──────────────────────────────────────────────────────────────────────
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+export interface AppHeaderProfile {
+  firstName?:    string;
+  lastName?:     string;
+  email?:        string;
+  mobileNumber?: string;
+  role?:         string;
+}
+
+export interface AppHeaderProps {
+  logoText:              string;
+  showNotifications?:    boolean;
+  profile?:              AppHeaderProfile | null;
+  profileSettingsPath:   string;
+  onLogout():            void;
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────────
+
 function getInitials(firstName = '', lastName = ''): string {
   return `${firstName[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase() || '?';
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Component ──────────────────────────────────────────────────────────────────
 
-export default function Header() {
-  const { logout, isLoading } = useAuth();
-
-  const [profile, setProfile]         = useState<AdminProfile | null>(null);
+export function AppHeader({
+  logoText,
+  showNotifications = true,
+  profile,
+  profileSettingsPath,
+  onLogout,
+}: AppHeaderProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef                    = useRef<HTMLDivElement>(null);
-  const initials  = getInitials(profile?.firstName, profile?.lastName);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const initials    = getInitials(profile?.firstName, profile?.lastName);
 
-  // ── Fetch profile ────────────────────────────────────────────────────────
-
-  useEffect(() => {
-    if (isLoading) return;
-    api.get<AdminProfile>(ADMIN_API.PROFILE_GET)
-      .then((res) => { if (res.data) setProfile(res.data); })
-      .catch(() => {}); // silent — header should never crash on profile failure
-  }, [isLoading]);
-
-  // ── Close dropdown on outside click ──────────────────────────────────────
-
+  // Close on outside click
   useEffect(() => {
     if (!dropdownOpen) return;
     const onMouseDown = (e: MouseEvent) => {
@@ -47,8 +54,7 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', onMouseDown);
   }, [dropdownOpen]);
 
-  // ── Close on Escape ───────────────────────────────────────────────────────
-
+  // Close on Escape
   useEffect(() => {
     if (!dropdownOpen) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setDropdownOpen(false); };
@@ -56,17 +62,23 @@ export default function Header() {
     return () => window.removeEventListener('keydown', onKey);
   }, [dropdownOpen]);
 
-  // ── Render ────────────────────────────────────────────────────────────────
-
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
-        <h1>Admin site</h1>
+        <h1>{logoText}</h1>
       </div>
+
       <div className={styles.actions}>
-        <button title="Notifications" className={styles.iconBtn} type="button" aria-label="Notifications">
-          <BellIcon size={17} />
-        </button>
+        {showNotifications && (
+          <button
+            title="Notifications"
+            className={styles.iconBtn}
+            type="button"
+            aria-label="Notifications"
+          >
+            <BellIcon size={17} />
+          </button>
+        )}
 
         <div className={styles.avatarWrap} ref={dropdownRef}>
           <button
@@ -85,9 +97,7 @@ export default function Header() {
               <div className={styles.userCard}>
                 <div className={styles.userAvatar}>{initials}</div>
                 <p className={styles.userName}>
-                  {profile
-                    ? `${profile.firstName} ${profile.lastName}`
-                    : '—'}
+                  {profile ? `${profile.firstName} ${profile.lastName}` : '—'}
                 </p>
                 <p className={styles.userEmail}>{profile?.email || '—'}</p>
                 {profile?.mobileNumber && (
@@ -102,9 +112,8 @@ export default function Header() {
 
               <div className={styles.divider} />
 
-              {/* Profile Configuration */}
               <Link
-                href="/profile"
+                href={profileSettingsPath}
                 className={styles.dropdownItem}
                 role="menuitem"
                 onClick={() => setDropdownOpen(false)}
@@ -115,18 +124,16 @@ export default function Header() {
 
               <div className={styles.divider} />
 
-              {/* Logout */}
               <button
                 title="Log out"
                 className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`}
                 type="button"
                 role="menuitem"
-                onClick={() => { setDropdownOpen(false); logout(); }}
+                onClick={() => { setDropdownOpen(false); onLogout(); }}
               >
                 <span className={styles.dropdownItemIcon}><LogoutIcon size={15} /></span>
                 Log out
               </button>
-
             </div>
           )}
         </div>

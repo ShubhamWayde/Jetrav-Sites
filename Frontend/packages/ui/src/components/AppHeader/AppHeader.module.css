@@ -1,4 +1,4 @@
-/* ── Header bar ───────────────────────────────────────────────────────────── */
+/* ── Header bar ────────────────────────────────────────────────────────────── */
 
 .header {
   display: flex;
@@ -15,12 +15,12 @@
   flex-shrink: 0;
 }
 
-.logo h1{
+.logo h1 {
   font-size: var(--h5-font);
   margin: 0;
 }
 
-/* ── Right-side action buttons ────────────────────────────────────────────── */
+/* ── Right-side action buttons ─────────────────────────────────────────────── */
 
 .actions {
   display: flex;
@@ -40,10 +40,6 @@
   color: var(--jt-light-base, #a0a0a0);
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
-  -webkit-border-radius: var(--radius-lg, 8px);
-  -moz-border-radius: var(--radius-lg, 8px);
-  -ms-border-radius: var(--radius-lg, 8px);
-  -o-border-radius: var(--radius-lg, 8px);
 }
 
 .iconBtn:hover {
@@ -51,7 +47,7 @@
   color: var(--jt-light-base, #d0d0d0);
 }
 
-/* ── Avatar button ────────────────────────────────────────────────────────── */
+/* ── Avatar button ─────────────────────────────────────────────────────────── */
 
 .avatarWrap {
   position: relative;
@@ -66,7 +62,6 @@
   color: var(--jt-light-base, #f5f5f5);
   font-size: 12px;
   font-weight: var(--font-weight-600, 600);
-
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease;
   display: flex;
@@ -84,7 +79,7 @@
   user-select: none;
 }
 
-/* ── Dropdown ─────────────────────────────────────────────────────────────── */
+/* ── Dropdown ──────────────────────────────────────────────────────────────── */
 
 .dropdown {
   position: absolute;
@@ -98,10 +93,6 @@
   overflow: hidden;
   animation: dropIn 0.15s ease;
   z-index: 200;
-  -webkit-border-radius: var(--radius-xl, 12px);
-  -moz-border-radius: var(--radius-xl, 12px);
-  -ms-border-radius: var(--radius-xl, 12px);
-  -o-border-radius: var(--radius-xl, 12px);
 }
 
 @keyframes dropIn {
@@ -109,7 +100,7 @@
   to   { opacity: 1; transform: translateY(0)    scale(1);    }
 }
 
-/* ── User card inside dropdown ────────────────────────────────────────────── */
+/* ── User card inside dropdown ─────────────────────────────────────────────── */
 
 .userCard {
   display: flex;
@@ -131,7 +122,6 @@
   justify-content: center;
   font-size: 22px;
   font-weight: var(--font-weight-600, 600);
-
   color: var(--primary-50, #f5f5f5);
   margin-bottom: 10px;
   user-select: none;
@@ -170,13 +160,9 @@
   color: var(--primary-100, #d0d0d0);
   border: 1px solid rgba(255, 255, 255, 0.12);
   letter-spacing: 0.4px;
-  -webkit-border-radius: var(--radius-3xl, 20px);
-  -moz-border-radius: var(--radius-3xl, 20px);
-  -ms-border-radius: var(--radius-3xl, 20px);
-  -o-border-radius: var(--radius-3xl, 20px);
 }
 
-/* ── Divider ──────────────────────────────────────────────────────────────── */
+/* ── Divider ───────────────────────────────────────────────────────────────── */
 
 .divider {
   height: 1px;
@@ -184,7 +170,7 @@
   margin: 0;
 }
 
-/* ── Dropdown menu items ──────────────────────────────────────────────────── */
+/* ── Dropdown menu items ────────────────────────────────────────────────────── */
 
 .dropdownItem {
   display: flex;
@@ -193,7 +179,6 @@
   width: 100%;
   padding: 11px 16px;
   font-size: var(--font-sm, 14px);
-
   color: var(--primary-100, #d0d0d0);
   background: transparent;
   border: none;
