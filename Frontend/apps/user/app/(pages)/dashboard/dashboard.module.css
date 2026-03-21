@@ -1,0 +1,133 @@
+.page {
+  padding: 24px 28px;
+  max-width: 900px;
+}
+
+.pageTitle {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--jt-light-base);
+}
+
+/* ── Stats row ─────────────────────────────────────────────────────────────── */
+
+.statsRow {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.statCard {
+  background: var(--jt-neutral-900);
+  border-radius: 10px;
+  padding: 18px 28px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  min-width: 140px;
+  flex: 1;
+}
+
+.statLabel {
+  font-size: 13px;
+  color: var(--jt-light-base);
+  margin: 0;
+}
+
+.statValue {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--jt-light-base);
+  margin: 0;
+}
+
+/* ── Sections ──────────────────────────────────────────────────────────────── */
+
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: var(--jt-light-base);
+}
+
+.emptyText {
+  color: var(--jt-light-base);
+  font-size: 14px;
+}
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Lead / Quotation cards ────────────────────────────────────────────────── */
+
+.card {
+  background: var(--jt-neutral-900);
+  border-radius: 10px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardType {
+  font-weight: 600;
+  font-size: 15px;
+  text-transform: capitalize;
+}
+
+.statusBadge {
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.cardAssign {
+  font-size: 13px;
+  color: var(--jt-light-base);
+  margin: 0;
+}
+
+.cardRemark {
+  font-size: 13px;
+  color: var(--jt-light-base);
+  margin: 0;
+}
+
+.cardMeta {
+  font-size: 12px;
+  color: var(--jt-light-base);
+  margin: 0;
+}
+
+/* ── Loading / error ───────────────────────────────────────────────────────── */
+
+.loading {
+  padding: 32px;
+  text-align: center;
+  color: var(--jt-light-base);
+}
+
+.error {
+  padding: 32px;
+  text-align: center;
+  color: #e53e3e;
+}

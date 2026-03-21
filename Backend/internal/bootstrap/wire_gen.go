@@ -36,7 +36,7 @@ func InitializeApp(db *gorm.DB) (*App, error) {
 	userService := service.NewUserService(userRepository)
 	sessionService := service.NewSessionService(sessionRepository)
 	otpService := service.NewOTPService(otpRepository, smsService)
-	customerService := service.NewCustomerService(customerRepository)
+	customerService := service.NewCustomerService(customerRepository, rewardRepository)
 	quotationService := service.NewQuotationService(quotationRepository, customerRepository)
 	leadService := service.NewLeadService(leadRepository, customerRepository)
 	dashboardService := service.NewDashboardService(dashboardRepository)
@@ -45,7 +45,7 @@ func InitializeApp(db *gorm.DB) (*App, error) {
 	// ── Handlers ──────────────────────────────────────────────────────────
 	authHandler := handlers.NewAuthHandler(authService, otpService, sessionService)
 	adminHandler := handlers.NewAdminHandler(adminService)
-	userHandler := handlers.NewUserHandler(userService)
+	userHandler := handlers.NewUserHandler(userService, leadService, quotationService)
 	customerHandler := handlers.NewCustomerHandler(customerService)
 	quotationHandler := handlers.NewQuotationHandler(quotationService)
 	leadHandler := handlers.NewLeadHandler(leadService)

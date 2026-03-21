@@ -46,3 +46,7 @@ export { showSuccess, showError, showInfo, showWarning, getErrorMessage } from '
 export { default as SigninView } from './views/SigninView/SigninView';
 export { default as SignupView } from './views/SignupView/SignupView';
 export { default as OTPView }   from './views/OTPView/OTPView';
+
+// ─── Shared pages ─────────────────────────────────────────────────────────────
+export { default as ProfilePage } from './components/ProfilePage/ProfilePage';
+export type { ProfilePageProps }  from './components/ProfilePage/ProfilePage';

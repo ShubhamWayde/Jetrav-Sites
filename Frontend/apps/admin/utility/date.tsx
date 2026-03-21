@@ -8,6 +8,7 @@ export function formatDate(iso: string): string {
 }
 
 
-export function formatNumber(n: number): string {
+export function formatNumber(n: number | null | undefined): string {
+  if (n == null || isNaN(n)) return '0';
   return n.toLocaleString('en-IN');
 }

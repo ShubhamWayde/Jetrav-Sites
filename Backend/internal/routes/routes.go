@@ -84,11 +84,16 @@ func Register(r *gin.Engine, app *bootstrap.App) {
 		user.PUT("/profile",               app.UserHandler.UpdateProfile)
 		user.POST("/profile/set-password", app.UserHandler.SetPassword)
 
+		// ── Dashboard / Leads / Quotations ───────────────────────────────
+		user.GET("/dashboard",   app.UserHandler.GetDashboard)
+		user.GET("/leads",       app.UserHandler.GetLeads)
+		user.GET("/quotations",  app.UserHandler.GetQuotations)
+
 		// ── Plans & Subscription ──────────────────────────────────────────
-		user.GET("/plans",                      app.PlanHandler.GetPlans)
-		user.GET("/subscription",               app.PlanHandler.GetSubscription)
-		user.POST("/plans/subscribe",           app.PlanHandler.Subscribe)
-		user.POST("/plans/create-order",        app.PlanHandler.CreateOrder)
-		user.POST("/plans/verify-payment",      app.PlanHandler.VerifyPayment)
+		user.GET("/plans",                 app.PlanHandler.GetPlans)
+		user.GET("/subscription",          app.PlanHandler.GetSubscription)
+		user.POST("/plans/subscribe",      app.PlanHandler.Subscribe)
+		user.POST("/plans/create-order",   app.PlanHandler.CreateOrder)
+		user.POST("/plans/verify-payment", app.PlanHandler.VerifyPayment)
 	}
 }

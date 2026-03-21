@@ -19,4 +19,7 @@ type LeadService interface {
 
 	// Delete removes a lead owned by adminID.
 	Delete(adminID, id uint) error
+
+	// ListByCustomer returns all leads for the given user (customer dashboard).
+	ListByCustomer(customerID uint) ([]models.LeadResponse, error)
 }

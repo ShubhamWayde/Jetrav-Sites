@@ -2,25 +2,25 @@ package repository
 
 import "Backend/internal/models"
 
-// CustomerRepository defines all data-access operations for the customers table.
+// CustomerRepository manages users with role='user' on behalf of admins.
+// All queries target the users table filtered by role='user'.
 type CustomerRepository interface {
-	// Create inserts a new customer record.
-	Create(customer *models.Customer) error
+	// Create inserts a new user with role='user' (admin-created customer).
+	Create(user *models.User) error
 
-	// List returns only customers added by the given admin, joined with admin info.
+	// List returns role='user' accounts added by the given admin.
 	List(adminID uint) ([]models.CustomerRow, error)
 
-	// GetByID returns a single customer by primary key, joined with admin info.
+	// GetByID returns a single role='user' account with admin name joined.
 	GetByID(id uint) (*models.CustomerRow, error)
 
-	// Update applies a map of column→value changes to the given customer ID.
+	// Update applies partial field updates to a user account.
 	Update(id uint, updates map[string]interface{}) error
 
-	// Delete removes a customer by primary key.
+	// Delete hard-deletes a user account.
 	Delete(id uint) error
 
-	// ExistsByMobile reports whether a customer with the given mobile number
-	// exists. Pass excludeID > 0 to skip that record (used on updates so the
-	// owner of the number can keep it unchanged).
-	ExistsByMobile(mobile string, excludeID uint) (bool, error)
+	// ExistsByPhone returns true if any user already has the given phone number.
+	// Pass excludeID > 0 to skip that record (used during update).
+	ExistsByPhone(mobile string, excludeID uint) (bool, error)
 }

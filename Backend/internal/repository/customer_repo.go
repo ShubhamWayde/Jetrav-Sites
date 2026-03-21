@@ -15,52 +15,58 @@ func NewCustomerRepository(db *gorm.DB) CustomerRepository {
 	return &customerRepo{db: db}
 }
 
-// adminJoinSelect is the SELECT clause used for every customer query that
-// needs to include the adding-admin's full name from the users table.
-const adminJoinSelect = `
+// customerJoinSelect selects customer (c), admin name (u), and jetcoin balance (rwd).
+const customerJoinSelect = `
 	c."ID",
 	c."firstName",
 	c."lastName",
+	c."email",
+	c."phoneNumber",
+	c."password",
+	c."accountName",
+	c."isVerified",
+	c."role",
 	c."planType",
-	c."jetcoins",
 	c."totalTrips",
 	c."totalStays",
-	c."email",
-	c."mobileNumber",
 	c."reference",
 	c."addedBy",
 	c."createdAt",
 	c."updatedAt",
-	u."firstName" AS "addedByFirstName",
-	u."lastName"  AS "addedByLastName"
+	u."firstName"              AS "addedByFirstName",
+	u."lastName"               AS "addedByLastName",
+	COALESCE(rwd."coin", 0)    AS "jetcoins"
 `
 
-// Create inserts a new customer into the database.
-func (r *customerRepo) Create(customer *models.Customer) error {
-	return r.db.Create(customer).Error
+// Create inserts a new user with role='user'.
+func (r *customerRepo) Create(user *models.User) error {
+	return r.db.Create(user).Error
 }
 
-// List returns only customers added by the given admin, joined with admin info.
-func (r *customerRepo) List(adminID uint) ([]models.CustomerRow, error) {
+// List returns all role='user' accounts, newest first.
+// adminID is accepted for interface compatibility but all users are returned.
+func (r *customerRepo) List(_ uint) ([]models.CustomerRow, error) {
 	var rows []models.CustomerRow
 	err := r.db.
-		Table(`customers c`).
-		Select(adminJoinSelect).
+		Table(`users c`).
+		Select(customerJoinSelect).
 		Joins(`LEFT JOIN users u ON u."ID" = c."addedBy"`).
-		Where(`c."addedBy" = ?`, adminID).
+		Joins(`LEFT JOIN reward rwd ON rwd."userID" = c."ID"`).
+		Where(`c."role" = 'user'`).
 		Order(`c."createdAt" DESC`).
 		Find(&rows).Error
 	return rows, err
 }
 
-// GetByID returns a single customer with admin join.
+// GetByID returns a single role='user' account with admin name and coins joined.
 func (r *customerRepo) GetByID(id uint) (*models.CustomerRow, error) {
 	var row models.CustomerRow
 	err := r.db.
-		Table(`customers c`).
-		Select(adminJoinSelect).
+		Table(`users c`).
+		Select(customerJoinSelect).
 		Joins(`LEFT JOIN users u ON u."ID" = c."addedBy"`).
-		Where(`c."ID" = ?`, id).
+		Joins(`LEFT JOIN reward rwd ON rwd."userID" = c."ID"`).
+		Where(`c."ID" = ? AND c."role" = 'user'`, id).
 		First(&row).Error
 	if err != nil {
 		return nil, err
@@ -68,16 +74,13 @@ func (r *customerRepo) GetByID(id uint) (*models.CustomerRow, error) {
 	return &row, nil
 }
 
-// Update applies only the provided fields to the customer.
+// Update applies only the provided fields and stamps updatedAt.
 func (r *customerRepo) Update(id uint, updates map[string]interface{}) error {
-	// Always stamp updatedAt
 	updates["updatedAt"] = time.Now()
-
 	result := r.db.
-		Model(&models.Customer{}).
-		Where(`"ID" = ?`, id).
+		Model(&models.User{}).
+		Where(`"ID" = ? AND "role" = 'user'`, id).
 		Updates(updates)
-
 	if result.Error != nil {
 		return result.Error
 	}
@@ -87,12 +90,11 @@ func (r *customerRepo) Update(id uint, updates map[string]interface{}) error {
 	return nil
 }
 
-// Delete hard-deletes the customer by primary key.
+// Delete hard-deletes a user account by primary key.
 func (r *customerRepo) Delete(id uint) error {
 	result := r.db.
-		Where(`"ID" = ?`, id).
-		Delete(&models.Customer{})
-
+		Where(`"ID" = ? AND "role" = 'user'`, id).
+		Delete(&models.User{})
 	if result.Error != nil {
 		return result.Error
 	}
@@ -102,11 +104,9 @@ func (r *customerRepo) Delete(id uint) error {
 	return nil
 }
 
-// ExistsByMobile returns true when any customer has the given mobile number.
-// Pass excludeID > 0 to ignore that particular record (used during update so
-// the owner of the number is allowed to keep it unchanged).
-func (r *customerRepo) ExistsByMobile(mobile string, excludeID uint) (bool, error) {
-	query := r.db.Model(&models.Customer{}).Where(`"mobileNumber" = ?`, mobile)
+// ExistsByPhone returns true if any user already owns the given phone number.
+func (r *customerRepo) ExistsByPhone(mobile string, excludeID uint) (bool, error) {
+	query := r.db.Model(&models.User{}).Where(`"phoneNumber" = ?`, mobile)
 	if excludeID > 0 {
 		query = query.Where(`"ID" != ?`, excludeID)
 	}

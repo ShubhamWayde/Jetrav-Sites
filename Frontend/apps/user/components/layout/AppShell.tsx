@@ -13,7 +13,7 @@ import type { UserProfile } from '@/app/types/profile';
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Home',     icon: <HomeIcon size={18} /> },
-  { href: '/account',   label: 'Accounts', icon: <AccountIcon size={18} /> },
+  { href: '/accounts',  label: 'Accounts', icon: <AccountIcon size={18} /> },
 ];
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -36,7 +36,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           logoText="User App"
           showNotifications={false}
           profile={profile}
-          profileSettingsPath="/account"
+          profileSettingsPath="/profile"
           onLogout={logout}
         />
       }

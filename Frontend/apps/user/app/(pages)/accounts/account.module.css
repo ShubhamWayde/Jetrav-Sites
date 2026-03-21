@@ -1,0 +1,258 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 720px;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--jt-light-base);
+  margin: 0 0 0.25rem;
+}
+
+.pageSubtitle {
+  font-size: 0.875rem;
+  color: var(--jt-light-base);
+  margin: 0;
+}
+
+/* ── Jetcoins card ─────────────────────────────────────────────────────────── */
+
+.coinsCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 1px solid #f59e0b;
+}
+
+.coinsIcon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.coinsLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #92400e;
+  margin: 0 0 0.2rem;
+}
+
+.coinsValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #78350f;
+  margin: 0;
+}
+
+/* ── Plan card ─────────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--jt-neutral-900);
+  border: 1px solid var(--jt-neutral-900);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cardHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cardTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color:var(--jt-light-base);
+  margin: 0 0 0.35rem;
+}
+
+.planName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color:var(--jt-light-base);
+  margin: 0;
+}
+
+.tierBadge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.tierSilver {
+  background: var(--jt-neutral-400);
+  color:var(--jt-light-base);
+  border: 1px solid var(--jt-neutral-400);
+}
+
+.tierGold {
+  background: #fef9c3;
+  color: #854d0e;
+  border: 1px solid #fde047;
+}
+
+.tierPlatinum {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #9ca3af;
+}
+
+/* ── Plan meta grid ────────────────────────────────────────────────────────── */
+
+.planMeta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--jt-neutral-800);
+  border-radius: 8px;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.metaLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--jt-light-base);
+}
+
+.metaValue {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--jt-light-base);
+}
+
+/* ── Features ──────────────────────────────────────────────────────────────── */
+
+.featuresTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color:var(--jt-light-base);
+  margin: 0 0 0.75rem;
+}
+
+.featuresList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color:var(--jt-light-base);
+}
+
+.featureCheck {
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+/* ── Footer ────────────────────────────────────────────────────────────────── */
+
+.cardFooter {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid var(--jt-neutral-400);
+}
+
+.changePlanBtn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: var(--color-primary, #2563eb);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.changePlanBtn:hover {
+  opacity: 0.88;
+}
+
+/* ── Empty state ───────────────────────────────────────────────────────────── */
+
+.emptyPlan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.emptyTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color:var(--jt-light-base);
+  margin: 0;
+}
+
+.emptySubtitle {
+  font-size: 0.875rem;
+  color:var(--jt-light-base);
+  margin: 0 0 0.75rem;
+}
+
+/* ── Spinner / loading ─────────────────────────────────────────────────────── */
+
+.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-border, #e5e7eb);
+  border-top-color: var(--color-primary, #2563eb);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
