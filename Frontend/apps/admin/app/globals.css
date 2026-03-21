@@ -87,3 +87,12 @@ a {
   -ms-border-radius: var(--radius-md);
   -o-border-radius: var(--radius-md);
 }
+
+/* ── React Toastify overrides ─────────────────────────────────────────────── */
+.Toastify__toast {
+  background: var(--jt-neutral-exact);
+  border: 1px solid var(--jt-neutral-900);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-sm);
+  font-family: inherit;
+}
