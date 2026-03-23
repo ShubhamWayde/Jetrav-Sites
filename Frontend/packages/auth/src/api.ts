@@ -6,6 +6,13 @@
 import { clearAuth, getAccessToken, storeAccessToken } from './utils/auth';
 import { AUTH_API } from './constants';
 
+// Configured once by AuthProvider so the refresh call can tell the backend
+// which role-specific cookie to use.
+let _appRole = '';
+export function configureApiRole(role: string): void {
+  _appRole = role;
+}
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface ApiResponse<T = unknown> {
@@ -67,7 +74,8 @@ async function request<T>(
 
 async function attemptRefresh(): Promise<boolean> {
   try {
-    const res = await fetch(AUTH_API.REFRESH, {
+    const url = _appRole ? `${AUTH_API.REFRESH}?role=${_appRole}` : AUTH_API.REFRESH;
+    const res = await fetch(url, {
       method: 'POST',
       credentials: 'include',
     });

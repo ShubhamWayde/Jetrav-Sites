@@ -8,16 +8,18 @@ import (
 
 	"Backend/internal/models"
 	"Backend/internal/service"
+	"Backend/pkg/socket"
 	"Backend/pkg/utils"
 )
 
 // QuotationHandler handles all CRUD endpoints for the quotations resource.
 type QuotationHandler struct {
 	quotationService service.QuotationService
+	hub              *socket.Hub
 }
 
-func NewQuotationHandler(quotationService service.QuotationService) *QuotationHandler {
-	return &QuotationHandler{quotationService: quotationService}
+func NewQuotationHandler(quotationService service.QuotationService, hub *socket.Hub) *QuotationHandler {
+	return &QuotationHandler{quotationService: quotationService, hub: hub}
 }
 
 // ─── POST /api/admin/customers/:id/quotations ─────────────────────────────────
@@ -55,6 +57,9 @@ func (h *QuotationHandler) Create(c *gin.Context) {
 		utils.Error(c, status, err.Error())
 		return
 	}
+
+	// Notify the customer in real-time
+	h.hub.Emit(customerID, "quotation_created", quotation)
 
 	utils.Success(c, http.StatusCreated, "Quotation created successfully", quotation)
 }

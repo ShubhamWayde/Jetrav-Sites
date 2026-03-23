@@ -8,6 +8,12 @@ import (
 
 func Register(r *gin.Engine, app *bootstrap.App) {
 
+	// ── WebSocket ─────────────────────────────────────────────────────────────
+	// GET /ws  — authenticated users connect here for real-time events.
+	ws := r.Group("/ws")
+	ws.Use(middleware.AuthMiddleware())
+	ws.GET("", app.WsHandler.ServeWS)
+
 	api := r.Group("/api")
 
 	// =========================================================================

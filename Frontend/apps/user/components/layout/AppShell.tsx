@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAuth, api } from '@repo/auth';
+import { useAuth, api, useNotifications } from '@repo/auth';
 import { AppLayout }  from '@repo/ui/AppLayout';
 import { AppHeader }  from '@repo/ui/AppHeader';
 import { AppSidebar } from '@repo/ui/AppSidebar';
@@ -21,6 +21,7 @@ const NAV_ITEMS = [
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const { logout, isLoading } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const { notifications, markAllRead, dismiss, dismissAll } = useNotifications('user');
 
   useEffect(() => {
     if (isLoading) return;
@@ -34,10 +35,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       header={
         <AppHeader
           logoText="User App"
-          showNotifications={false}
+          showNotifications
           profile={profile}
           profileSettingsPath="/profile"
           onLogout={logout}
+          notifications={notifications}
+          onMarkAllRead={markAllRead}
+          onDismiss={dismiss}
+          onDismissAll={dismissAll}
         />
       }
       sidebar={<AppSidebar navItems={NAV_ITEMS} />}

@@ -10,6 +10,16 @@ import {
   STORAGE_DEVICE_ID,
 } from '../constants';
 
+// ─── Per-app configuration ────────────────────────────────────────────────────
+// Call configureAuth('admin') in the admin app's AuthProvider so tokens are
+// stored under different localStorage keys and never bleed between apps.
+
+let _storageKey = STORAGE_ACCESS_TOKEN; // default: 'access_token'
+
+export function configureAuth(role: string): void {
+  _storageKey = `${role}_access_token`;
+}
+
 // ─── Cookie helpers ───────────────────────────────────────────────────────────
 
 function setCookie(name: string, value: string, days: number): void {
@@ -27,18 +37,18 @@ function deleteCookie(name: string): void {
 
 export function storeAccessToken(token: string): void {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(STORAGE_ACCESS_TOKEN, token);
+  localStorage.setItem(_storageKey, token);
   setCookie(COOKIE_TOKEN, token, SESSION_DAYS);
 }
 
 export function getAccessToken(): string | null {
   if (typeof window === 'undefined') return null;
-  return localStorage.getItem(STORAGE_ACCESS_TOKEN);
+  return localStorage.getItem(_storageKey);
 }
 
 export function clearAuth(): void {
   if (typeof window === 'undefined') return;
-  localStorage.removeItem(STORAGE_ACCESS_TOKEN);
+  localStorage.removeItem(_storageKey);
   deleteCookie(COOKIE_TOKEN);
 }
 

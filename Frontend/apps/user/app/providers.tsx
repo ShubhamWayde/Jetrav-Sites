@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
-    <AuthProvider>
+    <AuthProvider role="user">
       {children}
       <ToastContainer
         position="top-right"

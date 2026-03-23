@@ -8,8 +8,8 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { api } from '../api';
-import { clearAuth, getAccessToken, storeAccessToken } from '../utils/auth';
+import { api, configureApiRole } from '../api';
+import { clearAuth, configureAuth, getAccessToken, storeAccessToken } from '../utils/auth';
 import { AUTH_API } from '../constants';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -30,16 +30,27 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+interface AuthProviderProps {
+  children: ReactNode;
+  /** 'admin' | 'user' — isolates localStorage key and refresh cookie per app. */
+  role?: string;
+}
+
+export function AuthProvider({ children, role }: AuthProviderProps) {
   const [state, setState] = useState<AuthState>({
     accessToken: null,
     isLoading: true,
   });
 
   useEffect(() => {
+    // Configure role-specific storage key and refresh URL once on mount.
+    if (role) {
+      configureAuth(role);
+      configureApiRole(role);
+    }
     const token = getAccessToken();
     setState({ accessToken: token, isLoading: false });
-  }, []);
+  }, [role]);
 
   const saveToken = useCallback((token: string) => {
     storeAccessToken(token);
