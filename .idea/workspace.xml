@@ -82,7 +82,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="UAT" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -234,6 +234,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="updated code" />
     <MESSAGE value="fix structure and update imports" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix structure and update imports" />
+    <MESSAGE value="updated font import" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated font import" />
   </component>
 </project>
