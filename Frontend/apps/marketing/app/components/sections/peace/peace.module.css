@@ -1,0 +1,12 @@
+.grid > div {
+	--radial-gradient-color: var(--jt-yellow-600);
+
+	&:hover {
+		svg * {
+			fill: url(#jt-yellow-gradient);
+			stroke: url(#jt-yellow-gradient);
+			stroke-width: 0.2;
+		}
+	}
+}
+

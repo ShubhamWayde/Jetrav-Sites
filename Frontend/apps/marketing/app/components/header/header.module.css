@@ -1,4 +1,44 @@
+.headerMain {
+	border-block-end: 1px solid;
+	border-image: linear-gradient(
+			to right,
+			transparent 0%,
+			color-mix(in srgb, oklch(from var(--jt-skyBlue-600) l c h/0.2), transparent 20%) 50%,
+			transparent 100%
+	) 1;
+	position: sticky;
+	top: 0;
+	z-index: 8;
+	transition: all var(--time-normal) var(--jt-easeInOutQuart);
+}
+
+.scroll {
+	background-color: oklch(from var(--jt-dark-exact) l c h / 0.8);
+	border-radius: var(--radius-full);
+	top: var(--space-6);
+	backdrop-filter: blur(12px);
+}
+
+.isHidden {
+	transform: translateY(-150%);
+}
+
 .logoSize {
 	height: 20px;
 	width: auto;
+}
+
+.headerContainer {
+	nav ul li {
+		font-size: var(--font-sm);
+		padding-inline: var(--space-4);
+		padding-block: var(--space-2);
+		border-radius: var(--radius-full);
+	}
+
+	nav {
+		@media (max-width: 1024px) {
+			display: none;
+		}
+	}
 }

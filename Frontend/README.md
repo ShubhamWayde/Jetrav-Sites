@@ -6,15 +6,15 @@ Turborepo monorepo containing three Next.js applications for the Jetrav travel a
 
 ## Tech Stack
 
-| Tool | Version |
-|---|---|
-| Package Manager | pnpm 9.0.0 |
-| Monorepo | Turborepo 2.8.7 |
-| Framework | Next.js 16.1.6 (App Router) |
-| Runtime | React 19.2.0 |
-| Language | TypeScript 5.9.3 |
-| Linting | ESLint |
-| Formatting | Prettier |
+| Tool            | Version                     |
+|-----------------|-----------------------------|
+| Package Manager | pnpm 9.0.0                  |
+| Monorepo        | Turborepo 2.8.7             |
+| Framework       | Next.js 16.1.6 (App Router) |
+| Runtime         | React 19.2.0                |
+| Language        | TypeScript 5.9.3            |
+| Linting         | ESLint                      |
+| Formatting      | Prettier                    |
 
 ---
 
@@ -144,6 +144,7 @@ admin/
 ```
 
 **Features:**
+
 - OTP-based admin signup via SMS (Twilio)
 - Password login with JWT authentication
 - Auto token refresh on API calls
@@ -292,8 +293,13 @@ NEXT_PUBLIC_API_URL=http://localhost:8080
 
 ## Dev Ports
 
-| App | Port |
-|---|---|
-| user | 3000 |
-| admin | 3001 |
+| App       | Port |
+|-----------|------|
+| user      | 3000 |
+| admin     | 3001 |
 | marketing | 3001 |
+
+---
+
+for build icons
+pnpm --filter ui run build:icons

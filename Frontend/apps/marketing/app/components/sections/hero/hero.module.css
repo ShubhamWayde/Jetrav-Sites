@@ -1,0 +1,37 @@
+.tag {
+	button {
+		--btn-gradient-angle: 10deg;
+		cursor: default;
+	}
+}
+
+.headingWrapper {
+	h1 {
+		font-size: var(--font-heading);
+		font-weight: var(--font-weight-500);
+		font-style: italic;
+		line-height: var(--leading-tight);
+	}
+
+	p {
+		font-size: var(--font-subtitle);
+	}
+}
+
+.heroIconWrapper {
+	@media (max-width: 768px) {
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	.heroIcon {
+		--icon-size: clamp(3.5rem, 10vw, 4.5rem);
+		height: var(--icon-size);
+		width: var(--icon-size);
+
+		@media (min-width: 768px) {
+			margin-inline-end: var(--space-6);
+		}
+
+	}
+}

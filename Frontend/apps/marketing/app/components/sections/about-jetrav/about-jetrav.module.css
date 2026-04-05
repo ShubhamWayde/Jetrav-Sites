@@ -1,0 +1,5 @@
+.text {
+	font-size: clamp(2rem, 8vw, 4rem);
+	line-height: var(--leading-tight);
+	font-weight: var(--font-weight-100);
+}

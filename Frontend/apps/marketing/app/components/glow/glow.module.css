@@ -1,0 +1,5 @@
+.glow {
+	position: absolute;
+	z-index: -50;
+	pointer-events: none;
+}

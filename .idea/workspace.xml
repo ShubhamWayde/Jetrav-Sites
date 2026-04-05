@@ -4,22 +4,63 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91181458-c591-40bb-b421-baf1c5954518" name="Changes" comment="updated code">
+    <list default="true" id="91181458-c591-40bb-b421-baf1c5954518" name="Changes" comment="fix structure and update imports">
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/services/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/glow/glow.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/glow/glow.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/about-jetrav/about-jetrav.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/about-jetrav/about-jetrav.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/change-plans/change-plans.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/change-plans/change-plans.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/cta/cta.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/cta/cta.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/hero/hero.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/hero/hero.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/peace/peace.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/peace/peace.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/solutions/solutions.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/solutions/solutions.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/token/token.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/token/token.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/text-reveal/text-reveal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/button/button.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/button/button.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/card/card.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/card/card.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/circuit-grid/circuit-grid.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/circuit-grid/circuit-grid.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/glowing-logo/glowing-logo.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/glowing-logo/glowing-logo.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/sectionInfo-block/info-block.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/sectionInfo-block/info-block.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/packages/constants/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/packages/constants/src/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/packages/constants/src/routes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/icon.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/icon.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/svgGradients.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/admin/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/admin/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/admin/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/admin/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/home/page.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/home/page.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/home/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/home/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/footer/footer.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/footer/footer.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/footer/footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/footer/footer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.module.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/globals.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/user/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/user/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/user/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/user/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/tsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/fonts.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/fonts/fonts.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/components/logo/logo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/components/logo/logo.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/fonts/fonts.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/fonts/fonts.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/base.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/utilities.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/utilities.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/variable.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/variable.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/styles/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/base.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/styles/css/utilities.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/utilities.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/styles/css/variable.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/variable.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,13 +68,25 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="252" />
+    <option name="cachedIndexableFilesCount" value="388" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+      </list>
+    </option>
   </component>
   <component name="FormatOnSaveOptions">
     <option name="myRunOnSave" value="true" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -59,40 +112,45 @@
   &quot;associatedIndex&quot;: 8
 }</component>
   <component name="ProjectId" id="3A1Lu3QFdRN7SkRKcAVznPyMVBm" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "code.cleanup.on.save": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "javascript.preferred.runtime.type.id": "node",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "D:/Folder2/waydzo/Development/git/Jetrav-Sites",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "pnpm",
-    "rearrange.code.on.save": "true",
-    "settings.editor.selected.configurable": "preferences.sourceCode.CSS",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "D:\\Folder2\\waydzo\\Development\\git\\Jetrav-Sites\\Frontend\\packages\\auth\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;code.cleanup.on.save&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;design-marketing&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Folder2/waydzo/Development/git/Jetrav-Sites&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;rearrange.code.on.save&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\Folder2\\waydzo\\Development\\git\\Jetrav-Sites\\Frontend\\packages\\eslint-config\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -104,15 +162,17 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Folder2\waydzo\Development\git\Jetrav-Sites\Frontend\packages\ui\src\Icons\raw" />
+      <recent name="D:\Folder2\waydzo\Development\git\Jetrav-Sites\Frontend\packages\ui\src\Icons" />
+      <recent name="D:\Folder2\waydzo\Development\git\Jetrav-Sites\Frontend\apps\marketing\app\components\ui" />
       <recent name="D:\Folder2\waydzo\Development\git\Jetrav-Sites\Frontend\packages\ui" />
       <recent name="D:\Folder2\waydzo\Development\git\Jetrav-Sites\Frontend\packages\ui\src\fonts" />
-      <recent name="D:\Folder2\waydzo\Development\git\Jetrav-Sites\Frontend\apps\marketing\app\(pages)\home" />
     </key>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-WS-253.31033.133" />
+        <option value="bundled-js-predefined-d6986cc7102b-3bd3a6803838-JavaScript-WS-261.22158.274" />
       </set>
     </attachedChunks>
   </component>
@@ -127,7 +187,18 @@
       <workItem from="1771759031595" duration="19868000" />
       <workItem from="1772884048542" duration="11577000" />
       <workItem from="1773463187585" duration="40000" />
-      <workItem from="1773463240896" duration="32750000" />
+      <workItem from="1773463240896" duration="33130000" />
+      <workItem from="1773752022735" duration="201000" />
+      <workItem from="1773752235184" duration="275000" />
+      <workItem from="1773752520915" duration="45000" />
+      <workItem from="1773752576816" duration="833000" />
+      <workItem from="1773754958191" duration="130000" />
+      <workItem from="1773755099089" duration="7835000" />
+      <workItem from="1774071858190" duration="31952000" />
+      <workItem from="1774672745594" duration="65486000" />
+      <workItem from="1774801866743" duration="11604000" />
+      <workItem from="1775145403735" duration="18000" />
+      <workItem from="1775145448670" duration="42107000" />
     </task>
     <task id="LOCAL-00001" summary="updated code">
       <option name="closed" value="true" />
@@ -145,7 +216,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773673630332</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="fix structure and update imports">
+      <option name="closed" value="true" />
+      <created>1773677977396</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1773677977396</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -153,6 +232,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="updated code" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated code" />
+    <MESSAGE value="fix structure and update imports" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix structure and update imports" />
   </component>
 </project>

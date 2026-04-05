@@ -1,0 +1,9 @@
+.imgBackground {
+	background-color: var(--jt-dark-exact);
+}
+
+@media (max-width: 1024px) {
+	.grid > div:last-child {
+		grid-column: 1 / -1;
+	}
+}
