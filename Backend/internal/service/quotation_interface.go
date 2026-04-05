@@ -12,4 +12,7 @@ type QuotationService interface {
 
 	// Delete removes a quotation by ID, verifying it belongs to customerID and admin owns the customer.
 	Delete(adminID, customerID, quotationID uint) error
+
+	// ListForUser returns all quotations for the given user (customer dashboard).
+	ListForUser(customerID uint) ([]models.QuotationResponse, error)
 }

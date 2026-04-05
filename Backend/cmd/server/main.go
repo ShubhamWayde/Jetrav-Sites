@@ -10,11 +10,15 @@ import (
 	"Backend/config"
 	"Backend/internal/bootstrap"
 	"Backend/internal/routes"
+	"Backend/pkg/cache"
 	"Backend/pkg/database"
 )
 
 func main() {
 	config.LoadEnv()
+
+	// Redis
+	cache.Connect()
 
 	// DB
 	database.Connect()
@@ -36,6 +40,9 @@ func main() {
 		panic(err)
 	}
 
+	// Start WebSocket hub event loop
+	go app.Hub.Run()
+
 	// Server
 	r := gin.Default()
 
@@ -43,6 +50,7 @@ func main() {
 		AllowOrigins: []string{
 			"http://localhost:3000",
 			"http://localhost:3001", // admin app
+			"http://localhost:3002", // user app
 		},
 		// OPTIONS must be listed so preflight requests are answered, not rejected
 		AllowMethods: []string{

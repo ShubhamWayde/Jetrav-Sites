@@ -18,24 +18,22 @@ const (
 )
 
 // ─── Lead Type Constants ──────────────────────────────────────────────────────
-// Reuses the same type strings as quotations.
 
 const (
-	LeadTypeAir            = "air"
-	LeadTypeTrain          = "train"
-	LeadTypeHotel          = "hotel"
-	LeadTypeVisa           = "visa"
-	LeadTypeInsurance      = "insurance"
-	LeadTypeBus            = "bus"
-	LeadTypeCar            = "car"
+	LeadTypeAir             = "air"
+	LeadTypeTrain           = "train"
+	LeadTypeHotel           = "hotel"
+	LeadTypeVisa            = "visa"
+	LeadTypeInsurance       = "insurance"
+	LeadTypeBus             = "bus"
+	LeadTypeCar             = "car"
 	LeadTypeForeignExchange = "foreign_exchange"
-	LeadTypePackage        = "package"
+	LeadTypePackage         = "package"
 )
 
 // ─── Lead Model ───────────────────────────────────────────────────────────────
 
-// Lead is the database model for the leads table.
-// Details holds type-specific fields (origin, destination, etc.) as JSONB.
+// Lead.customerID references users.ID (users with role='user').
 type Lead struct {
 	ID         uint                   `gorm:"column:ID;primaryKey;autoIncrement"`
 	CustomerID uint                   `gorm:"column:customerID;not null"`
@@ -49,8 +47,7 @@ type Lead struct {
 	UpdatedAt  time.Time              `gorm:"column:updatedAt;autoUpdateTime"`
 }
 
-// LeadRow is the result of a JOIN that enriches a lead with customer and
-// admin name/mobile information for the list and detail responses.
+// LeadRow enriches a lead with customer (user) and admin name via JOIN on users.
 type LeadRow struct {
 	Lead
 	CustomerFirstName  string `gorm:"column:customerFirstName"`
@@ -62,31 +59,27 @@ type LeadRow struct {
 
 // ─── Request Types ────────────────────────────────────────────────────────────
 
-// NewCustomerInfo is embedded in CreateLeadRequest when creating a lead
-// for a customer who does not yet exist in the system.
+// NewCustomerInfo is used when creating a lead for a user that doesn't exist yet.
 type NewCustomerInfo struct {
 	FirstName    string `json:"firstName"    binding:"required"`
 	LastName     string `json:"lastName"     binding:"required"`
-	Gender       string `json:"gender"`
 	MobileNumber string `json:"mobileNumber" binding:"required"`
 	Email        string `json:"email"        binding:"omitempty,email"`
 	Reference    string `json:"reference"`
 }
 
-// CreateLeadRequest is the JSON body for POST /api/admin/leads.
-// Exactly one of ExistingCustomerID or NewCustomer must be provided.
+// CreateLeadRequest: exactly one of ExistingCustomerID or NewCustomer is required.
 type CreateLeadRequest struct {
-	ExistingCustomerID *uint           `json:"existingCustomerId"`
+	ExistingCustomerID *uint            `json:"existingCustomerId"`
 	NewCustomer        *NewCustomerInfo `json:"newCustomer"`
-	Type               string          `json:"type"     binding:"required"`
-	Status             string          `json:"status"`
-	Details            json.RawMessage `json:"details"`
-	AssignTo           string          `json:"assignTo"`
-	Remark             string          `json:"remark"`
+	Type               string           `json:"type"     binding:"required"`
+	Status             string           `json:"status"`
+	Details            json.RawMessage  `json:"details"`
+	AssignTo           string           `json:"assignTo"`
+	Remark             string           `json:"remark"`
 }
 
-// UpdateLeadRequest is the JSON body for PUT /api/admin/leads/:id.
-// All fields are optional — only non-nil values are applied.
+// UpdateLeadRequest: all fields optional.
 type UpdateLeadRequest struct {
 	Type     *string         `json:"type"`
 	Status   *string         `json:"status"`
@@ -95,10 +88,8 @@ type UpdateLeadRequest struct {
 	Remark   *string         `json:"remark"`
 }
 
-// ─── Response Type ────────────────────────────────────────────────────────────
+// ─── Response Types ───────────────────────────────────────────────────────────
 
-// LeadResponse is returned by all lead API endpoints.
-// Customer name and mobile are flattened from the JOIN result.
 type LeadResponse struct {
 	ID            uint            `json:"id"`
 	CustomerID    uint            `json:"customerId"`
@@ -113,4 +104,10 @@ type LeadResponse struct {
 	CreatedByName string          `json:"createdByName"`
 	CreatedAt     time.Time       `json:"createdAt"`
 	UpdatedAt     time.Time       `json:"updatedAt"`
+}
+
+// UserDashboardResponse is returned by GET /api/user/dashboard.
+type UserDashboardResponse struct {
+	Leads      []LeadResponse      `json:"leads"`
+	Quotations []QuotationResponse `json:"quotations"`
 }

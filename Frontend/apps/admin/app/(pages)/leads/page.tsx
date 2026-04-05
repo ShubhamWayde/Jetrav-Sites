@@ -1,21 +1,21 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { showSuccess, showError } from '@repo/auth';
 import { api } from '@/lib/api';
 import { ADMIN_API } from '@/lib/constants';
 import { LEAD_TYPES, LeadResponse, LeadType } from '@/app/types/lead';
 import AddLeadModal from '@/components/modals/create-lead/AddLeadModal';
 import EditLeadModal from '@/components/modals/edit-lead/EditLeadModal';
 import ConfirmDeleteModal from '@/components/modals/confirm-delete/ConfirmDeleteModal';
-import Spinner from '@repo/ui/Spinner';
 import { LeadsIcon, PencilIcon, TrashIcon } from '@repo/ui/Icons';
-import Table, { Tr, Td, type Column } from '@repo/ui/Table';
+import Table, { type Column } from '@repo/ui/Table';
 import styles from './leads.module.css';
 import { formatDate } from '@/utility/date';
 import Button from '@repo/ui/Button';
 
-/** Extract a display value from a lead's details map, trying multiple keys. */
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
 function detailVal(details: Record<string, unknown>, ...keys: string[]): string {
   for (const key of keys) {
     const v = details[key];
@@ -24,13 +24,12 @@ function detailVal(details: Record<string, unknown>, ...keys: string[]): string 
   return '—';
 }
 
-/** Return the label for a lead type. */
 function getTypeLabel(type: string): string {
   const found = LEAD_TYPES.find((t) => t.value === type);
   return found ? found.label : type;
 }
 
-// ── Filter tab config ─────────────────────────────────────────────────────────
+// ── Filter tabs ───────────────────────────────────────────────────────────────
 
 const FILTER_TABS: { value: string; label: string }[] = [
   { value: '', label: 'All' },
@@ -109,12 +108,12 @@ const TYPE_COLUMNS: Record<string, ColDef[]> = {
     { header: 'Purpose',  keys: ['purpose'] },
   ],
   package: [
-    { header: 'Destination',   keys: ['destination'] },
-    { header: 'Start Date',    keys: ['startDate'] },
-    { header: 'End Date',      keys: ['endDate'] },
-    { header: 'Adults',        keys: ['adults'] },
-    { header: 'Children',      keys: ['children'] },
-    { header: 'Package Type',  keys: ['packageType'] },
+    { header: 'Destination',  keys: ['destination'] },
+    { header: 'Start Date',   keys: ['startDate'] },
+    { header: 'End Date',     keys: ['endDate'] },
+    { header: 'Adults',       keys: ['adults'] },
+    { header: 'Children',     keys: ['children'] },
+    { header: 'Package Type', keys: ['packageType'] },
   ],
 };
 
@@ -125,37 +124,31 @@ export default function LeadsPage() {
   const [loading, setLoading]           = useState(true);
   const [fetchError, setFetchError]     = useState('');
   const [activeFilter, setActiveFilter] = useState<LeadType | ''>('');
-
-  // Modal states
   const [showAdd, setShowAdd]             = useState(false);
   const [editTarget, setEditTarget]       = useState<LeadResponse | null>(null);
   const [deleteTarget, setDeleteTarget]   = useState<LeadResponse | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  // ── Fetch leads ───────────────────────────────────────────────────────────
+  // ── Fetch ─────────────────────────────────────────────────────────────────
 
   const fetchLeads = useCallback(async (typeFilter?: string) => {
     const filter = typeFilter !== undefined ? typeFilter : activeFilter;
     setLoading(true);
     setFetchError('');
     try {
-      const url = filter
-        ? `${ADMIN_API.LEADS}?type=${filter}`
-        : ADMIN_API.LEADS;
+      const url = filter ? `${ADMIN_API.LEADS}?type=${filter}` : ADMIN_API.LEADS;
       const res = await api.get<LeadResponse[]>(url);
       setLeads(res.data ?? []);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to fetch leads.';
       setFetchError(msg);
-      toast.error(msg);
+      showError(msg);
     } finally {
       setLoading(false);
     }
   }, [activeFilter]);
 
   useEffect(() => { fetchLeads(); }, [fetchLeads]);
-
-  // ── Filter tab change ─────────────────────────────────────────────────────
 
   const handleFilterChange = (value: LeadType | '') => {
     setActiveFilter(value);
@@ -169,30 +162,70 @@ export default function LeadsPage() {
     setDeleteLoading(true);
     try {
       const res = await api.delete(ADMIN_API.LEAD_BY_ID(deleteTarget.id));
-      toast.success(res.message ?? 'Lead deleted successfully.');
+      showSuccess(res.message ?? 'Lead deleted successfully.');
       setDeleteTarget(null);
       fetchLeads();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to delete lead.');
+      showError(err instanceof Error ? err.message : 'Failed to delete lead.');
     } finally {
       setDeleteLoading(false);
     }
   };
 
-  // ── Dynamic columns ───────────────────────────────────────────────────────
+  // ── Columns ───────────────────────────────────────────────────────────────
 
   const typeCols: ColDef[] = TYPE_COLUMNS[activeFilter] ?? [];
   const showTypeCol = activeFilter === '';
 
-  const columns: Column[] = [
-    { header: 'Name' },
-    ...(showTypeCol ? [{ header: 'Type' }] : []),
-    { header: 'Status' },
-    ...typeCols.map(col => ({ header: col.header })),
-    { header: 'Mobile No.' },
-    { header: 'Updated On' },
-    { header: 'Assign To' },
-    { header: 'Actions' },
+  const columns: Column<LeadResponse>[] = [
+    {
+      key: 'customerName', header: 'Name',
+      render: (lead) => <span className={styles.name}>{lead.customerName}</span>,
+    },
+    ...(showTypeCol ? [{
+      key: 'type', header: 'Type',
+      render: (lead: LeadResponse) => getTypeLabel(lead.type),
+    }] : []),
+    {
+      key: 'status', header: 'Status',
+      render: (lead) => {
+        const statusClass = styles[`status${lead.status}` as keyof typeof styles];
+        return (
+          <span className={`${styles.statusBadge} ${statusClass ?? ''}`}>
+            {lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}
+          </span>
+        );
+      },
+    },
+    ...typeCols.map((col) => ({
+      key: col.header,
+      header: col.header,
+      render: (lead: LeadResponse) => detailVal(lead.details ?? {}, ...col.keys),
+    })),
+    {
+      key: 'mobileNumber', header: 'Mobile No.',
+      render: (lead) => lead.mobileNumber || <span className={styles.muted}>—</span>,
+    },
+    { key: 'updatedAt',  header: 'Updated On', render: (lead) => formatDate(lead.updatedAt) },
+    {
+      key: 'assignTo', header: 'Assign To',
+      render: (lead) => lead.assignTo || <span className={styles.muted}>—</span>,
+    },
+    {
+      key: 'actions', header: 'Actions',
+      render: (lead) => (
+        <div className={styles.actions}>
+          <button className={styles.editBtn} type="button" title="Edit lead"
+            onClick={() => setEditTarget(lead)}>
+            <PencilIcon size={14} />
+          </button>
+          <button className={styles.deleteBtn} type="button" title="Delete lead"
+            onClick={() => setDeleteTarget(lead)}>
+            <TrashIcon size={14} />
+          </button>
+        </div>
+      ),
+    },
   ];
 
   // ── Render ────────────────────────────────────────────────────────────────
@@ -200,15 +233,13 @@ export default function LeadsPage() {
   return (
     <div className={styles.page}>
 
-      {/* ── Page header ─────────────────────────────────────────────────── */}
       <div className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>Leads</h1>
-        <Button title="Add Lead" className='btn-md' type="button" onClick={() => setShowAdd(true)}>
+        <Button title="Add Lead" className="btn-md" type="button" onClick={() => setShowAdd(true)}>
           + Add Lead
         </Button>
       </div>
 
-      {/* ── Type filter tabs ─────────────────────────────────────────────── */}
       <div className={styles.filterBar}>
         {FILTER_TABS.map(({ value, label }) => (
           <button
@@ -222,101 +253,23 @@ export default function LeadsPage() {
         ))}
       </div>
 
-      {/* ── Content ─────────────────────────────────────────────────────── */}
-      {loading ? (
-        <div className={styles.centered}>
-          <Spinner />
-          Loading leads…
-        </div>
-      ) : fetchError ? (
-        <div className={styles.centered}>
-          <span className={styles.errorText}>{fetchError}</span>
-          <Button title="Retry" variant="secondary" onClick={() => fetchLeads()}>Retry</Button>
-        </div>
-      ) : leads.length === 0 ? (
-        <div className={styles.empty}>
-          <span className={styles.emptyIcon}><LeadsIcon size={40} /></span>
-          <p>No leads yet{activeFilter ? ` for ${getTypeLabel(activeFilter)}` : ''}.</p>
-        </div>
-      ) : (
-        <Table columns={columns}>
-          {leads.map((lead) => {
-            const d = lead.details ?? {};
-            const statusClass = styles[`status${lead.status}` as keyof typeof styles];
-            return (
-              <Tr key={lead.id}>
-                {/* Name */}
-                <Td>
-                  <span className={styles.name}>{lead.customerName}</span>
-                </Td>
-
-                {/* Type — only shown on All tab */}
-                {showTypeCol && (
-                  <Td>{getTypeLabel(lead.type)}</Td>
-                )}
-
-                {/* Status */}
-                <Td>
-                  <span className={`${styles.statusBadge} ${statusClass ?? ''}`}>
-                    {lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}
-                  </span>
-                </Td>
-
-                {/* Dynamic detail columns */}
-                {typeCols.map((col) => (
-                  <Td key={col.header}>
-                    {detailVal(d, ...col.keys)}
-                  </Td>
-                ))}
-
-                {/* Mobile */}
-                <Td>
-                  {lead.mobileNumber || <span className={styles.muted}>—</span>}
-                </Td>
-
-                {/* Updated On */}
-                <Td>{formatDate(lead.updatedAt)}</Td>
-
-                {/* Assign To */}
-                <Td>
-                  {lead.assignTo || <span className={styles.muted}>—</span>}
-                </Td>
-
-                {/* Actions */}
-                <Td>
-                  <div className={styles.actions}>
-                    <button
-                      className={styles.editBtn}
-                      type="button"
-                      title="Edit lead"
-                      onClick={() => setEditTarget(lead)}
-                    >
-                      <PencilIcon size={14} />
-                    </button>
-                    <button
-                      className={styles.deleteBtn}
-                      type="button"
-                      title="Delete lead"
-                      onClick={() => setDeleteTarget(lead)}
-                    >
-                      <TrashIcon size={14} />
-                    </button>
-                  </div>
-                </Td>
-              </Tr>
-            );
-          })}
-        </Table>
-      )}
-
-      {/* ── Add Lead modal ────────────────────────────────────────────────── */}
-      <AddLeadModal
-        isOpen={showAdd}
-        onClose={() => setShowAdd(false)}
-        onSuccess={fetchLeads}
+      <Table
+        columns={columns}
+        rows={leads}
+        rowKey={(lead) => lead.id}
+        loading={loading}
+        error={fetchError}
+        onRetry={() => fetchLeads()}
+        empty={
+          <div className={styles.empty}>
+            <span className={styles.emptyIcon}><LeadsIcon size={40} /></span>
+            <p>No leads yet{activeFilter ? ` for ${getTypeLabel(activeFilter)}` : ''}.</p>
+          </div>
+        }
       />
 
-      {/* ── Edit Lead modal ───────────────────────────────────────────────── */}
+      <AddLeadModal isOpen={showAdd} onClose={() => setShowAdd(false)} onSuccess={fetchLeads} />
+
       <EditLeadModal
         isOpen={!!editTarget}
         lead={editTarget}
@@ -324,15 +277,10 @@ export default function LeadsPage() {
         onSuccess={fetchLeads}
       />
 
-      {/* ── Delete confirmation ───────────────────────────────────────────── */}
       <ConfirmDeleteModal
         isOpen={!!deleteTarget}
         title="Delete Lead"
-        description={
-          deleteTarget
-            ? `Are you sure you want to delete the lead for ${deleteTarget.customerName}? This action cannot be undone.`
-            : ''
-        }
+        description={deleteTarget ? `Are you sure you want to delete the lead for ${deleteTarget.customerName}? This action cannot be undone.` : ''}
         confirmLabel="Delete"
         loading={deleteLoading}
         onClose={() => setDeleteTarget(null)}

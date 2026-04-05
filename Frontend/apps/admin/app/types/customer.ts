@@ -1,4 +1,3 @@
-// modal types for customer form
 export interface CustomerResponse {
   id:           number;
   firstName:    string;
@@ -11,13 +10,12 @@ export interface CustomerResponse {
   email:        string;
   mobileNumber: string;
   reference:    string;
-  addedBy:      number;
+  addedBy:      number | null;
   addedByName:  string;
   addedOn:      string;
   updatedAt:    string;
 }
 
-// form values for customer form
 export interface CustomerFormValues {
   firstName:    string;
   lastName:     string;
@@ -28,23 +26,4 @@ export interface CustomerFormValues {
   totalTrips:   string;
   totalStays:   string;
   reference:    string;
-}
-
-// response type for customers list API
-export interface CustomerResponse {
-  id:           number;
-  firstName:    string;
-  lastName:     string;
-  fullName:     string;
-  planType:     string;
-  jetcoins:     number;
-  totalTrips:   number;
-  totalStays:   number;
-  email:        string;
-  mobileNumber: string;
-  reference:    string;
-  addedBy:      number;
-  addedByName:  string;
-  addedOn:      string;
-  updatedAt:    string;
 }

@@ -10,16 +10,27 @@ import (
 	"Backend/pkg/utils"
 )
 
-// UserHandler handles user profile HTTP endpoints.
+// UserHandler handles user profile and dashboard HTTP endpoints.
 type UserHandler struct {
-	userService service.UserService
+	userService      service.UserService
+	leadService      service.LeadService
+	quotationService service.QuotationService
 }
 
-func NewUserHandler(userService service.UserService) *UserHandler {
-	return &UserHandler{userService: userService}
+func NewUserHandler(
+	userService service.UserService,
+	leadService service.LeadService,
+	quotationService service.QuotationService,
+) *UserHandler {
+	return &UserHandler{
+		userService:      userService,
+		leadService:      leadService,
+		quotationService: quotationService,
+	}
 }
 
 // ─── GET /api/user/profile ────────────────────────────────────────────────────
+
 func (h *UserHandler) GetProfile(c *gin.Context) {
 	userIDRaw, exists := c.Get("userID")
 	if !exists {
@@ -42,10 +53,13 @@ func (h *UserHandler) GetProfile(c *gin.Context) {
 		IsVerified:   user.IsVerified,
 		HasPassword:  user.Password != "",
 		Role:         user.Role,
+		TotalTrips:   user.TotalTrips,
+		TotalStays:   user.TotalStays,
 	})
 }
 
 // ─── PUT /api/user/profile ────────────────────────────────────────────────────
+
 func (h *UserHandler) UpdateProfile(c *gin.Context) {
 	userIDRaw, exists := c.Get("userID")
 	if !exists {
@@ -68,6 +82,7 @@ func (h *UserHandler) UpdateProfile(c *gin.Context) {
 }
 
 // ─── POST /api/user/profile/set-password ─────────────────────────────────────
+
 func (h *UserHandler) SetPassword(c *gin.Context) {
 	userIDRaw, exists := c.Get("userID")
 	if !exists {
@@ -87,4 +102,68 @@ func (h *UserHandler) SetPassword(c *gin.Context) {
 	}
 
 	utils.Success(c, http.StatusOK, "Password set successfully. You can now login with mobile number and password.", nil)
+}
+
+// ─── GET /api/user/dashboard ──────────────────────────────────────────────────
+
+func (h *UserHandler) GetDashboard(c *gin.Context) {
+	userIDRaw, exists := c.Get("userID")
+	if !exists {
+		utils.Error(c, http.StatusUnauthorized, "Unauthorized")
+		return
+	}
+	userID := userIDRaw.(uint)
+
+	leads, err := h.leadService.ListByCustomer(userID)
+	if err != nil {
+		utils.Error(c, http.StatusInternalServerError, "Failed to fetch leads")
+		return
+	}
+
+	quotations, err := h.quotationService.ListForUser(userID)
+	if err != nil {
+		utils.Error(c, http.StatusInternalServerError, "Failed to fetch quotations")
+		return
+	}
+
+	utils.Success(c, http.StatusOK, "Dashboard fetched", models.UserDashboardResponse{
+		Leads:      leads,
+		Quotations: quotations,
+	})
+}
+
+// ─── GET /api/user/leads ──────────────────────────────────────────────────────
+
+func (h *UserHandler) GetLeads(c *gin.Context) {
+	userIDRaw, exists := c.Get("userID")
+	if !exists {
+		utils.Error(c, http.StatusUnauthorized, "Unauthorized")
+		return
+	}
+
+	leads, err := h.leadService.ListByCustomer(userIDRaw.(uint))
+	if err != nil {
+		utils.Error(c, http.StatusInternalServerError, "Failed to fetch leads")
+		return
+	}
+
+	utils.Success(c, http.StatusOK, "Leads fetched", leads)
+}
+
+// ─── GET /api/user/quotations ─────────────────────────────────────────────────
+
+func (h *UserHandler) GetQuotations(c *gin.Context) {
+	userIDRaw, exists := c.Get("userID")
+	if !exists {
+		utils.Error(c, http.StatusUnauthorized, "Unauthorized")
+		return
+	}
+
+	quotations, err := h.quotationService.ListForUser(userIDRaw.(uint))
+	if err != nil {
+		utils.Error(c, http.StatusInternalServerError, "Failed to fetch quotations")
+		return
+	}
+
+	utils.Success(c, http.StatusOK, "Quotations fetched", quotations)
 }

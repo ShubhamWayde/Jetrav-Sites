@@ -1,0 +1,260 @@
+/* ── Page wrapper ─────────────────────────────────────────────────────────── */
+.container {
+  min-height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 24px 80px;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: var(--h2-font);
+  font-weight: var(--font-weight-600);
+  color: var(--jt-light-base);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: var(--font-sm);
+  color: var(--jt-neutral-400);
+  margin: 8px 0 0;
+}
+
+/* ── Controls (tabs + billing) ────────────────────────────────────────────── */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 960px;
+  margin-bottom: 36px;
+}
+
+.tabGroup {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-lg);
+  padding: 4px;
+}
+
+.tabBtn {
+  padding: 8px 20px;
+  border-radius: calc(var(--radius-lg) - 2px);
+  border: none;
+  background: transparent;
+  color: var(--jt-neutral-400);
+  font-size: var(--font-sm);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+
+.tabBtn:hover {
+  color: var(--jt-light-base);
+}
+
+.tabBtnActive {
+  background: var(--jt-light-base);
+  color: var(--jt-neutral-base);
+}
+
+.discount {
+  font-weight: var(--font-weight-600);
+  font-size: var(--font-xs);
+}
+
+/* ── Loading dots ─────────────────────────────────────────────────────────── */
+.loadingRow {
+  display: flex;
+  gap: 8px;
+  margin-top: 64px;
+}
+
+.loadingDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--jt-neutral-400);
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+.loadingDot:nth-child(2) { animation-delay: 0.2s; }
+.loadingDot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 1; }
+}
+
+/* ── Plans grid ───────────────────────────────────────────────────────────── */
+.plansGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+  max-width: 960px;
+}
+
+/* ── Card wrapper (holds popular badge + card) ────────────────────────────── */
+.cardWrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.popularBadge {
+  background: var(--jt-light-base);
+  color: var(--jt-neutral-base);
+  text-align: center;
+  padding: 8px 12px;
+  font-size: var(--font-xs);
+  font-weight: var(--font-weight-600);
+  letter-spacing: 0.05em;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
+.card {
+  flex: 1;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cardPopular {
+  border-color: var(--jt-light-base);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+/* ── Plan name + desc ─────────────────────────────────────────────────────── */
+.planName {
+  font-size: var(--h4-font);
+  font-weight: var(--font-weight-600);
+  color: var(--jt-light-base);
+  margin: 0 0 4px;
+}
+
+.planDesc {
+  font-size: var(--font-xs);
+  color: var(--jt-neutral-400);
+  margin: 0;
+}
+
+/* ── Price ────────────────────────────────────────────────────────────────── */
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.priceCurrency {
+  font-size: var(--font-sm);
+  color: var(--jt-light-base);
+  font-weight: var(--font-weight-500);
+}
+
+.price {
+  font-size: var(--h3-font);
+  font-weight: var(--font-weight-700);
+  color: var(--jt-light-base);
+  line-height: 1;
+}
+
+.pricePeriod {
+  font-size: var(--font-sm);
+  color: var(--jt-neutral-400);
+  margin-left: 2px;
+}
+
+.billedYearly {
+  width: 100%;
+  font-size: var(--font-xs);
+  color: var(--jt-neutral-400);
+}
+
+/* ── Feature list ─────────────────────────────────────────────────────────── */
+.features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--font-sm);
+  color: var(--jt-neutral-200);
+  line-height: 1.4;
+}
+
+.bullet {
+  color: var(--jt-light-base);
+  flex-shrink: 0;
+}
+
+/* ── Success screen ───────────────────────────────────────────────────────── */
+.successScreen {
+  min-height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+}
+
+.successLabel {
+  font-size: var(--font-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--jt-neutral-400);
+  margin: 0;
+}
+
+.successTitle {
+  font-size: var(--h2-font);
+  font-weight: var(--font-weight-700);
+  color: var(--jt-light-base);
+  margin: 0;
+}
+
+.successSubtitle {
+  font-size: var(--font-sm);
+  color: var(--jt-neutral-400);
+  margin: 0 0 8px;
+}
+
+.successBtn {
+  width: 100%;
+  max-width: 320px;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .plansGrid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+}

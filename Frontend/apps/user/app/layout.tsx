@@ -1,5 +1,5 @@
 import type {Metadata} from "next";
-import {fontOutfit} from "@repo/ui/fonts/fonts";
+import {fontOutfit} from "@repo/ui/fonts";
 import Providers from "./providers";
 import "@repo/ui/styles/css/base.css";
 import "./globals.css";
@@ -15,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${fontOutfit.variable}`}>
+    <html lang="en" className={`${fontOutfit.variable} ${fontOutfit.className}`}>
+      <body>
         <Providers>{children}</Providers>
       </body>
     </html>

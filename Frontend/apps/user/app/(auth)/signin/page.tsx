@@ -3,7 +3,7 @@ import type { AuthConfig } from '@repo/auth';
 
 const config: AuthConfig = {
   role:              'user',
-  afterAuthRedirect: '/dashboard',
+  afterAuthRedirect: '/',
   appLabel: 'User App',
 };
 

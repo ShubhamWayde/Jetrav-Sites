@@ -8,16 +8,18 @@ import (
 
 	"Backend/internal/models"
 	"Backend/internal/service"
+	"Backend/pkg/socket"
 	"Backend/pkg/utils"
 )
 
 // LeadHandler handles all CRUD endpoints for the leads resource.
 type LeadHandler struct {
 	leadService service.LeadService
+	hub         *socket.Hub
 }
 
-func NewLeadHandler(leadService service.LeadService) *LeadHandler {
-	return &LeadHandler{leadService: leadService}
+func NewLeadHandler(leadService service.LeadService, hub *socket.Hub) *LeadHandler {
+	return &LeadHandler{leadService: leadService, hub: hub}
 }
 
 // ─── POST /api/admin/leads ────────────────────────────────────────────────────
@@ -55,6 +57,9 @@ func (h *LeadHandler) Create(c *gin.Context) {
 		utils.Error(c, status, msg)
 		return
 	}
+
+	// Notify the customer in real-time
+	h.hub.Emit(lead.CustomerID, "lead_created", lead)
 
 	utils.Success(c, http.StatusCreated, "Lead created successfully", lead)
 }
@@ -149,6 +154,9 @@ func (h *LeadHandler) Update(c *gin.Context) {
 		utils.Error(c, status, msg)
 		return
 	}
+
+	// Notify the customer in real-time
+	h.hub.Emit(lead.CustomerID, "lead_updated", lead)
 
 	utils.Success(c, http.StatusOK, "Lead updated successfully", lead)
 }

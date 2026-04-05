@@ -23,7 +23,6 @@ func NewLeadService(
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-// leadRowToResponse converts a LeadRow (with JOIN data) to the API response type.
 func leadRowToResponse(row models.LeadRow) models.LeadResponse {
 	detailsBytes, _ := json.Marshal(row.Details)
 	if detailsBytes == nil {
@@ -46,7 +45,6 @@ func leadRowToResponse(row models.LeadRow) models.LeadResponse {
 	}
 }
 
-// isValidLeadType returns true for a recognised lead/quotation type string.
 func isValidLeadType(t string) bool {
 	switch t {
 	case models.LeadTypeAir,
@@ -63,7 +61,6 @@ func isValidLeadType(t string) bool {
 	return false
 }
 
-// isValidLeadStatus returns true for a recognised lead status string.
 func isValidLeadStatus(s string) bool {
 	switch s {
 	case models.LeadStatusContacted,
@@ -81,12 +78,10 @@ func isValidLeadStatus(s string) bool {
 // ─── Create ───────────────────────────────────────────────────────────────────
 
 func (s *leadService) Create(adminID uint, req models.CreateLeadRequest) (*models.LeadResponse, error) {
-	// Validate type.
 	if !isValidLeadType(req.Type) {
 		return nil, errors.New("invalid lead type: must be one of air, train, hotel, visa, insurance, bus, car, foreign_exchange, package")
 	}
 
-	// Default status to "quotation" if not provided.
 	status := req.Status
 	if status == "" {
 		status = models.LeadStatusQuotation
@@ -94,25 +89,18 @@ func (s *leadService) Create(adminID uint, req models.CreateLeadRequest) (*model
 		return nil, errors.New("invalid lead status: must be one of quotation, confirmed, quoted, negotiation, cancelled, lost")
 	}
 
-	// Resolve customer ID — either use an existing customer or create a new one.
 	var customerID uint
 
 	switch {
 	case req.ExistingCustomerID != nil:
-		// Verify the customer exists and belongs to this admin.
-		customer, err := s.customerRepo.GetByID(*req.ExistingCustomerID)
-		if err != nil {
+		if _, err := s.customerRepo.GetByID(*req.ExistingCustomerID); err != nil {
 			return nil, errors.New("customer not found")
-		}
-		if customer.AddedBy != adminID {
-			return nil, errors.New("forbidden")
 		}
 		customerID = *req.ExistingCustomerID
 
 	case req.NewCustomer != nil:
 		nc := req.NewCustomer
-		// Check for duplicate mobile number.
-		exists, err := s.customerRepo.ExistsByMobile(nc.MobileNumber, 0)
+		exists, err := s.customerRepo.ExistsByPhone(nc.MobileNumber, 0)
 		if err != nil {
 			return nil, errors.New("failed to check mobile number availability")
 		}
@@ -120,25 +108,25 @@ func (s *leadService) Create(adminID uint, req models.CreateLeadRequest) (*model
 			return nil, errors.New("a customer with this mobile number already exists")
 		}
 
-		newCustomer := &models.Customer{
-			FirstName:    nc.FirstName,
-			LastName:     nc.LastName,
-			Email:        nc.Email,
-			MobileNumber: nc.MobileNumber,
-			Reference:    nc.Reference,
-			PlanType:     "Silver", // default plan
-			AddedBy:      adminID,
+		newUser := &models.User{
+			FirstName:   nc.FirstName,
+			LastName:    nc.LastName,
+			Email:       nc.Email,
+			PhoneNumber: nc.MobileNumber,
+			Reference:   nc.Reference,
+			AddedBy:     &adminID,
+			Role:        "user",
+			Password:    "",
 		}
-		if err := s.customerRepo.Create(newCustomer); err != nil {
+		if err := s.customerRepo.Create(newUser); err != nil {
 			return nil, errors.New("failed to create customer: " + err.Error())
 		}
-		customerID = newCustomer.ID
+		customerID = newUser.ID
 
 	default:
 		return nil, errors.New("either existingCustomerId or newCustomer must be provided")
 	}
 
-	// Unmarshal details JSON into a map for JSONB storage.
 	var details map[string]interface{}
 	if len(req.Details) > 0 {
 		if err := json.Unmarshal(req.Details, &details); err != nil {
@@ -163,7 +151,6 @@ func (s *leadService) Create(adminID uint, req models.CreateLeadRequest) (*model
 		return nil, errors.New("failed to create lead: " + err.Error())
 	}
 
-	// Fetch the full JOIN row so the response includes customer + admin names.
 	row, err := s.repo.GetByID(lead.ID)
 	if err != nil {
 		return nil, errors.New("lead created but failed to fetch details")
@@ -176,7 +163,6 @@ func (s *leadService) Create(adminID uint, req models.CreateLeadRequest) (*model
 // ─── List ─────────────────────────────────────────────────────────────────────
 
 func (s *leadService) List(adminID uint, leadType string) ([]models.LeadResponse, error) {
-	// If a type filter is provided, validate it.
 	if leadType != "" && !isValidLeadType(leadType) {
 		return nil, errors.New("invalid lead type filter")
 	}
@@ -211,7 +197,6 @@ func (s *leadService) GetByID(adminID, id uint) (*models.LeadResponse, error) {
 // ─── Update ───────────────────────────────────────────────────────────────────
 
 func (s *leadService) Update(adminID, id uint, req models.UpdateLeadRequest) (*models.LeadResponse, error) {
-	// Verify ownership before updating.
 	existing, err := s.repo.GetByID(id)
 	if err != nil {
 		return nil, errors.New("lead not found")
@@ -228,14 +213,12 @@ func (s *leadService) Update(adminID, id uint, req models.UpdateLeadRequest) (*m
 		}
 		updates["type"] = *req.Type
 	}
-
 	if req.Status != nil {
 		if !isValidLeadStatus(*req.Status) {
 			return nil, errors.New("invalid lead status")
 		}
 		updates["status"] = *req.Status
 	}
-
 	if len(req.Details) > 0 {
 		var details map[string]interface{}
 		if err := json.Unmarshal(req.Details, &details); err != nil {
@@ -244,11 +227,9 @@ func (s *leadService) Update(adminID, id uint, req models.UpdateLeadRequest) (*m
 		detailsBytes, _ := json.Marshal(details)
 		updates["details"] = string(detailsBytes)
 	}
-
 	if req.AssignTo != nil {
 		updates["assignTo"] = *req.AssignTo
 	}
-
 	if req.Remark != nil {
 		updates["remark"] = *req.Remark
 	}
@@ -261,7 +242,6 @@ func (s *leadService) Update(adminID, id uint, req models.UpdateLeadRequest) (*m
 		return nil, errors.New("failed to update lead")
 	}
 
-	// Return the refreshed record.
 	row, err := s.repo.GetByID(id)
 	if err != nil {
 		return nil, errors.New("lead updated but failed to fetch details")
@@ -285,4 +265,19 @@ func (s *leadService) Delete(adminID, id uint) error {
 		return errors.New("lead not found")
 	}
 	return nil
+}
+
+// ─── ListByCustomer (for user dashboard) ──────────────────────────────────────
+
+func (s *leadService) ListByCustomer(customerID uint) ([]models.LeadResponse, error) {
+	rows, err := s.repo.ListByCustomer(customerID)
+	if err != nil {
+		return nil, errors.New("failed to fetch leads")
+	}
+
+	responses := make([]models.LeadResponse, 0, len(rows))
+	for _, row := range rows {
+		responses = append(responses, leadRowToResponse(row))
+	}
+	return responses, nil
 }

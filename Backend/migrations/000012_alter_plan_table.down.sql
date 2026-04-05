@@ -1,0 +1,9 @@
+ALTER TABLE plan
+  DROP COLUMN IF EXISTS "name",
+  DROP COLUMN IF EXISTS "description",
+  DROP COLUMN IF EXISTS "category",
+  DROP COLUMN IF EXISTS "tier",
+  DROP COLUMN IF EXISTS "billingCycle",
+  DROP COLUMN IF EXISTS "price",
+  DROP COLUMN IF EXISTS "isFree",
+  DROP COLUMN IF EXISTS "isPopular";

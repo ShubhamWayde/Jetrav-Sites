@@ -7,28 +7,31 @@ import (
 	"gorm.io/gorm"
 )
 
+// ─── User DB Model ────────────────────────────────────────────────────────────
+
 type User struct {
-	ID uint `gorm:"column:ID;primaryKey;autoIncrement"`
-
-	FirstName string `gorm:"column:firstName"`
-	LastName  string `gorm:"column:lastName"`
-
+	ID          uint   `gorm:"column:ID;primaryKey;autoIncrement"`
+	FirstName   string `gorm:"column:firstName"`
+	LastName    string `gorm:"column:lastName"`
 	Email       string `gorm:"column:email;uniqueIndex:users_email_phone_unique"`
 	PhoneNumber string `gorm:"column:phoneNumber;uniqueIndex:users_email_phone_unique"`
-
-	Password string `gorm:"column:password;not null"`
-
+	Password    string `gorm:"column:password;not null"`
 	AccountName string `gorm:"column:accountName"`
+	IsVerified  bool   `gorm:"column:isVerified;default:false"`
+	Role        string `gorm:"column:role;default:user"`
 
-	IsVerified bool   `gorm:"column:isVerified;default:false"`
-	Role       string `gorm:"column:role;default:user"`
+	// ─── Customer-specific fields (role='user' accounts) ─────────────────────
+	PlanType   string `gorm:"column:planType;default:Silver"`
+	TotalTrips int    `gorm:"column:totalTrips;default:0"`
+	TotalStays int    `gorm:"column:totalStays;default:0"`
+	Reference  string `gorm:"column:reference"`
+	AddedBy    *uint  `gorm:"column:addedBy"` // nil = self-registered
 
 	CreatedAt time.Time `gorm:"column:createdAt;autoCreateTime"`
 	UpdatedAt time.Time `gorm:"column:updatedAt;autoUpdateTime"`
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
-	// Skip hashing if no password provided (e.g. admin OTP-only signup)
 	if u.Password == "" {
 		return nil
 	}
@@ -43,10 +46,7 @@ func (u *User) BeforeUpdate(tx *gorm.DB) (err error) {
 }
 
 func (u *User) hashPassword() error {
-	hashed, err := bcrypt.GenerateFromPassword(
-		[]byte(u.Password),
-		bcrypt.DefaultCost,
-	)
+	hashed, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
@@ -55,17 +55,13 @@ func (u *User) hashPassword() error {
 }
 
 func (u *User) CheckPassword(password string) bool {
-	// Cannot authenticate with an empty stored hash
 	if u.Password == "" {
 		return false
 	}
-	return bcrypt.CompareHashAndPassword(
-		[]byte(u.Password),
-		[]byte(password),
-	) == nil
+	return bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password)) == nil
 }
 
-// ─── User Auth Requests ──────────────────────────────────────────────────────
+// ─── Auth Request Types ───────────────────────────────────────────────────────
 
 type UserSignupRequest struct {
 	FirstName    string `json:"firstName"    binding:"required"`
@@ -80,7 +76,7 @@ type UserLoginWithPasswordRequest struct {
 	DeviceID     string `json:"deviceID"     binding:"required"`
 }
 
-// ─── User Profile Response ───────────────────────────────────────────────────
+// ─── Profile Response ─────────────────────────────────────────────────────────
 
 type UserProfileResponse struct {
 	ID           uint   `json:"id"`
@@ -91,4 +87,6 @@ type UserProfileResponse struct {
 	IsVerified   bool   `json:"isVerified"`
 	HasPassword  bool   `json:"hasPassword"`
 	Role         string `json:"role"`
+	TotalTrips   int    `json:"totalTrips"`
+	TotalStays   int    `json:"totalStays"`
 }

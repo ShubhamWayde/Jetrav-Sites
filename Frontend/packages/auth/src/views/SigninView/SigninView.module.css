@@ -1,6 +1,6 @@
 .tabs {
   display: flex;
-  border-bottom: 1px solid var(--jt-dark-200);
+  border-bottom: 1px solid var(--jt-neutral-200);
   margin-bottom: 4px;
 }
 
@@ -10,11 +10,11 @@
   text-align: center;
   font-size: var(--font-sm);
   font-weight: var(--font-weight-400);
-  color: var(--jt-dark-200);
+  color: var(--jt-neutral-200);
   cursor: pointer;
   border: none;
   background: transparent;
-  font-family: var(--font-primary);
+
   transition: color 0.2s ease, border-bottom-color 0.2s ease;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;

@@ -4,7 +4,6 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-primary);
   line-height: 1.45;
   font-weight: var(--font-weight-500);
   margin-bottom: 1rem;
@@ -57,7 +56,6 @@ ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  font-family: var(--font-primary);
 }
 
 p {
@@ -88,4 +86,13 @@ a {
   -moz-border-radius: var(--radius-md);
   -ms-border-radius: var(--radius-md);
   -o-border-radius: var(--radius-md);
+}
+
+/* ── React Toastify overrides ─────────────────────────────────────────────── */
+.Toastify__toast {
+  background: var(--jt-neutral-exact);
+  border: 1px solid var(--jt-neutral-900);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-sm);
+  font-family: inherit;
 }

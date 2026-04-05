@@ -22,9 +22,7 @@ func NewQuotationService(
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-// toResponse converts a Quotation model to the API response type.
 func quotationToResponse(q models.Quotation) models.QuotationResponse {
-	// Marshal the details map back to raw JSON for the response.
 	detailsBytes, _ := json.Marshal(q.Details)
 	if detailsBytes == nil {
 		detailsBytes = []byte("{}")
@@ -41,24 +39,33 @@ func quotationToResponse(q models.Quotation) models.QuotationResponse {
 	}
 }
 
+func isValidQuotationType(t string) bool {
+	switch t {
+	case models.QuotationTypeAir,
+		models.QuotationTypeTrain,
+		models.QuotationTypeHotel,
+		models.QuotationTypeVisa,
+		models.QuotationTypeInsurance,
+		models.QuotationTypeBus,
+		models.QuotationTypeCar,
+		models.QuotationTypeForeignExchange,
+		models.QuotationTypePackage:
+		return true
+	}
+	return false
+}
+
 // ─── Create ───────────────────────────────────────────────────────────────────
 
 func (s *quotationService) Create(adminID, customerID uint, req models.CreateQuotationRequest) (*models.QuotationResponse, error) {
-	// Verify the customer exists and belongs to this admin.
-	customer, err := s.customerRepo.GetByID(customerID)
-	if err != nil {
+	if _, err := s.customerRepo.GetByID(customerID); err != nil {
 		return nil, errors.New("customer not found")
 	}
-	if customer.AddedBy != adminID {
-		return nil, errors.New("forbidden")
-	}
 
-	// Validate quotation type.
 	if !isValidQuotationType(req.Type) {
 		return nil, errors.New("invalid quotation type: must be one of air, train, hotel, visa, insurance, bus, car, foreign_exchange, package")
 	}
 
-	// Unmarshal the raw JSON details into a map for storage.
 	var details map[string]interface{}
 	if len(req.Details) > 0 {
 		if err := json.Unmarshal(req.Details, &details); err != nil {
@@ -85,16 +92,11 @@ func (s *quotationService) Create(adminID, customerID uint, req models.CreateQuo
 	return &resp, nil
 }
 
-// ─── ListByCustomer ───────────────────────────────────────────────────────────
+// ─── ListByCustomer (admin view) ──────────────────────────────────────────────
 
-func (s *quotationService) ListByCustomer(adminID, customerID uint) ([]models.QuotationResponse, error) {
-	// Verify the customer exists and belongs to this admin.
-	customer, err := s.customerRepo.GetByID(customerID)
-	if err != nil {
+func (s *quotationService) ListByCustomer(_ uint, customerID uint) ([]models.QuotationResponse, error) {
+	if _, err := s.customerRepo.GetByID(customerID); err != nil {
 		return nil, errors.New("customer not found")
-	}
-	if customer.AddedBy != adminID {
-		return nil, errors.New("forbidden")
 	}
 
 	quotations, err := s.repo.ListByCustomer(customerID)
@@ -111,17 +113,11 @@ func (s *quotationService) ListByCustomer(adminID, customerID uint) ([]models.Qu
 
 // ─── Delete ───────────────────────────────────────────────────────────────────
 
-func (s *quotationService) Delete(adminID, customerID, quotationID uint) error {
-	// Verify the customer exists and belongs to this admin.
-	customer, err := s.customerRepo.GetByID(customerID)
-	if err != nil {
+func (s *quotationService) Delete(_ uint, customerID, quotationID uint) error {
+	if _, err := s.customerRepo.GetByID(customerID); err != nil {
 		return errors.New("customer not found")
 	}
-	if customer.AddedBy != adminID {
-		return errors.New("forbidden")
-	}
 
-	// Verify the quotation exists and belongs to the given customer.
 	q, err := s.repo.GetByID(quotationID)
 	if err != nil {
 		return errors.New("quotation not found")
@@ -136,20 +132,17 @@ func (s *quotationService) Delete(adminID, customerID, quotationID uint) error {
 	return nil
 }
 
-// ─── Validation ───────────────────────────────────────────────────────────────
+// ─── ListForUser (user dashboard — no admin check) ────────────────────────────
 
-func isValidQuotationType(t string) bool {
-	switch t {
-	case models.QuotationTypeAir,
-		models.QuotationTypeTrain,
-		models.QuotationTypeHotel,
-		models.QuotationTypeVisa,
-		models.QuotationTypeInsurance,
-		models.QuotationTypeBus,
-		models.QuotationTypeCar,
-		models.QuotationTypeForeignExchange,
-		models.QuotationTypePackage:
-		return true
+func (s *quotationService) ListForUser(customerID uint) ([]models.QuotationResponse, error) {
+	quotations, err := s.repo.ListByCustomer(customerID)
+	if err != nil {
+		return nil, errors.New("failed to fetch quotations")
 	}
-	return false
+
+	responses := make([]models.QuotationResponse, 0, len(quotations))
+	for _, q := range quotations {
+		responses = append(responses, quotationToResponse(q))
+	}
+	return responses, nil
 }

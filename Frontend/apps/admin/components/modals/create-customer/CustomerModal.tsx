@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { toast } from 'react-toastify';
+import { showSuccess, showError } from '@repo/auth';
 import Button from '@repo/ui/Button';
 import InputField from '@repo/ui/InputField';
 import SelectField from '@repo/ui/SelectField';
@@ -90,7 +90,7 @@ export default function CustomerModal({
         });
       })
       .catch((err) => {
-        toast.error(err instanceof Error ? err.message : 'Failed to load customer data.');
+        showError(err instanceof Error ? err.message : 'Failed to load customer data.');
         onClose();
       })
       .finally(() => setFetching(false));
@@ -136,7 +136,7 @@ export default function CustomerModal({
 
   // ── Submit ────────────────────────────────────────────────────────────────
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: { preventDefault(): void }) => {
     e.preventDefault();
     if (!validate()) return;
 
@@ -158,19 +158,15 @@ export default function CustomerModal({
       let res;
       if (isEdit) {
         res = await api.put(ADMIN_API.CUSTOMER_BY_ID(customerId), payload);
-        toast.success(res.message ?? 'Customer updated successfully.');
+        showSuccess(res.message ?? 'Customer updated successfully.');
       } else {
         res = await api.post(ADMIN_API.CUSTOMERS, payload);
-        toast.success(res.message ?? 'Customer created successfully.');
+        showSuccess(res.message ?? 'Customer created successfully.');
       }
       onSuccess();
       onClose();
     } catch (err) {
-      toast.error(
-        err instanceof Error
-          ? err.message
-          : `Failed to ${isEdit ? 'update' : 'create'} customer.`
-      );
+      showError(err instanceof Error ? err.message : `Failed to ${isEdit ? 'update' : 'create'} customer.`);
     } finally {
       setLoading(false);
     }

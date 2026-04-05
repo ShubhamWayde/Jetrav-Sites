@@ -12,16 +12,21 @@ func AuthMiddleware() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		auth := c.GetHeader("Authorization")
+		// Accept token from Authorization header OR ?token= query param
+		// (WebSocket upgrades cannot send custom headers in the browser).
+		var tokenStr string
+		if auth := c.GetHeader("Authorization"); auth != "" {
+			tokenStr = strings.TrimPrefix(auth, "Bearer ")
+		} else if q := c.Query("token"); q != "" {
+			tokenStr = q
+		}
 
-		if auth == "" {
+		if tokenStr == "" {
 			c.JSON(http.StatusUnauthorized,
 				gin.H{"error": "Missing token"})
 			c.Abort()
 			return
 		}
-
-		tokenStr := strings.TrimPrefix(auth, "Bearer ")
 
 		claims, err := utils.ValidateToken(tokenStr)
 		if err != nil {
