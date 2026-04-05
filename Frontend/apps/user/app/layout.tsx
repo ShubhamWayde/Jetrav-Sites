@@ -1,5 +1,5 @@
 import type {Metadata} from "next";
-import {fontOutfit} from "@repo/ui/fonts";
+import {fontOutfit} from "@repo/ui/fonts/fonts";
 import Providers from "./providers";
 import "@repo/ui/styles/css/base.css";
 import "./globals.css";
