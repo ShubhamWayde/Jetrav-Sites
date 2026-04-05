@@ -1,0 +1,54 @@
+/* ── Sidebar container ─────────────────────────────────────────────────────── */
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #0d0d0d;
+  border-right: 1px solid var(--jt-neutral-800);
+  position: sticky;
+  top: 0;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* ── Nav links ─────────────────────────────────────────────────────────────── */
+
+.nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 10px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-sm);
+  color: var(--jt-light-base);
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--jt-light-base);
+}
+
+.navItemActive {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--jt-light-base);
+  font-weight: var(--font-weight-500);
+}
+
+.navIcon {
+  font-size: 15px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}

@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
-    <AuthProvider>
+    <AuthProvider role="user">
       {children}
       <ToastContainer
         position="top-right"
@@ -19,13 +19,6 @@ export default function Providers({ children }: { children: ReactNode }) {
         draggable
         pauseOnHover
         theme="dark"
-        toastStyle={{
-          background: '#1a1a1a',
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: '10px',
-          fontSize: '14px',
-          fontFamily: 'var(--Outfit-font, inherit)',
-        }}
       />
     </AuthProvider>
   );

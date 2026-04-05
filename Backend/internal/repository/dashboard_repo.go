@@ -56,13 +56,13 @@ func (r *dashboardRepo) GetStats(adminID uint, filters models.DashboardFilters) 
 		q = q.Where(`"createdAt" >= ?`, since)
 	}
 
-	// Customer type filter — join customers table and inspect totalTrips.
+	// Customer type filter — join users table (customers merged into users).
 	switch filters.CustomerType {
 	case "new":
-		q = q.Joins(`JOIN customers c ON c."ID" = leads."customerID"`).
+		q = q.Joins(`JOIN users c ON c."ID" = leads."customerID"`).
 			Where(`c."totalTrips" = 0`)
 	case "existing":
-		q = q.Joins(`JOIN customers c ON c."ID" = leads."customerID"`).
+		q = q.Joins(`JOIN users c ON c."ID" = leads."customerID"`).
 			Where(`c."totalTrips" > 0`)
 	}
 
@@ -107,7 +107,7 @@ func (r *dashboardRepo) GetUpcomingTrips(tripType string, filters models.Dashboa
 	q := r.db.
 		Table(`leads l`).
 		Select(leadJoinSelect).
-		Joins(`LEFT JOIN customers c ON c."ID" = l."customerID"`).
+		Joins(`LEFT JOIN users c ON c."ID" = l."customerID"`).
 		Joins(`LEFT JOIN users u ON u."ID" = l."createdBy"`).
 		Where(`l."type" = ?`, tripType).
 		// Only active pipeline trips — exclude terminal statuses.

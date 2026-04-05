@@ -15,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${fontOutfit.variable}`}>
+    <html lang="en" className={`${fontOutfit.variable} ${fontOutfit.className}`}>
+      <body>
         <Providers>{children}</Providers>
       </body>
     </html>

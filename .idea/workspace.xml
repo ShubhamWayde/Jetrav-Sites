@@ -4,10 +4,61 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91181458-c591-40bb-b421-baf1c5954518" name="Changes" comment="fix structure and update imports">
+    <list default="true" id="91181458-c591-40bb-b421-baf1c5954518" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/admin/app/(pages)/customers/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/admin/app/(pages)/customers/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/admin/app/(pages)/leads/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/admin/app/(pages)/leads/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/admin/app/(pages)/quotations/[customerId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/admin/app/(pages)/quotations/[customerId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/admin/components/layout/AppShell.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/admin/components/layout/AppShell.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/admin/components/modals/confirm-delete/ConfirmDeleteModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/admin/components/modals/confirm-delete/ConfirmDeleteModal.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/footer/footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/footer/footer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/cta/cta.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/cta/cta.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/hero/hero.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/hero/hero.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/peace/peace.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/peace/peace.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/solutions/solutions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/solutions/solutions.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/user/app/(pages)/accounts/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/user/app/(pages)/accounts/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/user/app/(pages)/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/user/app/(pages)/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/user/components/layout/AppShell.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/user/components/layout/AppShell.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/auth/src/components/ProfilePage/ProfilePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/auth/src/components/ProfilePage/ProfilePage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/Icons.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/AirplaneTicket.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Analytics.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Call.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/CarryOnBagChecked.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/CheckedBag.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/CurrencyExchange.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/CurrencyRupeeCircle.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Discord.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Email.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/FlightTakeoff.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Holiday.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Hotel.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/HumanAi.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Instagram.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Insurance.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/JetPoints.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/JetravIconOutline.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Login.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Registration.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Services.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/SmartSearch.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Surfing.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Taxi.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/TrackBooking.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/TrainTicket.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Visa.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/Workspaces.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/XTwitter.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/YourTrips.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/generated/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/icon.module.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/icon.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/Icons/svgGradients.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/components/Icons/Icons.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/components/Icons/Icons.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,7 +66,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="388" />
+    <option name="cachedIndexableFilesCount" value="501" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -78,7 +129,7 @@
     &quot;code.cleanup.on.save&quot;: &quot;true&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;UAT&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
@@ -92,7 +143,7 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
     &quot;rearrange.code.on.save&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;actions.on.save&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;ts.external.directory.path&quot;: &quot;D:\\Folder2\\waydzo\\Development\\git\\Jetrav-Sites\\Frontend\\packages\\eslint-config\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
@@ -146,6 +197,9 @@
       <workItem from="1774801866743" duration="11604000" />
       <workItem from="1775145403735" duration="18000" />
       <workItem from="1775145448670" duration="42107000" />
+      <workItem from="1775403382956" duration="2551000" />
+      <workItem from="1775410534084" duration="415000" />
+      <workItem from="1775410986728" duration="366000" />
     </task>
     <task id="LOCAL-00001" summary="updated code">
       <option name="closed" value="true" />

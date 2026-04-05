@@ -1,4 +1,4 @@
-import AppShell from '@/components/layout/app-layout/AppShell';
+import AppShell from '@/components/layout/AppShell';
 
 export default function PagesLayout({
   children,

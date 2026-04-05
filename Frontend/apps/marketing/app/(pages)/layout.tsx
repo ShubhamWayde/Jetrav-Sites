@@ -2,11 +2,11 @@ import React from "react";
 import Header from "../components/header/header";
 import Footer from "../components/footer/footer";
 import Glow from "../components/glow/glow";
-import {SvgGradients} from "@repo/ui/icons/svgGradients";
+import { SvgGradients } from "@repo/ui/icon/svgGradients";
 
 export default function PagesLayout({
-                                      children,
-                                    }: {
+  children,
+}: {
   children: React.ReactNode;
 }) {
   return (
@@ -14,9 +14,7 @@ export default function PagesLayout({
       <SvgGradients />
       <Glow />
       <Header />
-      <main>
-        {children}
-      </main>
+      <main>{children}</main>
       <Footer />
     </>
   );

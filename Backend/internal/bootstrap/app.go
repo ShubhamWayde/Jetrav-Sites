@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"Backend/internal/handlers"
+	"Backend/pkg/socket"
 )
 
 type App struct {
@@ -12,6 +13,9 @@ type App struct {
 	QuotationHandler *handlers.QuotationHandler
 	LeadHandler      *handlers.LeadHandler
 	DashboardHandler *handlers.DashboardHandler
+	PlanHandler      *handlers.PlanHandler
+	WsHandler        *handlers.WsHandler
+	Hub              *socket.Hub
 }
 
 func NewApp(
@@ -22,6 +26,9 @@ func NewApp(
 	quotationHandler *handlers.QuotationHandler,
 	leadHandler *handlers.LeadHandler,
 	dashboardHandler *handlers.DashboardHandler,
+	planHandler *handlers.PlanHandler,
+	wsHandler *handlers.WsHandler,
+	hub *socket.Hub,
 ) *App {
 	return &App{
 		AuthHandler:      authHandler,
@@ -31,5 +38,8 @@ func NewApp(
 		QuotationHandler: quotationHandler,
 		LeadHandler:      leadHandler,
 		DashboardHandler: dashboardHandler,
+		PlanHandler:      planHandler,
+		WsHandler:        wsHandler,
+		Hub:              hub,
 	}
 }

@@ -10,6 +10,7 @@ import (
 
 	"Backend/internal/models"
 	"Backend/internal/service"
+	"Backend/pkg/socket"
 	"Backend/pkg/utils"
 )
 
@@ -18,17 +19,20 @@ type AuthHandler struct {
 	authService    service.AuthService
 	otpService     service.OTPService
 	sessionService service.SessionService
+	hub            *socket.Hub
 }
 
 func NewAuthHandler(
 	authService service.AuthService,
 	otpService service.OTPService,
 	sessionService service.SessionService,
+	hub *socket.Hub,
 ) *AuthHandler {
 	return &AuthHandler{
 		authService:    authService,
 		otpService:     otpService,
 		sessionService: sessionService,
+		hub:            hub,
 	}
 }
 
@@ -51,6 +55,14 @@ func (h *AuthHandler) Signup(c *gin.Context) {
 		return
 	}
 
+	// Notify all connected admins of the new user signup
+	if req.Role == "user" {
+		h.hub.BroadcastToRole("admin", "user_signup", gin.H{
+			"name":   req.FirstName + " " + req.LastName,
+			"mobile": req.MobileNumber,
+		})
+	}
+
 	resp := gin.H{"mobileNumber": req.MobileNumber}
 	if os.Getenv("APP_ENV") == "development" || os.Getenv("TWILIO_ACCOUNT_SID") == "" {
 		resp["otp"] = otp
@@ -69,7 +81,7 @@ func (h *AuthHandler) SendOTP(c *gin.Context) {
 	}
 
 	if err := h.authService.CheckUserRole(req.MobileNumber, req.Role); err != nil {
-		utils.Error(c, http.StatusUnauthorized, err.Error())
+		utils.Error(c, http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
@@ -147,10 +159,23 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 // ─── POST /api/auth/refresh ───────────────────────────────────────────────────
 func (h *AuthHandler) Refresh(c *gin.Context) {
-	refreshToken, _, err := h.getRefreshToken(c)
-	if err != nil {
-		utils.Error(c, http.StatusUnauthorized, "Refresh token missing")
-		return
+	// If the frontend passes ?role=admin|user, only check that app's cookie so
+	// admin and user sessions on the same browser never bleed into each other.
+	role := c.Query("role")
+	var refreshToken string
+	var err error
+	if role != "" {
+		refreshToken, err = c.Cookie(refreshCookieName(role))
+		if err != nil {
+			utils.Error(c, http.StatusUnauthorized, "Refresh token missing")
+			return
+		}
+	} else {
+		refreshToken, _, err = h.getRefreshToken(c)
+		if err != nil {
+			utils.Error(c, http.StatusUnauthorized, "Refresh token missing")
+			return
+		}
 	}
 
 	claims, err := utils.ValidateRefreshToken(refreshToken)

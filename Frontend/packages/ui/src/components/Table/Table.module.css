@@ -1,0 +1,86 @@
+/* ── Scroll wrapper ──────────────────────────────────────────────────────── */
+
+.wrap {
+  flex: 1;
+  overflow: auto;
+}
+
+/* ── Table ───────────────────────────────────────────────────────────────── */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+  font-size: var(--font-sm);
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+
+.th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: var(--font-xs);
+  font-weight: var(--font-weight-500);
+  color: var(--jt-light-base);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--jt-neutral-800);
+  white-space: nowrap;
+  background: #0d0d0d;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* ── Body rows ───────────────────────────────────────────────────────────── */
+
+.row {
+  border-bottom: 1px solid var(--jt-neutral-800);
+  transition: background 0.12s ease;
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+/* ── Cells ───────────────────────────────────────────────────────────────── */
+
+.td {
+  padding: 12px 14px;
+  color: var(--jt-light-base);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* ── State rows (loading / error / empty) ────────────────────────────────── */
+
+.stateCell {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--jt-light-muted);
+  font-size: var(--font-sm);
+}
+
+.errorText {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--jt-error, #f87171);
+}
+
+.retryBtn {
+  padding: 6px 16px;
+  border: 1px solid var(--jt-neutral-700);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--jt-light-base);
+  font-size: var(--font-sm);
+  cursor: pointer;
+}
+
+.retryBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}

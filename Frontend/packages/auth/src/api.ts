@@ -3,8 +3,15 @@
  * and silent token-refresh on 401 responses.
  */
 
-import { clearAuth, getAccessToken, storeAccessToken } from './auth';
+import { clearAuth, getAccessToken, storeAccessToken } from './utils/auth';
 import { AUTH_API } from './constants';
+
+// Configured once by AuthProvider so the refresh call can tell the backend
+// which role-specific cookie to use.
+let _appRole = '';
+export function configureApiRole(role: string): void {
+  _appRole = role;
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -36,7 +43,13 @@ async function request<T>(
   });
 
   // ── Auto-refresh on 401 ───────────────────────────────────────────────────
-  if (res.status === 401 && !retried) {
+  // Public auth routes (signup, send-otp, verify-otp, login) can legitimately
+  // return 401 for business reasons (e.g. "user not found"). Do NOT treat those
+  // as expired sessions — only protected endpoints should trigger a token refresh.
+  const PUBLIC_AUTH_ROUTES = [AUTH_API.SIGNUP, AUTH_API.SEND_OTP, AUTH_API.VERIFY_OTP, AUTH_API.LOGIN];
+  const isPublicAuthRoute  = PUBLIC_AUTH_ROUTES.some(endpoint => url.startsWith(endpoint));
+
+  if (res.status === 401 && !retried && !isPublicAuthRoute) {
     const refreshed = await attemptRefresh();
     if (refreshed) return request<T>(url, options, true);
 
@@ -61,7 +74,8 @@ async function request<T>(
 
 async function attemptRefresh(): Promise<boolean> {
   try {
-    const res = await fetch(AUTH_API.REFRESH, {
+    const url = _appRole ? `${AUTH_API.REFRESH}?role=${_appRole}` : AUTH_API.REFRESH;
+    const res = await fetch(url, {
       method: 'POST',
       credentials: 'include',
     });

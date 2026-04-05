@@ -1,7 +1,10 @@
 // ─── API ──────────────────────────────────────────────────────────────────────
 
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
+  process.env.NEXT_PUBLIC_API_URL ??
+  (process.env.NODE_ENV === 'production'
+    ? 'https://api.yourdomain.com'
+    : 'http://localhost:8080');
 
 /** Shared auth endpoints — same for all apps (admin, user, etc.) */
 export const AUTH_API = {
