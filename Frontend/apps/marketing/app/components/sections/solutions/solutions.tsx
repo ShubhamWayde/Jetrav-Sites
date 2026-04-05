@@ -13,7 +13,7 @@ import {
   Taxi,
   TrainTicket,
   Visa
-} from "@repo/ui/icons";
+} from "@repo/ui/icon";
 
 const DATA = [
   {

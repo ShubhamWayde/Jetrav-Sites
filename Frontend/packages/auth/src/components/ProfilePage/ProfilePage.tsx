@@ -1,57 +1,57 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { api } from '../../api';
-import { showSuccess, showError } from '../../utils/toast';
+import {useEffect, useMemo, useState} from 'react';
+import {useAuth} from '../../context/AuthContext';
+import {api} from '../../api';
+import {showError, showSuccess} from '../../utils/toast';
 import Button from '@repo/ui/Button';
 import Spinner from '@repo/ui/Spinner';
 import InputField from '@repo/ui/InputField';
-import { EyeOffIcon, EyeOpenIcon, PencilIcon } from '@repo/ui/Icons';
+import {EyeOffIcon, EyeOpenIcon, PencilIcon} from '@repo/ui/icon';
 import styles from './ProfilePage.module.css';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
 interface Profile {
-  firstName:   string;
-  lastName:    string;
-  email:       string;
+  firstName: string;
+  lastName: string;
+  email: string;
   mobileNumber?: string;
   hasPassword: boolean;
 }
 
 type InfoErrors = { firstName?: string; lastName?: string };
-type PwdErrors  = { oldPwd?: string; newPwd?: string; confirmPwd?: string };
-type ShowPwd    = { oldPwd: boolean; newPwd: boolean; confirmPwd: boolean };
+type PwdErrors = { oldPwd?: string; newPwd?: string; confirmPwd?: string };
+type ShowPwd = { oldPwd: boolean; newPwd: boolean; confirmPwd: boolean };
 
 export interface ProfilePageProps {
   /** GET  endpoint for fetching the profile  */
-  profileGetUrl:   string;
+  profileGetUrl: string;
   /** PUT  endpoint for updating name fields   */
-  profilePutUrl:   string;
+  profilePutUrl: string;
   /** POST endpoint for setting/changing password */
-  setPasswordUrl:  string;
+  setPasswordUrl: string;
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
 // ── Component ──────────────────────────────────────────────────────────────────
 
-export default function ProfilePage({ profileGetUrl, profilePutUrl, setPasswordUrl }: ProfilePageProps) {
-  const { isLoading: authLoading } = useAuth();
+export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUrl}: ProfilePageProps) {
+  const {isLoading: authLoading} = useAuth();
 
-  const [profile,  setProfile]  = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [fetching, setFetching] = useState(true);
 
-  const [editMode,   setEditMode]   = useState(false);
-  const [form,       setForm]       = useState({ firstName: '', lastName: '' });
+  const [editMode, setEditMode] = useState(false);
+  const [form, setForm] = useState({firstName: '', lastName: ''});
   const [infoErrors, setInfoErrors] = useState<InfoErrors>({});
   const [infoSaving, setInfoSaving] = useState(false);
 
-  const [pwdForm,   setPwdForm]   = useState({ oldPwd: '', newPwd: '', confirmPwd: '' });
+  const [pwdForm, setPwdForm] = useState({oldPwd: '', newPwd: '', confirmPwd: ''});
   const [pwdErrors, setPwdErrors] = useState<PwdErrors>({});
   const [pwdSaving, setPwdSaving] = useState(false);
-  const [showPwd,   setShowPwd]   = useState<ShowPwd>({ oldPwd: false, newPwd: false, confirmPwd: false });
+  const [showPwd, setShowPwd] = useState<ShowPwd>({oldPwd: false, newPwd: false, confirmPwd: false});
 
   const fullName = profile ? `${profile.firstName} ${profile.lastName}` : '—';
 
@@ -68,7 +68,7 @@ export default function ProfilePage({ profileGetUrl, profilePutUrl, setPasswordU
       .then((res) => {
         if (res.data) {
           setProfile(res.data);
-          setForm({ firstName: res.data.firstName, lastName: res.data.lastName });
+          setForm({firstName: res.data.firstName, lastName: res.data.lastName});
         }
       })
       .catch((err) => showError(err instanceof Error ? err.message : 'Failed to load profile.'))
@@ -78,38 +78,41 @@ export default function ProfilePage({ profileGetUrl, profilePutUrl, setPasswordU
   // ── General Info ──────────────────────────────────────────────────────────
 
   const startEdit = () => {
-    if (profile) setForm({ firstName: profile.firstName, lastName: profile.lastName });
+    if (profile) setForm({firstName: profile.firstName, lastName: profile.lastName});
     setInfoErrors({});
     setEditMode(true);
   };
 
   const cancelEdit = () => {
-    if (profile) setForm({ firstName: profile.firstName, lastName: profile.lastName });
+    if (profile) setForm({firstName: profile.firstName, lastName: profile.lastName});
     setInfoErrors({});
     setEditMode(false);
   };
 
   const handleInfoChange =
     (field: 'firstName' | 'lastName') =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setForm((prev) => ({ ...prev, [field]: e.target.value }));
-      setInfoErrors((prev) => ({ ...prev, [field]: '' }));
-    };
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm((prev) => ({...prev, [field]: e.target.value}));
+        setInfoErrors((prev) => ({...prev, [field]: ''}));
+      };
 
   const saveInfo = async () => {
     const errs: InfoErrors = {};
     if (!form.firstName.trim()) errs.firstName = 'First name is required.';
-    if (!form.lastName.trim())  errs.lastName  = 'Last name is required.';
-    if (Object.keys(errs).length > 0) { setInfoErrors(errs); return; }
+    if (!form.lastName.trim()) errs.lastName = 'Last name is required.';
+    if (Object.keys(errs).length > 0) {
+      setInfoErrors(errs);
+      return;
+    }
 
     setInfoSaving(true);
     try {
       const res = await api.put(profilePutUrl, {
         firstName: form.firstName.trim(),
-        lastName:  form.lastName.trim(),
+        lastName: form.lastName.trim(),
       });
       setProfile((prev) =>
-        prev ? { ...prev, firstName: form.firstName.trim(), lastName: form.lastName.trim() } : prev,
+        prev ? {...prev, firstName: form.firstName.trim(), lastName: form.lastName.trim()} : prev,
       );
       showSuccess(res.message ?? 'Profile updated successfully.');
       setEditMode(false);
@@ -124,13 +127,13 @@ export default function ProfilePage({ profileGetUrl, profilePutUrl, setPasswordU
 
   const handlePwdChange =
     (field: keyof typeof pwdForm) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setPwdForm((prev) => ({ ...prev, [field]: e.target.value }));
-      setPwdErrors((prev) => ({ ...prev, [field]: '' }));
-    };
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPwdForm((prev) => ({...prev, [field]: e.target.value}));
+        setPwdErrors((prev) => ({...prev, [field]: ''}));
+      };
 
   const toggleShow = (field: keyof ShowPwd) =>
-    setShowPwd((prev) => ({ ...prev, [field]: !prev[field] }));
+    setShowPwd((prev) => ({...prev, [field]: !prev[field]}));
 
   const savePwd = async () => {
     const errs: PwdErrors = {};
@@ -144,16 +147,19 @@ export default function ProfilePage({ profileGetUrl, profilePutUrl, setPasswordU
       errs.confirmPwd = 'Please confirm your new password.';
     else if (pwdForm.newPwd !== pwdForm.confirmPwd)
       errs.confirmPwd = 'Passwords do not match.';
-    if (Object.keys(errs).length > 0) { setPwdErrors(errs); return; }
+    if (Object.keys(errs).length > 0) {
+      setPwdErrors(errs);
+      return;
+    }
 
     setPwdSaving(true);
     try {
       const res = await api.post(setPasswordUrl, {
-        password:        pwdForm.newPwd.trim(),
+        password: pwdForm.newPwd.trim(),
         confirmPassword: pwdForm.confirmPwd.trim(),
       });
-      setProfile((prev) => prev ? { ...prev, hasPassword: true } : prev);
-      setPwdForm({ oldPwd: '', newPwd: '', confirmPwd: '' });
+      setProfile((prev) => prev ? {...prev, hasPassword: true} : prev);
+      setPwdForm({oldPwd: '', newPwd: '', confirmPwd: ''});
       showSuccess(res.message ?? 'Password saved successfully.');
     } catch (err) {
       showError(err instanceof Error ? err.message : 'Failed to save password.');
@@ -260,7 +266,10 @@ export default function ProfilePage({ profileGetUrl, profilePutUrl, setPasswordU
               autoComplete="current-password"
               error={pwdErrors.oldPwd}
               suffix={
-                <button className={styles.eyeBtn} type="button" onClick={() => toggleShow('oldPwd')} aria-label={showPwd.oldPwd ? 'Hide' : 'Show'}>
+                <button className={styles.eyeBtn}
+                        type="button"
+                        onClick={() => toggleShow('oldPwd')}
+                        aria-label={showPwd.oldPwd ? 'Hide' : 'Show'}>
                   {showPwd.oldPwd ? <EyeOpenIcon /> : <EyeOffIcon />}
                 </button>
               }
@@ -276,7 +285,10 @@ export default function ProfilePage({ profileGetUrl, profilePutUrl, setPasswordU
             autoComplete="new-password"
             error={pwdErrors.newPwd}
             suffix={
-              <button className={styles.eyeBtn} type="button" onClick={() => toggleShow('newPwd')} aria-label={showPwd.newPwd ? 'Hide' : 'Show'}>
+              <button className={styles.eyeBtn}
+                      type="button"
+                      onClick={() => toggleShow('newPwd')}
+                      aria-label={showPwd.newPwd ? 'Hide' : 'Show'}>
                 {showPwd.newPwd ? <EyeOpenIcon /> : <EyeOffIcon />}
               </button>
             }
@@ -291,7 +303,10 @@ export default function ProfilePage({ profileGetUrl, profilePutUrl, setPasswordU
             autoComplete="new-password"
             error={pwdErrors.confirmPwd}
             suffix={
-              <button className={styles.eyeBtn} type="button" onClick={() => toggleShow('confirmPwd')} aria-label={showPwd.confirmPwd ? 'Hide' : 'Show'}>
+              <button className={styles.eyeBtn}
+                      type="button"
+                      onClick={() => toggleShow('confirmPwd')}
+                      aria-label={showPwd.confirmPwd ? 'Hide' : 'Show'}>
                 {showPwd.confirmPwd ? <EyeOpenIcon /> : <EyeOffIcon />}
               </button>
             }

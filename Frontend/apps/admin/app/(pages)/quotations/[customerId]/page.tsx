@@ -1,18 +1,18 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { showSuccess, showError } from '@repo/auth';
-import { api } from '@/lib/api';
-import { ADMIN_API } from '@/lib/constants';
-import { QUOTATION_TYPES, QuotationResponse } from '@/app/types/quotation';
-import { CustomerResponse } from '@/app/types/customer';
+import {useCallback, useEffect, useState} from 'react';
+import {useParams, useRouter} from 'next/navigation';
+import {showError, showSuccess} from '@repo/auth';
+import {api} from '@/lib/api';
+import {ADMIN_API} from '@/lib/constants';
+import {QUOTATION_TYPES, QuotationResponse} from '@/app/types/quotation';
+import {CustomerResponse} from '@/app/types/customer';
 import ConfirmDeleteModal from '@/components/modals/confirm-delete/ConfirmDeleteModal';
 import AddQuotationModal from '@/components/modals/create-quotation/AddQuotationModal';
-import { ClipboardIcon, TrashIcon } from '@repo/ui/Icons';
-import Table, { type Column } from '@repo/ui/Table';
+import {ClipboardIcon, TrashIcon} from '@repo/ui/icon';
+import Table, {type Column} from '@repo/ui/Table';
 import styles from './quotations.module.css';
-import { formatDate } from '@/utility/date';
+import {formatDate} from '@/utility/date';
 import Button from '@repo/ui/Button';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -22,7 +22,7 @@ function getTypeLabel(type: string): string {
   return found ? found.label : type;
 }
 
-function DetailsList({ details }: { details: Record<string, unknown> }) {
+function DetailsList({details}: { details: Record<string, unknown> }) {
   const entries = Object.entries(details).filter(([, v]) => v !== '' && v !== null && v !== undefined);
   if (entries.length === 0) return <span className={styles.muted}>—</span>;
   return (
@@ -40,15 +40,15 @@ function DetailsList({ details }: { details: Record<string, unknown> }) {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function QuotationsPage() {
-  const params     = useParams();
-  const router     = useRouter();
+  const params = useParams();
+  const router = useRouter();
   const customerId = Number(params['customerId']);
 
-  const [customer, setCustomer]         = useState<CustomerResponse | null>(null);
-  const [quotations, setQuotations]     = useState<QuotationResponse[]>([]);
-  const [loading, setLoading]           = useState(true);
-  const [fetchError, setFetchError]     = useState('');
-  const [showAdd, setShowAdd]           = useState(false);
+  const [customer, setCustomer] = useState<CustomerResponse | null>(null);
+  const [quotations, setQuotations] = useState<QuotationResponse[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState('');
+  const [showAdd, setShowAdd] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<QuotationResponse | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
@@ -73,7 +73,9 @@ export default function QuotationsPage() {
     }
   }, [customerId]);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   // ── Delete ────────────────────────────────────────────────────────────────
 
@@ -95,7 +97,7 @@ export default function QuotationsPage() {
   // ── Columns ───────────────────────────────────────────────────────────────
 
   const columns: Column<QuotationResponse>[] = [
-    { key: 'index',    header: '#',         render: (_, i) => i + 1 },
+    {key: 'index', header: '#', render: (_, i) => i + 1},
     {
       key: 'type', header: 'Type',
       render: (q) => (
@@ -118,12 +120,12 @@ export default function QuotationsPage() {
         ? <span className={styles.remarkText}>{q.remark}</span>
         : <span className={styles.muted}>—</span>,
     },
-    { key: 'createdAt', header: 'Created On', render: (q) => formatDate(q.createdAt) },
+    {key: 'createdAt', header: 'Created On', render: (q) => formatDate(q.createdAt)},
     {
       key: 'actions', header: 'Actions',
       render: (q) => (
         <button className={styles.deleteBtn} type="button" title="Delete quotation"
-          onClick={() => setDeleteTarget(q)}>
+                onClick={() => setDeleteTarget(q)}>
           <TrashIcon size={14} />
         </button>
       ),
@@ -139,7 +141,7 @@ export default function QuotationsPage() {
         <div className={styles.headerLeft}>
           <div className={styles.breadCrumbs}>
             <Button title="Back to Customers" variant="ghost" type="button"
-              onClick={() => router.push('/customers')}>
+                    onClick={() => router.push('/customers')}>
               ← Customers
             </Button>
             {customer && (

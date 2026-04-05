@@ -1,51 +1,51 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { api } from '@repo/auth';
+import React, {useEffect, useState} from 'react';
+import {api} from '@repo/auth';
 import Spinner from '@repo/ui/Spinner';
-import { LeadsIcon, ClipboardIcon } from '@repo/ui/Icons';
-import { USER_API } from '@/lib/constants';
-import type { UserDashboard, LeadResponse, QuotationResponse } from '@/app/types/profile';
+import {ClipboardIcon, LeadsIcon} from '@repo/ui/icon';
+import {USER_API} from '@/lib/constants';
+import type {LeadResponse, QuotationResponse, UserDashboard} from '@/app/types/profile';
 import styles from './dashboard.module.css';
 
 // ── Status colours (runtime data → inline style) ───────────────────────────────
 
 const STATUS_BG: Record<string, string> = {
-  quotation:   '#e8f4fd',
-  contacted:   '#fff3cd',
-  quoted:      '#d1ecf1',
-  confirmed:   '#d4edda',
+  quotation: '#e8f4fd',
+  contacted: '#fff3cd',
+  quoted: '#d1ecf1',
+  confirmed: '#d4edda',
   negotiation: '#f8d7da',
-  cancelled:   '#f0f0f0',
-  lost:        '#f0f0f0',
+  cancelled: '#f0f0f0',
+  lost: '#f0f0f0',
 };
 
 const STATUS_FG: Record<string, string> = {
-  quotation:   '#0c6093',
-  contacted:   '#856404',
-  quoted:      '#0c5460',
-  confirmed:   '#155724',
+  quotation: '#0c6093',
+  contacted: '#856404',
+  quoted: '#0c5460',
+  confirmed: '#155724',
   negotiation: '#721c24',
-  cancelled:   '#6c757d',
-  lost:        '#6c757d',
+  cancelled: '#6c757d',
+  lost: '#6c757d',
 };
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
 
-function LeadCard({ lead }: { lead: LeadResponse }) {
+function LeadCard({lead}: { lead: LeadResponse }) {
   return (
     <div className={styles.card}>
       <div className={styles.cardTop}>
         <span className={styles.cardType}>{lead.type}</span>
         <span
           className={styles.statusBadge}
-          style={{ background: STATUS_BG[lead.status] ?? '#f0f0f0', color: STATUS_FG[lead.status] ?? '#333' }}
+          style={{background: STATUS_BG[lead.status] ?? '#f0f0f0', color: STATUS_FG[lead.status] ?? '#333'}}
         >
           {lead.status}
         </span>
       </div>
       {lead.assignTo && <p className={styles.cardAssign}>Assigned to: {lead.assignTo}</p>}
-      {lead.remark   && <p className={styles.cardRemark}>{lead.remark}</p>}
+      {lead.remark && <p className={styles.cardRemark}>{lead.remark}</p>}
       <p className={styles.cardMeta}>
         Added by {lead.createdByName} &bull; {new Date(lead.createdAt).toLocaleDateString()}
       </p>
@@ -53,12 +53,12 @@ function LeadCard({ lead }: { lead: LeadResponse }) {
   );
 }
 
-function QuotationCard({ quotation }: { quotation: QuotationResponse }) {
+function QuotationCard({quotation}: { quotation: QuotationResponse }) {
   return (
     <div className={styles.card}>
       <span className={styles.cardType}>{quotation.type}</span>
       {quotation.assignTo && <p className={styles.cardAssign}>Assigned to: {quotation.assignTo}</p>}
-      {quotation.remark   && <p className={styles.cardRemark}>{quotation.remark}</p>}
+      {quotation.remark && <p className={styles.cardRemark}>{quotation.remark}</p>}
       <p className={styles.cardMeta}>{new Date(quotation.createdAt).toLocaleDateString()}</p>
     </div>
   );
@@ -67,9 +67,9 @@ function QuotationCard({ quotation }: { quotation: QuotationResponse }) {
 // ── Page ───────────────────────────────────────────────────────────────────────
 
 export default function DashboardPage() {
-  const [data,    setData]    = useState<UserDashboard | null>(null);
+  const [data, setData] = useState<UserDashboard | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error,   setError]   = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     api.get<UserDashboard>(USER_API.DASHBOARD)
@@ -93,13 +93,13 @@ export default function DashboardPage() {
     return <div className={styles.error}>{error}</div>;
   }
 
-  const leads      = data?.leads      ?? [];
+  const leads = data?.leads ?? [];
   const quotations = data?.quotations ?? [];
 
   const stats = [
-    { label: 'Total Leads',      value: leads.length },
-    { label: 'Total Quotations', value: quotations.length },
-    { label: 'Active Leads',     value: leads.filter(l => !['cancelled', 'lost'].includes(l.status)).length },
+    {label: 'Total Leads', value: leads.length},
+    {label: 'Total Quotations', value: quotations.length},
+    {label: 'Active Leads', value: leads.filter(l => !['cancelled', 'lost'].includes(l.status)).length},
   ];
 
   return (

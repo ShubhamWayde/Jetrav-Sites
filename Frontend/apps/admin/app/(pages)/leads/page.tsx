@@ -1,17 +1,17 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import { showSuccess, showError } from '@repo/auth';
-import { api } from '@/lib/api';
-import { ADMIN_API } from '@/lib/constants';
-import { LEAD_TYPES, LeadResponse, LeadType } from '@/app/types/lead';
+import {useCallback, useEffect, useState} from 'react';
+import {showError, showSuccess} from '@repo/auth';
+import {api} from '@/lib/api';
+import {ADMIN_API} from '@/lib/constants';
+import {LEAD_TYPES, LeadResponse, LeadType} from '@/app/types/lead';
 import AddLeadModal from '@/components/modals/create-lead/AddLeadModal';
 import EditLeadModal from '@/components/modals/edit-lead/EditLeadModal';
 import ConfirmDeleteModal from '@/components/modals/confirm-delete/ConfirmDeleteModal';
-import { LeadsIcon, PencilIcon, TrashIcon } from '@repo/ui/Icons';
-import Table, { type Column } from '@repo/ui/Table';
+import {LeadsIcon, PencilIcon, TrashIcon} from '@repo/ui/icon';
+import Table, {type Column} from '@repo/ui/Table';
 import styles from './leads.module.css';
-import { formatDate } from '@/utility/date';
+import {formatDate} from '@/utility/date';
 import Button from '@repo/ui/Button';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -32,101 +32,104 @@ function getTypeLabel(type: string): string {
 // ── Filter tabs ───────────────────────────────────────────────────────────────
 
 const FILTER_TABS: { value: string; label: string }[] = [
-  { value: '', label: 'All' },
+  {value: '', label: 'All'},
   ...LEAD_TYPES,
 ];
 
 // ── Dynamic column definitions per lead type ──────────────────────────────────
 
-interface ColDef { header: string; keys: string[] }
+interface ColDef {
+  header: string;
+  keys: string[]
+}
 
 const TYPE_COLUMNS: Record<string, ColDef[]> = {
   '': [
-    { header: 'Origin / City',  keys: ['source', 'city', 'country'] },
-    { header: 'Destination',    keys: ['destination'] },
-    { header: 'Date',           keys: ['departure', 'checkIn', 'startDate', 'travelDate', 'pickupDate'] },
-    { header: 'Return / Out',   keys: ['return', 'checkOut', 'endDate', 'dropDate'] },
-    { header: 'Adults',         keys: ['adults'] },
-    { header: 'Children',       keys: ['children'] },
+    {header: 'Origin / City', keys: ['source', 'city', 'country']},
+    {header: 'Destination', keys: ['destination']},
+    {header: 'Date', keys: ['departure', 'checkIn', 'startDate', 'travelDate', 'pickupDate']},
+    {header: 'Return / Out', keys: ['return', 'checkOut', 'endDate', 'dropDate']},
+    {header: 'Adults', keys: ['adults']},
+    {header: 'Children', keys: ['children']},
   ],
   air: [
-    { header: 'Origin',      keys: ['source'] },
-    { header: 'Destination', keys: ['destination'] },
-    { header: 'Departure',   keys: ['departure'] },
-    { header: 'Return',      keys: ['return'] },
-    { header: 'Adults',      keys: ['adults'] },
-    { header: 'Children',    keys: ['children'] },
-    { header: 'Infant',      keys: ['infant'] },
-    { header: 'SSR',         keys: ['ssr'] },
+    {header: 'Origin', keys: ['source']},
+    {header: 'Destination', keys: ['destination']},
+    {header: 'Departure', keys: ['departure']},
+    {header: 'Return', keys: ['return']},
+    {header: 'Adults', keys: ['adults']},
+    {header: 'Children', keys: ['children']},
+    {header: 'Infant', keys: ['infant']},
+    {header: 'SSR', keys: ['ssr']},
   ],
   train: [
-    { header: 'Source',      keys: ['source'] },
-    { header: 'Destination', keys: ['destination'] },
-    { header: 'Departure',   keys: ['departure'] },
-    { header: 'Return',      keys: ['return'] },
-    { header: 'Adults',      keys: ['adults'] },
-    { header: 'Children',    keys: ['children'] },
+    {header: 'Source', keys: ['source']},
+    {header: 'Destination', keys: ['destination']},
+    {header: 'Departure', keys: ['departure']},
+    {header: 'Return', keys: ['return']},
+    {header: 'Adults', keys: ['adults']},
+    {header: 'Children', keys: ['children']},
   ],
   hotel: [
-    { header: 'City',      keys: ['city'] },
-    { header: 'Check-In',  keys: ['checkIn'] },
-    { header: 'Check-Out', keys: ['checkOut'] },
-    { header: 'Rooms',     keys: ['rooms'] },
-    { header: 'Adults',    keys: ['adults'] },
-    { header: 'Children',  keys: ['children'] },
+    {header: 'City', keys: ['city']},
+    {header: 'Check-In', keys: ['checkIn']},
+    {header: 'Check-Out', keys: ['checkOut']},
+    {header: 'Rooms', keys: ['rooms']},
+    {header: 'Adults', keys: ['adults']},
+    {header: 'Children', keys: ['children']},
   ],
   visa: [
-    { header: 'Country',     keys: ['country'] },
-    { header: 'Visa Type',   keys: ['visaType'] },
-    { header: 'Travel Date', keys: ['travelDate'] },
-    { header: 'Adults',      keys: ['adults'] },
-    { header: 'Children',    keys: ['children'] },
+    {header: 'Country', keys: ['country']},
+    {header: 'Visa Type', keys: ['visaType']},
+    {header: 'Travel Date', keys: ['travelDate']},
+    {header: 'Adults', keys: ['adults']},
+    {header: 'Children', keys: ['children']},
   ],
   insurance: [
-    { header: 'Country',    keys: ['country'] },
-    { header: 'Start Date', keys: ['startDate'] },
-    { header: 'End Date',   keys: ['endDate'] },
-    { header: 'Adults',     keys: ['adults'] },
+    {header: 'Country', keys: ['country']},
+    {header: 'Start Date', keys: ['startDate']},
+    {header: 'End Date', keys: ['endDate']},
+    {header: 'Adults', keys: ['adults']},
   ],
   bus: [
-    { header: 'Source',      keys: ['source'] },
-    { header: 'Destination', keys: ['destination'] },
-    { header: 'Departure',   keys: ['departure'] },
-    { header: 'Adults',      keys: ['adults'] },
-    { header: 'Children',    keys: ['children'] },
+    {header: 'Source', keys: ['source']},
+    {header: 'Destination', keys: ['destination']},
+    {header: 'Departure', keys: ['departure']},
+    {header: 'Adults', keys: ['adults']},
+    {header: 'Children', keys: ['children']},
   ],
   car: [
-    { header: 'Source',      keys: ['source'] },
-    { header: 'Destination', keys: ['destination'] },
-    { header: 'Pickup Date', keys: ['pickupDate'] },
-    { header: 'Drop Date',   keys: ['dropDate'] },
-    { header: 'Car Type',    keys: ['carType'] },
+    {header: 'Source', keys: ['source']},
+    {header: 'Destination', keys: ['destination']},
+    {header: 'Pickup Date', keys: ['pickupDate']},
+    {header: 'Drop Date', keys: ['dropDate']},
+    {header: 'Car Type', keys: ['carType']},
   ],
   foreign_exchange: [
-    { header: 'Currency', keys: ['currency'] },
-    { header: 'Amount',   keys: ['amount'] },
-    { header: 'Purpose',  keys: ['purpose'] },
+    {header: 'Currency', keys: ['currency']},
+    {header: 'Amount', keys: ['amount']},
+    {header: 'Purpose', keys: ['purpose']},
   ],
   package: [
-    { header: 'Destination',  keys: ['destination'] },
-    { header: 'Start Date',   keys: ['startDate'] },
-    { header: 'End Date',     keys: ['endDate'] },
-    { header: 'Adults',       keys: ['adults'] },
-    { header: 'Children',     keys: ['children'] },
-    { header: 'Package Type', keys: ['packageType'] },
+    {header: 'Destination', keys: ['destination']},
+    {header: 'Start Date', keys: ['startDate']},
+    {header: 'End Date', keys: ['endDate']},
+    {header: 'Adults', keys: ['adults']},
+    {header: 'Children', keys: ['children']},
+    {header: 'Package Type', keys: ['packageType']},
   ],
 };
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function LeadsPage() {
-  const [leads, setLeads]               = useState<LeadResponse[]>([]);
-  const [loading, setLoading]           = useState(true);
-  const [fetchError, setFetchError]     = useState('');
+  const [leads, setLeads] = useState<LeadResponse[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState('');
   const [activeFilter, setActiveFilter] = useState<LeadType | ''>('');
-  const [showAdd, setShowAdd]             = useState(false);
-  const [editTarget, setEditTarget]       = useState<LeadResponse | null>(null);
-  const [deleteTarget, setDeleteTarget]   = useState<LeadResponse | null>(null);
+  const [showAdd, setShowAdd] = useState(false);
+  const [editTarget, setEditTarget] = useState<LeadResponse | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<LeadResponse | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   // ── Fetch ─────────────────────────────────────────────────────────────────
@@ -148,7 +151,9 @@ export default function LeadsPage() {
     }
   }, [activeFilter]);
 
-  useEffect(() => { fetchLeads(); }, [fetchLeads]);
+  useEffect(() => {
+    fetchLeads();
+  }, [fetchLeads]);
 
   const handleFilterChange = (value: LeadType | '') => {
     setActiveFilter(value);
@@ -206,7 +211,7 @@ export default function LeadsPage() {
       key: 'mobileNumber', header: 'Mobile No.',
       render: (lead) => lead.mobileNumber || <span className={styles.muted}>—</span>,
     },
-    { key: 'updatedAt',  header: 'Updated On', render: (lead) => formatDate(lead.updatedAt) },
+    {key: 'updatedAt', header: 'Updated On', render: (lead) => formatDate(lead.updatedAt)},
     {
       key: 'assignTo', header: 'Assign To',
       render: (lead) => lead.assignTo || <span className={styles.muted}>—</span>,
@@ -216,11 +221,11 @@ export default function LeadsPage() {
       render: (lead) => (
         <div className={styles.actions}>
           <button className={styles.editBtn} type="button" title="Edit lead"
-            onClick={() => setEditTarget(lead)}>
+                  onClick={() => setEditTarget(lead)}>
             <PencilIcon size={14} />
           </button>
           <button className={styles.deleteBtn} type="button" title="Delete lead"
-            onClick={() => setDeleteTarget(lead)}>
+                  onClick={() => setDeleteTarget(lead)}>
             <TrashIcon size={14} />
           </button>
         </div>
@@ -241,7 +246,7 @@ export default function LeadsPage() {
       </div>
 
       <div className={styles.filterBar}>
-        {FILTER_TABS.map(({ value, label }) => (
+        {FILTER_TABS.map(({value, label}) => (
           <button
             key={value}
             type="button"

@@ -1,23 +1,26 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { api } from '@repo/auth';
+import {useEffect, useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {api} from '@repo/auth';
 import Button from '@repo/ui/Button';
 import Spinner from '@repo/ui/Spinner';
-import { CheckCircleIcon } from '@repo/ui/Icons';
-import { USER_API } from '@/lib/constants';
-import { SubscriptionStatus } from '@/app/types/account';
-import { formatDate } from '@/app/utils/main';
+import {CheckCircleIcon} from '@repo/ui/icon';
+import {USER_API} from '@/lib/constants';
+import {SubscriptionStatus} from '@/app/types/account';
+import {formatDate} from '@/app/utils/main';
 import styles from './account.module.css';
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
 function tierColor(tier: string): string {
   switch (tier?.toLowerCase()) {
-    case 'gold':     return styles.tierGold     ?? '';
-    case 'platinum': return styles.tierPlatinum ?? '';
-    default:         return styles.tierSilver   ?? '';
+    case 'gold':
+      return styles.tierGold ?? '';
+    case 'platinum':
+      return styles.tierPlatinum ?? '';
+    default:
+      return styles.tierSilver ?? '';
   }
 }
 
@@ -25,13 +28,16 @@ function tierColor(tier: string): string {
 
 export default function AccountsPage() {
   const router = useRouter();
-  const [data,    setData]    = useState<SubscriptionStatus | null>(null);
+  const [data, setData] = useState<SubscriptionStatus | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     api.get<SubscriptionStatus>(USER_API.SUBSCRIPTION)
-      .then(res => { if (res.data) setData(res.data); })
-      .catch(() => {})
+      .then(res => {
+        if (res.data) setData(res.data);
+      })
+      .catch(() => {
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -110,7 +116,7 @@ export default function AccountsPage() {
           )}
 
           <div className={styles.cardFooter}>
-            <Button className='btn-sm' variant="secondary" onClick={() => router.push('/plan')}>
+            <Button className="btn-sm" variant="secondary" onClick={() => router.push('/plan')}>
               Change Plan
             </Button>
           </div>
@@ -120,7 +126,7 @@ export default function AccountsPage() {
           <div className={styles.emptyPlan}>
             <p className={styles.emptyTitle}>No active plan</p>
             <p className={styles.emptySubtitle}>Choose a plan to unlock all features.</p>
-            <Button className='btn-sm' onClick={() => router.push('/plan')}>
+            <Button className="btn-sm" onClick={() => router.push('/plan')}>
               Choose a Plan
             </Button>
           </div>

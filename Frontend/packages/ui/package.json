@@ -5,15 +5,15 @@
   "exports": {
     "./styles/css/*": "./styles/css/*",
     "./components/*": "./src/components/*.tsx",
-    "./icons": "./src/icons/index.ts",
-    "./icons/*": "./src/icons/*.tsx",
+    "./icon": "./src/icon/index.ts",
+    "./icon/*": "./src/icon/*.tsx",
     "./*": "./src/*.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "generate:component": "turbo gen react-component",
     "check-types": "tsc --noEmit",
-    "build:icons": "svgr ./src/Icons/raw --out-dir ./src/Icons/generated --typescript --icon --replace-attr-values #F0F0F0=currentColor"
+    "build:icons": "svgr ./src/icon/raw --out-dir ./src/icon/generated --typescript --icon --replace-attr-values #F0F0F0=currentColor"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

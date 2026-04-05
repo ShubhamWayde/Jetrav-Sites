@@ -16,7 +16,7 @@ import {
   TrackBooking,
   XTwitter,
   YourTrips
-} from "@repo/ui/icons";
+} from "@repo/ui/icon";
 import {ROUTES} from "@repo/constants";
 
 const FOOTER_LINKS = [

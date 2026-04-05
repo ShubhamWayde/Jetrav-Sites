@@ -4,7 +4,7 @@ import Image from "next/image"
 import styles from "./cta.module.css"
 import {fontRoboto} from "@repo/ui/fonts/fonts";
 import {Button} from "../../ui/button/button";
-import {CarryOnBagChecked, Icon} from "@repo/ui/icons";
+import {CarryOnBagChecked, Icon} from "@repo/ui/icon";
 
 export default function Cta() {
   return (

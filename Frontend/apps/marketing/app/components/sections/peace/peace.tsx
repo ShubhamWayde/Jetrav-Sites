@@ -3,7 +3,7 @@ import InfoBlock from "../../ui/sectionInfo-block/info-block"
 import Card from "../../ui/card/card"
 import Image from "next/image"
 import styles from "./peace.module.css"
-import {Analytics, CheckedBag, Icon, SmartSearch, Surfing} from "@repo/ui/icons";
+import {Analytics, CheckedBag, Icon, SmartSearch, Surfing} from "@repo/ui/icon";
 
 const CARD_DATA = [
   {
