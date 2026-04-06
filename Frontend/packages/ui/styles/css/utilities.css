@@ -12,6 +12,13 @@
 .flex-col { flex-direction: column; }
 .flex-wrap { flex-wrap: wrap; }
 
+@media (max-width: 768px) {
+	.md-fg-1 {
+		flex-grow: 1;
+		justify-content: center;
+	}
+}
+
 /* Flex Alignment */
 .items-start { align-items: flex-start; }
 .items-center { align-items: center; }

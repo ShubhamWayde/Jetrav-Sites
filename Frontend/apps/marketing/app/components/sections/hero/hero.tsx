@@ -85,9 +85,9 @@ export default function Hero() {
               <em>₹199</em>.
             </p>
           </div>
-          <div className={clx(styles.ctaWrapper, "flex")}>
+          <div className={clx("flex", "flex-wrap")}>
             <Button
-              className={clx("flex", "items-center", "px-4", "py-2", "gap-1")}
+              className={clx("flex", "items-center", "px-4", "py-2", "gap-1", "md-fg-1")}
               variant={"primary"}
               href={ROUTES.marketing.phoneNumber.href}>
               <Icon
@@ -104,7 +104,7 @@ export default function Hero() {
                 "items-center",
                 "px-4",
                 "py-2",
-                "gap-1",
+                "gap-1", "md-fg-1"
               )}
               variant={"secondary"}>
               <em>Dial. Done. Depart.</em>
