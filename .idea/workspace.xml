@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91181458-c591-40bb-b421-baf1c5954518" name="Changes" comment="">
+    <list default="true" id="91181458-c591-40bb-b421-baf1c5954518" name="Changes" comment="merged UAT to design-marketing branch">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/variable.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/variable.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/footer/footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/footer/footer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/cta/cta.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/cta/cta.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/hero/hero.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/hero/hero.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/utilities.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/utilities.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -173,7 +177,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773677977396</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="merged UAT to design-marketing branch">
+      <option name="closed" value="true" />
+      <created>1775441763907</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1775441763907</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -183,6 +195,7 @@
     <MESSAGE value="updated code" />
     <MESSAGE value="fix structure and update imports" />
     <MESSAGE value="updated folder name Icons to icon" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated folder name Icons to icon" />
+    <MESSAGE value="merged UAT to design-marketing branch" />
+    <option name="LAST_COMMIT_MESSAGE" value="merged UAT to design-marketing branch" />
   </component>
 </project>

@@ -5,6 +5,7 @@ import styles from "./cta.module.css"
 import {fontRoboto} from "@repo/ui/fonts/fonts";
 import {Button} from "../../ui/button/button";
 import {CarryOnBagChecked, Icon} from "@repo/ui/icon";
+import {ROUTES} from "@repo/constants";
 
 export default function Cta() {
   return (
@@ -16,11 +17,12 @@ export default function Cta() {
           } title={"Stop Searching. Start Traveling."}
                      description={"Hand over the endless tabs, complex routing, and visa paperwork to India’s smartest travel platform. Your personal concierge is ready."}
           >
-            <div className={clx("flex")}>
-              <Button className={clx("flex", "items-center", "px-4", "py-2", "gap-1")}>
+            <div className={clx("flex", "flex-wrap")}>
+              <Button href={ROUTES.marketing.phoneNumber.href}
+                      className={clx("flex", "items-center", "px-4", "py-2", "gap-1", "md-fg-1")}>
                 <Icon icon={CarryOnBagChecked} size={"lg"} color={"primaryGradient"} />
-                +91 90999-88132</Button>
-              <Button className={clx(fontRoboto.className, "flex", "items-center", "px-4", "py-2", "gap-1", styles.btnDark)}
+                {ROUTES.marketing.phoneNumber.label}</Button>
+              <Button className={clx(fontRoboto.className, "flex", "items-center", "px-4", "py-2", "gap-1", "md-fg-1", styles.btnDark)}
                       variant={"secondary"}>
                 <em>Dial. Done. Depart.</em>
               </Button>
