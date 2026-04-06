@@ -5,7 +5,6 @@ import Link from "next/link"
 import GlowingLogo from "../ui/glowing-logo/glowing-logo";
 import {
   Call,
-  Discord,
   Email,
   Icon,
   Instagram,
@@ -93,20 +92,20 @@ function Footer() {
             </div>
             <div className={clx(styles.socialLinks, "flex", "gap-3", "items-center")}>
               <Link className={clx("flex", "items-center", "justify-center", "p-2", "glowHover")}
-                    href={"/"}><Icon icon={Instagram}
-                                     size={"lg"}
-                                     color={"secondaryGradient"} />
+                    href={"https://www.instagram.com/jetravhq/"} target={"_blank"}><Icon icon={Instagram}
+                                                                                         size={"lg"}
+                                                                                         color={"secondaryGradient"} />
               </Link>
               <Link className={clx("flex", "items-center", "justify-center", "p-2", "glowHover")}
-                    href={"/"}><Icon icon={XTwitter}
-                                     size={"lg"}
-                                     color={"secondaryGradient"} />
+                    href={"https://x.com/jetravhq"}><Icon icon={XTwitter}
+                                                          size={"lg"}
+                                                          color={"secondaryGradient"} />
               </Link>
-              <Link className={clx("flex", "items-center", "justify-center", "p-2", "glowHover")}
-                    href={"/"}><Icon icon={Discord}
-                                     size={"lg"}
-                                     color={"secondaryGradient"} />
-              </Link>
+              {/*<Link className={clx("flex", "items-center", "justify-center", "p-2", "glowHover")}*/}
+              {/*      href={"/"}><Icon icon={Discord}*/}
+              {/*                       size={"lg"}*/}
+              {/*                       color={"secondaryGradient"} />*/}
+              {/*</Link>*/}
             </div>
           </div>
           <div className={clx(styles.footerLinks)}>
