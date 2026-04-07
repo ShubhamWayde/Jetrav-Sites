@@ -1,3 +1,11 @@
+export type AppRoute = {
+  label: string;
+  href: string;
+  target?: "_blank" | "_self";
+};
+
+type routeConfig = Record<string, Record<string, AppRoute>>;
+
 export const ROUTES = {
   marketing: {
     home: {label: 'Home', href: '/home'},
@@ -9,8 +17,9 @@ export const ROUTES = {
     email: {label: 'contact@jetrav.com', href: 'mailto:contact@jetrav.com'},
   },
   publicApp: {
-    login: {label: 'Login', href: 'https://app.jetrav.com/login'},
-    register: {label: 'Register', href: 'https://app.jetrav.com/register'},
+    login: {label: 'Login', href: 'https://app.jetrav.com/login', target: '_blank'},
+    register: {label: 'Register', href: 'https://app.jetrav.com/register', target: '_blank'},
+    trackBooking: {label: 'Track Booking', href: 'https://app.jetrav.com/track-booking', target: '_blank'},
   }
 
-} as const;
+} satisfies routeConfig;

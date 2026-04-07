@@ -18,24 +18,34 @@ import {
 } from "@repo/ui/icon";
 import {ROUTES} from "@repo/constants";
 
-const FOOTER_LINKS = [
+type NavItem = {
+  label: string;
+  href: string;
+  target?: string;
+  icon?: React.ReactNode;
+}
+
+type FooterSection = {
+  id: string;
+  title: string;
+  links: NavItem[];
+}
+
+const FOOTER_LINKS: FooterSection[] = [
   {
     id: "quick-links",
     title: "Quick Links",
     links: [
       {
-        label: ROUTES.marketing.solutions.label,
-        href: ROUTES.marketing.solutions.href,
+        ...ROUTES.marketing.solutions,
         icon: <Icon icon={YourTrips} size={"lg"} color={"secondaryGradient"} />
       },
       {
-        label: ROUTES.marketing.whyJetrav.label,
-        href: ROUTES.marketing.whyJetrav.href,
+        ...ROUTES.marketing.whyJetrav,
         icon: <Icon icon={JetravIconOutline} size={"lg"} color={"secondaryGradient"} />
       },
       {
-        label: ROUTES.marketing.jetPoints.label,
-        href: ROUTES.marketing.jetPoints.href,
+        ...ROUTES.marketing.jetPoints,
         icon: <Icon icon={JetPoints} size={"lg"} color={"secondaryGradient"} />
       },
     ]
@@ -45,18 +55,15 @@ const FOOTER_LINKS = [
     title: "Jetrav",
     links: [
       {
-        label: ROUTES.publicApp.login.label,
-        href: ROUTES.publicApp.login.href,
+        ...ROUTES.publicApp.login,
         icon: <Icon icon={Login} size={"lg"} color={"secondaryGradient"} />
       },
       {
-        label: ROUTES.publicApp.register.label,
-        href: ROUTES.publicApp.register.href,
+        ...ROUTES.publicApp.register,
         icon: <Icon icon={Registration} size={"lg"} color={"secondaryGradient"} />
       },
       {
-        label: "Track Booking",
-        href: "/track-booking",
+        ...ROUTES.publicApp.trackBooking,
         icon: <Icon icon={TrackBooking} size={"lg"} color={"secondaryGradient"} />
       },
     ]
@@ -66,13 +73,11 @@ const FOOTER_LINKS = [
     title: "Contact Us",
     links: [
       {
-        label: ROUTES.marketing.phoneNumber.label,
-        href: ROUTES.marketing.phoneNumber.href,
+        ...ROUTES.marketing.phoneNumber,
         icon: <Icon icon={Call} size={"lg"} color={"secondaryGradient"} />
       },
       {
-        label: ROUTES.marketing.email.label,
-        href: ROUTES.marketing.email.href,
+        ...ROUTES.marketing.email,
         icon: <Icon icon={Email} size={"lg"} color={"secondaryGradient"} />
       },
     ]
@@ -97,9 +102,9 @@ function Footer() {
                                                                                          color={"secondaryGradient"} />
               </Link>
               <Link className={clx("flex", "items-center", "justify-center", "p-2", "glowHover")}
-                    href={"https://x.com/jetravhq"}><Icon icon={XTwitter}
-                                                          size={"lg"}
-                                                          color={"secondaryGradient"} />
+                    href={"https://x.com/jetravhq"} target={"_blank"}><Icon icon={XTwitter}
+                                                                            size={"lg"}
+                                                                            color={"secondaryGradient"} />
               </Link>
               {/*<Link className={clx("flex", "items-center", "justify-center", "p-2", "glowHover")}*/}
               {/*      href={"/"}><Icon icon={Discord}*/}
@@ -116,7 +121,7 @@ function Footer() {
                   <ul className={clx("flex", "flex-col", "gap-3")}>
                     {section.links.map((link) => (
                       <li key={link.label}>
-                        <Link href={link.href} className={clx("flex", "gap-2", "items-center")}>
+                        <Link href={link.href} target={link.target} className={clx("flex", "gap-2", "items-center")}>
                           {link.icon}
                           {link.label}
                         </Link>
