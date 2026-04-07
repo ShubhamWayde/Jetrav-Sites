@@ -7,7 +7,6 @@
   border-radius: var(--radius-lg);
   padding: 12px 20px;
   font-size: var(--base-font);
-
   font-weight: var(--font-weight-400);
   cursor: pointer;
   line-height: 1.25;
@@ -17,18 +16,19 @@
   -moz-border-radius: var(--radius-lg);
   -ms-border-radius: var(--radius-lg);
   -o-border-radius: var(--radius-lg);
+	font-family: var(--font-primary), sans-serif;
 }
 
 /* Variants */
 .primary {
-  background: var(--jt-light-base);
-  color: var(--jt-neutral-base);
+  background: var(--jt-dark-exact);
+  color: var(--jt-light-exact);
   border-color: var(--jt-light-base);
 }
 
 .primary:hover:not(:disabled) {
-  background: transparent;
-  color: var(--jt-light-base);
+  background: var(--jt-light-exact);
+  color: var(--jt-dark-exact);
 }
 
 .secondary {

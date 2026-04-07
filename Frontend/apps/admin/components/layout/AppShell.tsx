@@ -5,17 +5,17 @@ import {api, useAuth, useNotifications} from '@repo/auth';
 import {AppLayout} from '@repo/ui/AppLayout';
 import {AppHeader} from '@repo/ui/AppHeader';
 import {AppSidebar} from '@repo/ui/AppSidebar';
-import {DashboardIcon, LeadsIcon, ReportsIcon, UsersIcon} from '@repo/ui/icon';
+import {Analytics, Icon, SmartSearch, Workspaces, YourTrips} from '@repo/ui/icon';
 import {ADMIN_API} from '@/lib/constants';
 import type {AdminProfile} from '@/app/types/profile';
 
 // ── Admin nav items ────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  {href: '/dashboard', label: 'Dashboard', icon: <DashboardIcon size={18} />},
-  {href: '/customers', label: 'Customers', icon: <UsersIcon size={18} />},
-  {href: '/leads', label: 'Leads', icon: <LeadsIcon size={18} />},
-  {href: '/reports', label: 'Reports', icon: <ReportsIcon size={18} />},
+  {href: '/dashboard', label: 'Dashboard', icon: <Icon icon={Analytics} size="sm" />},
+  {href: '/customers', label: 'Customers', icon: <Icon icon={Workspaces} size="sm" />},
+  {href: '/leads', label: 'Leads', icon: <Icon icon={SmartSearch} size="sm" />},
+  {href: '/reports', label: 'Reports', icon: <Icon icon={YourTrips} size="sm" />},
 ];
 
 // ── Component ─────────────────────────────────────────────────────────────────

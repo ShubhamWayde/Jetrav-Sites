@@ -7,7 +7,7 @@ import {showError, showSuccess} from '../../utils/toast';
 import Button from '@repo/ui/Button';
 import Spinner from '@repo/ui/Spinner';
 import InputField from '@repo/ui/InputField';
-import {EyeOffIcon, EyeOpenIcon, PencilIcon} from '@repo/ui/icon';
+import {Icon, JetravIconOutline, Edit, SmartSearch} from '@repo/ui/icon';
 import styles from './ProfilePage.module.css';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -194,7 +194,7 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
         </div>
         {!editMode && (
           <Button title="Edit Profile" type="button" onClick={startEdit} className="btn-md">
-            <PencilIcon size={14} />
+            <Icon icon={Edit} size="sm" />
             Edit
           </Button>
         )}
@@ -270,7 +270,7 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
                         type="button"
                         onClick={() => toggleShow('oldPwd')}
                         aria-label={showPwd.oldPwd ? 'Hide' : 'Show'}>
-                  {showPwd.oldPwd ? <EyeOpenIcon /> : <EyeOffIcon />}
+                  {showPwd.oldPwd ? <Icon icon={SmartSearch} size="sm" /> : <Icon icon={JetravIconOutline} size="sm" />}
                 </button>
               }
             />
@@ -289,7 +289,7 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
                       type="button"
                       onClick={() => toggleShow('newPwd')}
                       aria-label={showPwd.newPwd ? 'Hide' : 'Show'}>
-                {showPwd.newPwd ? <EyeOpenIcon /> : <EyeOffIcon />}
+                {showPwd.newPwd ? <Icon icon={SmartSearch} size="sm" /> : <Icon icon={JetravIconOutline} size="sm" />}
               </button>
             }
           />
@@ -307,7 +307,7 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
                       type="button"
                       onClick={() => toggleShow('confirmPwd')}
                       aria-label={showPwd.confirmPwd ? 'Hide' : 'Show'}>
-                {showPwd.confirmPwd ? <EyeOpenIcon /> : <EyeOffIcon />}
+                {showPwd.confirmPwd ? <Icon icon={SmartSearch} size="sm" /> : <Icon icon={JetravIconOutline} size="sm" />}
               </button>
             }
           />

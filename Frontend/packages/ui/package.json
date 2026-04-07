@@ -5,9 +5,11 @@
   "exports": {
     "./styles/css/*": "./styles/css/*",
     "./components/*": "./src/components/*.tsx",
+    "./utilities": "./src/utils/utils.ts",
+    "./fonts/fonts": "./src/fonts/fonts.tsx",
     "./icon": "./src/icon/index.ts",
     "./icon/*": "./src/icon/*.tsx",
-    "./*": "./src/*.tsx"
+    "./*": ["./src/components/*/index.ts", "./src/*.tsx"]
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

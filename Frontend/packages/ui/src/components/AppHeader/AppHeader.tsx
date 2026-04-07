@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { BellIcon, GearIcon, LogoutIcon } from '../Icons/Icons';
+import { Icon, Notification, Login, Edit } from '@repo/ui/icon';
 import styles from './AppHeader.module.css';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -108,7 +108,7 @@ export function AppHeader({
               aria-expanded={notifOpen}
               onClick={() => { setNotifOpen(p => !p); setProfileOpen(false); }}
             >
-              <BellIcon size={17} />
+              <Icon icon={Notification} size="md" />
               {unread > 0 && (
                 <span className={styles.badge}>{unread > 99 ? '99+' : unread}</span>
               )}
@@ -211,7 +211,7 @@ export function AppHeader({
                 role="menuitem"
                 onClick={() => setProfileOpen(false)}
               >
-                <span className={styles.dropdownItemIcon}><GearIcon size={15} /></span>
+                <span className={styles.dropdownItemIcon}><Icon icon={Edit} size="sm" /></span>
                 Profile Configuration
               </Link>
 
@@ -224,7 +224,7 @@ export function AppHeader({
                 role="menuitem"
                 onClick={() => { setProfileOpen(false); onLogout(); }}
               >
-                <span className={styles.dropdownItemIcon}><LogoutIcon size={15} /></span>
+                <span className={styles.dropdownItemIcon}><Icon icon={Login} size="sm" /></span>
                 Log out
               </button>
             </div>

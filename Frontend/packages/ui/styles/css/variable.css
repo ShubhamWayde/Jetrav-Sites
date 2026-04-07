@@ -107,7 +107,7 @@
 	--font-secondary: serif;
 
 	/* font sizes */
-	--base-font: var(--font-md);
+	--base-font: var(--font-sm);
 	--h1-font: clamp(3rem, 1.771vw, 4rem);
 	--h2-font: clamp(2.5rem, 1.667vw, 3.5rem);
 	--h3-font: clamp(1.125rem, 1.25vw, 1.5rem);

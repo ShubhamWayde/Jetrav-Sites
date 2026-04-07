@@ -1,10 +1,16 @@
-import {clx} from "@repo/ui/utilities";
+import { clx } from "@repo/ui/utilities";
 import styles from "./hero.module.css";
-import {fontRoboto} from "@repo/ui/fonts/fonts";
-import {Button} from "../../ui/button/button";
-import {Icon} from "@repo/ui/icon/icon";
-import {CarryOnBagChecked, CurrencyRupeeCircle, FlightTakeoff, HumanAi, Workspaces,} from "@repo/ui/icon";
-import {ROUTES} from "@repo/constants";
+import { fontRoboto } from "@repo/ui/fonts/fonts";
+import { Button } from "../../ui/button/button";
+import { Icon } from "@repo/ui/icon/icon";
+import {
+  CarryOnBagChecked,
+  CurrencyRupeeCircle,
+  FlightTakeoff,
+  HumanAi,
+  Workspaces,
+} from "@repo/ui/icon";
+import { ROUTES } from "@repo/constants";
 
 export default function Hero() {
   return (
@@ -12,13 +18,8 @@ export default function Hero() {
       <div className={clx("container")}>
         <div className={clx("flex", "flex-col", "gap-8")}>
           <div
-            className={clx(
-              styles.tag,
-              "flex",
-              "items-center",
-              "gap-2",
-              "py-2",
-            )}>
+            className={clx(styles.tag, "flex", "items-center", "gap-2", "py-2")}
+          >
             <Button
               className={clx(
                 fontRoboto.className,
@@ -28,13 +29,15 @@ export default function Hero() {
                 "py-2",
                 "gap-1",
               )}
-              variant={"secondary"}>
+              variant={"secondary"}
+            >
               Powered By Human + AI
               <Icon icon={HumanAi} size={"lg"} color={"secondary"} />
             </Button>
           </div>
           <div
-            className={clx(styles.headingWrapper, "flex", "flex-col", "gap-4")}>
+            className={clx(styles.headingWrapper, "flex", "flex-col", "gap-4")}
+          >
             <h1 className={clx(fontRoboto.className)}>
               <span
                 className={clx(
@@ -42,7 +45,8 @@ export default function Hero() {
                   "inline-flex",
                   "item-center",
                   "gap-6",
-                )}>
+                )}
+              >
                 Travel Seamlessly{" "}
                 <Icon
                   icon={FlightTakeoff}
@@ -56,7 +60,8 @@ export default function Hero() {
                   "inline-flex",
                   "item-center",
                   "gap-6",
-                )}>
+                )}
+              >
                 Earn Instantly
                 <Icon
                   icon={CurrencyRupeeCircle}
@@ -70,7 +75,8 @@ export default function Hero() {
                   "inline-flex",
                   "item-center",
                   "gap-6",
-                )}>
+                )}
+              >
                 Manage Effortlessly{" "}
                 <Icon
                   icon={Workspaces}
@@ -87,9 +93,17 @@ export default function Hero() {
           </div>
           <div className={clx("flex", "flex-wrap")}>
             <Button
-              className={clx("flex", "items-center", "px-4", "py-2", "gap-1", "md-fg-1")}
+              className={clx(
+                "flex",
+                "items-center",
+                "px-4",
+                "py-2",
+                "gap-1",
+                "md-fg-1",
+              )}
               variant={"primary"}
-              href={ROUTES.marketing.phoneNumber.href}>
+              href={ROUTES.marketing.phoneNumber.href}
+            >
               <Icon
                 icon={CarryOnBagChecked}
                 size={"lg"}
@@ -104,9 +118,11 @@ export default function Hero() {
                 "items-center",
                 "px-4",
                 "py-2",
-                "gap-1", "md-fg-1"
+                "gap-1",
+                "md-fg-1",
               )}
-              variant={"secondary"}>
+              variant={"secondary"}
+            >
               <em>Dial. Done. Depart.</em>
             </Button>
           </div>

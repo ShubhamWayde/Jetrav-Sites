@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import Button from '@repo/ui/Button';
-import Modal from '@repo/ui/Modal';
-import {TrashIcon} from '@repo/ui/icon';
-import styles from './ConfirmDeleteModal.module.css';
+import Button from "@repo/ui/Button";
+import Modal from "@repo/ui/Modal";
+import { Icon, Delete } from "@repo/ui/icon";
+import styles from "./ConfirmDeleteModal.module.css";
 
 interface ConfirmDeleteModalProps {
   isOpen: boolean;
@@ -16,19 +16,24 @@ interface ConfirmDeleteModalProps {
 }
 
 export default function ConfirmDeleteModal({
-                                             isOpen,
-                                             title = 'Confirm Delete',
-                                             description = 'Are you sure you want to delete this item? This action cannot be undone.',
-                                             confirmLabel = 'Delete',
-                                             loading = false,
-                                             onClose,
-                                             onConfirm,
-                                           }: ConfirmDeleteModalProps) {
+  isOpen,
+  title = "Confirm Delete",
+  description = "Are you sure you want to delete this item? This action cannot be undone.",
+  confirmLabel = "Delete",
+  loading = false,
+  onClose,
+  onConfirm,
+}: ConfirmDeleteModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} maxWidth={400} className={styles.body}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      maxWidth={400}
+      className={styles.body}
+    >
       {/* Icon */}
       <div className={styles.iconWrap}>
-        <TrashIcon size={24} className={styles.icon} />
+        <Icon icon={Delete} size="lg" className={styles.icon} />
       </div>
 
       {/* Content */}
@@ -37,12 +42,14 @@ export default function ConfirmDeleteModal({
 
       {/* Actions */}
       <div className={styles.actions}>
-        <Button title="Cancel"
-                className="btn-md"
-                variant="secondary"
-                type="button"
-                onClick={onClose}
-                disabled={loading}>
+        <Button
+          title="Cancel"
+          className="btn-md"
+          variant="secondary"
+          type="button"
+          onClick={onClose}
+          disabled={loading}
+        >
           Cancel
         </Button>
         <Button

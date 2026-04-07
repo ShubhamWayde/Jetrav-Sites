@@ -61,7 +61,8 @@ function header() {
         styles.headerMain,
         isScrolled && ["container", styles.scroll],
         isHidden && [styles.isHidden],
-      )}>
+      )}
+    >
       <div
         className={clx(
           styles.headerContainer,
@@ -71,7 +72,8 @@ function header() {
           "items-center",
           "px-8",
           "py-4",
-        )}>
+        )}
+      >
         <Link href="/home" area-label="Home">
           <Logo className={styles.logoSize} />
         </Link>
@@ -82,11 +84,13 @@ function header() {
               return (
                 <li
                   key={href}
-                  className={clx("flex", "items-center", "glowHover")}>
+                  className={clx("flex", "items-center", "glowHover")}
+                >
                   <Link
                     href={href}
                     className={clx(pathname === href)}
-                    aria-current={isActive ? "page" : undefined}>
+                    aria-current={isActive ? "page" : undefined}
+                  >
                     {label}
                   </Link>
                 </li>
@@ -99,13 +103,15 @@ function header() {
             className={clx("flex", "items-center", "px-4", "py-2", "gap-1")}
             variant={"navSecondary"}
             href={ROUTES.publicApp.login.href}
-            target={"_blank"}>
+            target={"_blank"}
+          >
             {ROUTES.publicApp.login.label}
           </Button>
           <Button
             className={clx("flex", "items-center", "px-4", "py-2", "gap-1")}
             variant={"navPrimary"}
-            href={ROUTES.publicApp.register.href}>
+            href={ROUTES.publicApp.register.href}
+          >
             {ROUTES.publicApp.register.label}
           </Button>
         </div>

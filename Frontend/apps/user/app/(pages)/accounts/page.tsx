@@ -5,7 +5,7 @@ import {useRouter} from 'next/navigation';
 import {api} from '@repo/auth';
 import Button from '@repo/ui/Button';
 import Spinner from '@repo/ui/Spinner';
-import {CheckCircleIcon} from '@repo/ui/icon';
+import {CarryOnBagChecked, Icon} from '@repo/ui/icon';
 import {USER_API} from '@/lib/constants';
 import {SubscriptionStatus} from '@/app/types/account';
 import {formatDate} from '@/app/utils/main';
@@ -107,7 +107,7 @@ export default function AccountsPage() {
               <ul className={styles.featuresList}>
                 {data.plan.features.map((f, i) => (
                   <li key={i} className={styles.featureItem}>
-                    <CheckCircleIcon size={15} className={styles.featureCheck} />
+                    <Icon icon={CarryOnBagChecked} size="sm" className={styles.featureCheck} />
                     {f}
                   </li>
                 ))}
