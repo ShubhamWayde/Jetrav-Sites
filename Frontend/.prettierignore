@@ -1,0 +1,30 @@
+# Dependency directories
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js / Turbo build outputs
+.next/
+.turbo/
+
+# Vercel / Environment
+.vercel
+.env
+.env.*
+!.env.example
+
+# SVGR generated icons (From your package.json script earlier!)
+src/icon/generated
+
+# Lockfiles
+package-lock.json
+pnpm-lock.yaml
+
+# Public / Static assets
+public/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
