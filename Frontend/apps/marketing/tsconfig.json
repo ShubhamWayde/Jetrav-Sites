@@ -1,15 +1,14 @@
 {
   "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
+    "plugins": [{ "name": "next" }],
+    "module": "ESNext",
+    "moduleResolution": "Bundler"
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "global.d.ts",
     "next-env.d.ts",
     "next.config.js",
     ".next/types/**/*.ts"

@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import {api} from '@repo/auth';
 import Spinner from '@repo/ui/Spinner';
-import {ClipboardIcon, LeadsIcon} from '@repo/ui/icon';
+import {Icon, SmartSearch, TrackBooking} from '@repo/ui/icon';
 import {USER_API} from '@/lib/constants';
 import type {LeadResponse, QuotationResponse, UserDashboard} from '@/app/types/profile';
 import styles from './dashboard.module.css';
@@ -119,7 +119,7 @@ export default function DashboardPage() {
       {/* Leads */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>
-          <LeadsIcon size={16} />
+          <Icon icon={SmartSearch} size="sm" />
           My Leads
         </h2>
         {leads.length === 0 ? (
@@ -134,7 +134,7 @@ export default function DashboardPage() {
       {/* Quotations */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>
-          <ClipboardIcon size={16} />
+          <Icon icon={TrackBooking} size="sm" />
           My Quotations
         </h2>
         {quotations.length === 0 ? (
