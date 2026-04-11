@@ -1,14 +1,16 @@
-import type {Metadata} from "next";
-import "@repo/ui/styles/css/base.css";
-import "./globals.css";
-import {fontOutfit} from "@repo/ui/fonts/fonts";
+import type { Metadata } from 'next';
+import '@repo/ui/styles/css/base.css';
+import './globals.css';
+import { fontOutfit } from '@repo/ui/fonts/fonts';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: {
-    default: "Jetrav | Travel Seamlessly, Earn Instantly",
-    template: "%s | Jetrav",
+    default: 'Jetrav | Travel Seamlessly, Earn Instantly',
+    template: '%s | Jetrav',
   },
-  description: "The only travel agency that gives you 15% back in Jet Points on every flight and manages your entire trip starting at ₹199.",
+  description:
+    'The only travel agency that gives you 15% back in Jet Points on every flight and manages your entire trip starting at ₹199.',
 
   keywords: [
     'smart travel agency',
@@ -18,10 +20,10 @@ export const metadata: Metadata = {
     'seamless travel management',
     'visa processing assistance',
     'holiday packages',
-    'zero change fee flights'
+    'zero change fee flights',
   ],
 
-  authors: [{name: 'Jetrav LLP'}],
+  authors: [{ name: 'Jetrav LLP' }],
   creator: 'Jetrav',
   publisher: 'Jetrav LLP',
 
@@ -36,7 +38,8 @@ export const metadata: Metadata = {
 
   openGraph: {
     title: 'Jetrav | Travel Seamlessly, Earn Instantly',
-    description: "Earn 15% back in Jet Points and let our Human + AI concierges manage your travel starting at ₹199. Dial. Done. Depart.",
+    description:
+      'Earn 15% back in Jet Points and let our Human + AI concierges manage your travel starting at ₹199. Dial. Done. Depart.',
     url: 'https://jetrav.com',
     siteName: 'Jetrav',
     images: [
@@ -52,9 +55,10 @@ export const metadata: Metadata = {
   },
 
   twitter: {
-    card: "summary_large_image",
-    title: "Jetrav | Smart Travel Management",
-    description: "Get 15% back in Jet Points on flights and trip management starting at ₹199. Stop searching. Start traveling.",
+    card: 'summary_large_image',
+    title: 'Jetrav | Smart Travel Management',
+    description:
+      'Get 15% back in Jet Points on flights and trip management starting at ₹199. Stop searching. Start traveling.',
     images: [
       {
         url: '/og-image.png',
@@ -78,18 +82,18 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-
 };
 
 export default function RootLayout({
-                                     children,
-                                   }: Readonly<{
+  children,
+}: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
       <body className={fontOutfit.className}>
         {children}
+        <Analytics />
       </body>
     </html>
   );

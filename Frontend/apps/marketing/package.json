@@ -13,8 +13,9 @@
   "dependencies": {
     "@repo/constants": "workspace:*",
     "@repo/ui": "workspace:*",
+    "@vercel/analytics": "^2.0.1",
     "framer-motion": "^12.38.0",
-    "next": "16.1.6",
+    "next": "16.2.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
