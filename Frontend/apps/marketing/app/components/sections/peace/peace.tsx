@@ -54,7 +54,7 @@ export default function Token() {
             }
             title={'One Fee. Total Peace of Mind.'}
             description={
-              'The Flat ₹199 Promise: With a service charge starting at just ₹199, Jetrav becomes your personal travel concierge. This fee covers:'
+              'With a service charge starting at just ₹199, Jetrav becomes your personal travel concierge. This fee covers:'
             }
           />
         </div>

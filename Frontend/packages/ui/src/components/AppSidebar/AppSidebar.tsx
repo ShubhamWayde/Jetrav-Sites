@@ -8,9 +8,9 @@ import styles from './AppSidebar.module.css';
 // ── Types ──────────────────────────────────────────────────────────────────────
 
 export interface SidebarNavItem {
-  href:  string;
+  href: string;
   label: string;
-  icon:  ReactNode;
+  icon: ReactNode;
 }
 
 export interface AppSidebarProps {
