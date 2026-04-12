@@ -129,9 +129,6 @@ Backend/
 │   ├── 000010_create_quotations_table
 │   └── 000011_create_leads_table
 │
-├── docker/
-│   └── Dockerfile                   # Application container image
-├── docker-compose.yml               # Multi-container setup (app + PostgreSQL)
 ├── .env.example                     # Environment variable template
 ├── go.mod
 └── go.sum
@@ -272,14 +269,6 @@ migrate -path migrations -database "postgres://user:pass@localhost:5432/dbname?s
 # Start server
 go run ./cmd/server/main.go
 ```
-
-### Run with Docker
-
-```bash
-docker-compose up --build
-```
-
----
 
 ## Migrations
 
