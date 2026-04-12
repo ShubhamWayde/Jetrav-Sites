@@ -1,50 +1,75 @@
 .card {
-	--radial-gradient-color: var(--jt-skyBlue-700);
-	border-radius: var(--radius-5xl);
-	position: relative;
-	isolation: isolate;
+  --radial-gradient-color: var(--jt-skyBlue-700);
+  border-radius: var(--radius-5xl);
+  position: relative;
+  isolation: isolate;
 
-	&::before, &::after {
-		content: "";
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-		z-index: -1;
-		opacity: 0;
-		transition: opacity var(--time-normal) var(--jt-easeInOutQuart);
-	}
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity var(--time-normal) var(--jt-easeInOutQuart);
+  }
 
-	&::after {
-		inset: 1px;
-		opacity: 1;
-	}
+  &::after {
+    inset: 1px;
+    opacity: 1;
+  }
 
-	&:hover::before {
-		background: radial-gradient(320px circle at var(--mouse-x) var(--mouse-y), var(--radial-gradient-color), transparent 100%);
-		opacity: 1;
+  &:hover::before {
+    background: radial-gradient(
+      320px circle at var(--mouse-x) var(--mouse-y),
+      var(--radial-gradient-color),
+      transparent 100%
+    );
+    opacity: 1;
+  }
 
-	}
-
-	&:hover::after {
-		background: oklch(from var(--jt-dark-exact) l c h / 0.8);
-	}
+  &:hover::after {
+    background: oklch(from var(--jt-dark-exact) l c h / 0.8);
+  }
 }
 
 .imageWrapper img {
-	border-radius: var(--radius-3xl);
-	object-fit: cover;
-	width: 100%;
+  border-radius: var(--radius-3xl);
+  object-fit: cover;
+  width: 100%;
+  position: relative;
+  anchor-name: --image;
+}
+
+.tagName {
+  position: absolute;
+  position-anchor: --image;
+  bottom: anchor(bottom);
+  left: anchor(left);
+  background-color: oklch(from var(--jt-dark-exact) l c h / 0.6);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(16px);
+  font-weight: var(--font-weight-200);
+  line-height: var(--leading-tight);
 }
 
 .cardContent {
+  h3 {
+    font-size: var(--font-subtitle);
+    font-weight: var(--font-weight-500);
+  }
 
-	h3 {
-		font-size: var(--font-subtitle);
-		font-weight: var(--font-weight-500);
-	}
+  p {
+    font-size: var(--font-md);
+    font-weight: var(--font-weight-200);
+  }
+}
 
-	p {
-		font-size: var(--font-md);
-		font-weight: var(--font-weight-200);
-	}
+.priceContainer {
+  a {
+    --btn-gradient-angle: 10deg;
+    font-size: var(--font-subtitle);
+    font-weight: var(--font-weight-500);
+  }
 }
