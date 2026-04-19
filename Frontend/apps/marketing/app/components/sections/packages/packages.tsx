@@ -89,7 +89,7 @@ const PACKAGE_DATA = [
     nights: 6,
     days: 7,
     location: ['4N Kuta', '2N Ubud'],
-    rating: 5,
+    rating: 4,
     tag: 'Trending Smart Package - From Delhi',
     image: '/img-bali.png',
     imageAlt:
