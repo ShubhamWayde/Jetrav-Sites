@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://jetrav.com'),
 
   alternates: {
-    canonical: '/',
+    canonical: '/home',
     languages: {
       'en-IN': '/en-IN',
     },
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: 'Jetrav | Travel Seamlessly, Earn Instantly',
     description:
       'Earn 15% back in Jet Points and let our Human + AI concierges manage your travel starting at ₹199. Dial. Done. Depart.',
-    url: 'https://jetrav.com',
+    url: 'https://jetrav.com/home',
     siteName: 'Jetrav',
     images: [
       {
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      noimageindex: true,
+      noimageindex: false,
       'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
