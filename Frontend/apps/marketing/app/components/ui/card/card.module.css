@@ -65,11 +65,3 @@
     font-weight: var(--font-weight-200);
   }
 }
-
-.priceContainer {
-  a {
-    --btn-gradient-angle: 10deg;
-    font-size: var(--font-subtitle);
-    font-weight: var(--font-weight-500);
-  }
-}

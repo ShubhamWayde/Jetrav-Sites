@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     siteName: 'Jetrav',
     images: [
       {
-        url: '/og-image.png',
+        url: 'https://jetrav.com/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Jetrav - A Tokenized Travel Economy',

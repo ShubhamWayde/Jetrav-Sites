@@ -1,70 +1,82 @@
 .cell {
-	color: var(--jt-light-exact);
-	background-color: transparent;
-	border: none;
-	border-radius: var(--radius-5xl);
-	position: relative;
-	isolation: isolate;
+  color: var(--jt-light-exact);
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-5xl);
+  position: relative;
+  isolation: isolate;
 
-	&::before {
-		content: "";
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-		z-index: -1;
-		border: 1px solid transparent;
-		background: linear-gradient(var(--btn-gradient-angle), oklch(from var(--jt-skyBlue-600) l c h/1) 0%, oklch(from var(--jt-dark-exact) l c h / 0) 40%) border-box;
-		opacity: 0.6;
-		mask: linear-gradient(#fff 0 0) padding-box,
-		linear-gradient(#fff 0 0) border-box;
-		-webkit-mask: linear-gradient(#fff 0 0) padding-box,
-		linear-gradient(#fff 0 0) border-box;
-		mask-composite: exclude;
-		-webkit-mask-composite: xor;
-		transition: opacity var(--time-normal) var(--jt-easeInOutQuart);
-	}
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: -1;
+    border: 1px solid transparent;
+    background: linear-gradient(
+        var(--gradientBox-angle),
+        oklch(from var(--jt-skyBlue-600) l c h/1) 0%,
+        oklch(from var(--jt-dark-exact) l c h / 0) 40%
+      )
+      border-box;
+    opacity: 0.6;
+    mask:
+      linear-gradient(#fff 0 0) padding-box,
+      linear-gradient(#fff 0 0) border-box;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) padding-box,
+      linear-gradient(#fff 0 0) border-box;
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    transition: opacity var(--time-normal) var(--jt-easeInOutQuart);
+  }
 
-	&:hover {
-		opacity: 1;
-		background: linear-gradient(var(--btn-gradient-angle), oklch(from var(--jt-skyBlue-900) l c h/0.2) 0%, oklch(from var(--jt-dark-exact) l c h / 0) 88%) border-box;
-	}
+  &:hover {
+    opacity: 1;
+    background: linear-gradient(
+        var(--gradientBox-angle),
+        oklch(from var(--jt-skyBlue-900) l c h/0.2) 0%,
+        oklch(from var(--jt-dark-exact) l c h / 0) 88%
+      )
+      border-box;
+  }
 
-	&:hover::before {
-		opacity: 1;
-	}
+  &:hover::before {
+    opacity: 1;
+  }
 
-	&:hover svg * {
-		fill: url(#jt-skyBlue-gradient);
-		stroke: url(#jt-skyBlue-gradient);
-		stroke-width: 0.2;
-	}
+  &:hover svg * {
+    fill: url(#jt-skyBlue-gradient);
+    stroke: url(#jt-skyBlue-gradient);
+    stroke-width: 0.2;
+  }
 }
 
 .cell:nth-child(odd) {
-	--btn-gradient-angle: 180deg;
+  --gradientBox-angle: 180deg;
 
-	@media (max-width: 768px) {
-		--btn-gradient-angle: 0deg;
-	}
+  @media (max-width: 768px) {
+    --gradientBox-angle: 0deg;
+  }
 }
 
-.cell:nth-child(even), .cell:last-child {
-	--btn-gradient-angle: 0deg;
+.cell:nth-child(even),
+.cell:last-child {
+  --gradientBox-angle: 0deg;
 }
 
 .cell:last-child {
-	grid-column: 1 / -1;
+  grid-column: 1 / -1;
 }
 
-
 .cardContent {
-	h3 {
-		font-size: var(--font-subtitle);
-		font-weight: var(--font-weight-500);
-	}
+  h3 {
+    font-size: var(--font-subtitle);
+    font-weight: var(--font-weight-500);
+  }
 
-	p {
-		font-size: var(--font-md);
-		font-weight: var(--font-weight-200);
-	}
+  p {
+    font-size: var(--font-md);
+    font-weight: var(--font-weight-200);
+  }
 }
