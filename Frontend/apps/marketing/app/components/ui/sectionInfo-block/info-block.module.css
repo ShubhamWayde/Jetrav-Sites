@@ -1,10 +1,10 @@
 .heading {
-	font-size: var(--h2-font);
-	font-weight: var(--font-weight-500);
-	line-height: var(--leading-tight);
+  font-size: var(--h2-font);
+  font-weight: var(--font-weight-500);
+  line-height: var(--leading-tight);
 }
 
 .description {
-	color: var(--jt-neutral-100);
-	font-size: var(--font-subtitle);
+  color: var(--jt-neutral-100);
+  font-size: var(--font-subtitle);
 }

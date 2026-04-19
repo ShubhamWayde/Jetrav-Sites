@@ -1,37 +1,38 @@
-.tag {
-	button {
-		--btn-gradient-angle: 10deg;
-		cursor: default;
-	}
+.tag div {
+  --gradientBox-angle: 10deg;
+  font-size: var(--h6-font);
 }
 
 .headingWrapper {
-	h1 {
-		font-size: var(--font-heading);
-		font-weight: var(--font-weight-500);
-		font-style: italic;
-		line-height: var(--leading-tight);
-	}
+  h1 {
+    font-size: var(--font-heading);
+    font-weight: var(--font-weight-500);
+    font-style: italic;
+    line-height: var(--leading-tight);
+  }
 
-	p {
-		font-size: var(--font-subtitle);
-	}
+  p {
+    font-size: var(--font-subtitle);
+  }
+}
+
+.headingWrapper + div > div {
+  font-size: var(--h5-font);
 }
 
 .heroIconWrapper {
-	@media (max-width: 768px) {
-		width: 100%;
-		justify-content: space-between;
-	}
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-between;
+  }
 
-	.heroIcon {
-		--icon-size: clamp(3.5rem, 10vw, 4.5rem);
-		height: var(--icon-size);
-		width: var(--icon-size);
+  .heroIcon {
+    --icon-size: clamp(3.5rem, 10vw, 4.5rem);
+    height: var(--icon-size);
+    width: var(--icon-size);
 
-		@media (min-width: 768px) {
-			margin-inline-end: var(--space-6);
-		}
-
-	}
+    @media (min-width: 768px) {
+      margin-inline-end: var(--space-6);
+    }
+  }
 }

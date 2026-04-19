@@ -73,7 +73,7 @@ export default function Token() {
             <Card
               key={card.id}
               icon={card.icon}
-              title={card.title}
+              heading={card.title}
               description={card.description}
               contentClassName={clx('px-4', 'mt-4', 'mb-4')}
             />
