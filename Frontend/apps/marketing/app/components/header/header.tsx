@@ -59,7 +59,7 @@ function header() {
     <header
       className={clx(
         styles.headerMain,
-        isScrolled && ['container', styles.scroll],
+        isScrolled && ['container', 'px-8', styles.scroll],
         isHidden && [styles.isHidden],
       )}
     >
@@ -70,7 +70,6 @@ function header() {
           isScrolled ? '' : 'container',
           'justify-between',
           'items-center',
-          'px-8',
           'py-4',
         )}
       >

@@ -4,73 +4,11 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91181458-c591-40bb-b421-baf1c5954518" name="Changes" comment="added packages component">
-      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/trip-card/trip-card.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/trip-card/trip-card.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/public/cursor_default.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/apps/marketing/public/cursor_pointer.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/DinnerDining.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/HeartCheck.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Hexagon.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/RoundTrip.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/SimCard.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Star.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/StarShine.tsx" afterDir="false" />
+    <list default="true" id="91181458-c591-40bb-b421-baf1c5954518" name="Changes" comment="updated rating">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/home/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/(pages)/home/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/footer/footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/footer/footer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/header/header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/change-plans/change-plans.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/change-plans/change-plans.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/cta/cta.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/cta/cta.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/cta/cta.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/cta/cta.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/hero/hero.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/hero/hero.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/hero/hero.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/hero/hero.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/packages/packages.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/packages/packages.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/peace/peace.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/peace/peace.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/token/token.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/sections/token/token.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/button/button.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/button/button.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/button/button.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/button/button.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/card/card.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/card/card.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/card/card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/card/card.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/circuit-grid/circuit-grid.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/circuit-grid/circuit-grid.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/sectionInfo-block/info-block.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/sectionInfo-block/info-block.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/sectionInfo-block/info-block.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/components/ui/sectionInfo-block/info-block.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/globals.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/public/img-bali.png" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/public/img-bali.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/public/img-thailand.png" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/public/img-thailand.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/AirplaneTicket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/AirplaneTicket.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Analytics.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Analytics.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Call.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Call.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/CarryOnBagChecked.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/CarryOnBagChecked.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/CheckedBag.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/CheckedBag.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/CurrencyExchange.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/CurrencyExchange.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/CurrencyRupeeCircle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/CurrencyRupeeCircle.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Discord.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Discord.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Email.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Email.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/FlightTakeoff.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/FlightTakeoff.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Holiday.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Holiday.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Hotel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Hotel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/HumanAi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/HumanAi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Instagram.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Instagram.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Insurance.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Insurance.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/JetPoints.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/JetPoints.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/JetravIconOutline.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/JetravIconOutline.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Registration.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Registration.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Services.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Services.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/SmartSearch.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/SmartSearch.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Surfing.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Surfing.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Taxi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Taxi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/TrackBooking.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/TrackBooking.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/TrainTicket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/TrainTicket.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Visa.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Visa.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Workspaces.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/Workspaces.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/XTwitter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/XTwitter.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/YourTrips.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/YourTrips.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/generated/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/icon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/src/icon/icon.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/utilities.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/packages/ui/styles/css/utilities.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/apps/marketing/public/og-image.png" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/apps/marketing/public/og-image.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +16,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="485" />
+    <option name="cachedIndexableFilesCount" value="486" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -232,7 +170,7 @@
       <workItem from="1775583033871" duration="5993000" />
       <workItem from="1775886028766" duration="1167000" />
       <workItem from="1776014067748" duration="75000" />
-      <workItem from="1776433204497" duration="40454000" />
+      <workItem from="1776433204497" duration="42599000" />
     </task>
     <task id="LOCAL-00001" summary="updated code">
       <option name="closed" value="true" />
@@ -290,7 +228,23 @@
       <option name="project" value="LOCAL" />
       <updated>1775983545468</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="added packages component">
+      <option name="closed" value="true" />
+      <created>1776590680888</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1776590680888</updated>
+    </task>
+    <task id="LOCAL-00009" summary="updated rating">
+      <option name="closed" value="true" />
+      <created>1776591243841</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1776591243841</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -306,7 +260,8 @@
     <MESSAGE value="added docker file and vercel analytics dependency" />
     <MESSAGE value="created packages component" />
     <MESSAGE value="added packages component" />
-    <option name="LAST_COMMIT_MESSAGE" value="added packages component" />
+    <MESSAGE value="updated rating" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated rating" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
