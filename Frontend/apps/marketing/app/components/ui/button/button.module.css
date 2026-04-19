@@ -1,15 +1,8 @@
 .btn {
-  --btn-gradient-angle: -90deg;
   border: none;
   border-radius: var(--radius-full);
-  cursor: pointer;
   font-size: var(--font-btn);
   font-weight: var(--font-weight-400);
-  background-color: var(--jt-light-exact);
-
-  &:hover {
-    background-color: oklch(from var(--jt-light-exact) l c h/0.9);
-  }
 }
 
 .navPrimary,
@@ -20,46 +13,10 @@
 
 .navPrimary,
 .primary {
+  background: var(--jt-light-exact);
   color: var(--jt-dark-exact);
-}
-
-.navSecondary,
-.secondary {
-  color: var(--jt-light-exact);
-  background-color: transparent;
-  border: none;
-  position: relative;
-  isolation: isolate;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    z-index: -1;
-    border: 1px solid transparent;
-    background: linear-gradient(
-        var(--btn-gradient-angle),
-        oklch(from var(--jt-skyBlue-600) l c h/0.6),
-        oklch(from var(--jt-neutral-800) l c h / 0)
-      )
-      border-box;
-    mask:
-      linear-gradient(#fff 0 0) padding-box,
-      linear-gradient(#fff 0 0) border-box;
-    -webkit-mask:
-      linear-gradient(#fff 0 0) padding-box,
-      linear-gradient(#fff 0 0) border-box;
-    mask-composite: exclude;
-    -webkit-mask-composite: xor;
-  }
 
   &:hover {
-    background: linear-gradient(
-        var(--btn-gradient-angle),
-        oklch(from var(--jt-skyBlue-600) l c h/0.2),
-        oklch(from var(--jt-neutral-800) l c h / 0)
-      )
-      border-box;
+    background: oklch(from var(--jt-light-exact) l c h/0.9);
   }
 }

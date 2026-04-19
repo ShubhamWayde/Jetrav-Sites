@@ -1,10 +1,10 @@
-import {ComponentProps, ElementType} from "react";
-import {clx} from "@repo/ui/utilities";
+import { ComponentProps, ElementType } from 'react';
+import { clx } from '@repo/ui/utilities';
 import styles from './icon.module.css';
 
-type IconSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+type IconSize = 'xxs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 type IconColor =
-  'primary'
+  | 'primary'
   | 'primaryGradient'
   | 'secondary'
   | 'secondaryGradient'
@@ -23,13 +23,14 @@ interface IconProps extends Omit<ComponentProps<'svg'>, 'width' | 'height'> {
 }
 
 export function Icon({
-                       icon: SvgIcon,
-                       size = 'md',
-                       color = 'inherit',
-                       className,
-                       ...props
-                     }: IconProps) {
+  icon: SvgIcon,
+  size = 'md',
+  color = 'inherit',
+  className,
+  ...props
+}: IconProps) {
   const sizeMap = {
+    xxs: 10,
     sm: 16,
     md: 20,
     lg: 24,
@@ -55,7 +56,7 @@ export function Icon({
     <SvgIcon
       width={sizeMap[size]}
       height={sizeMap[size]}
-      className={clx(styles.icon, colorMap[color], "fs-0", className)}
+      className={clx(styles.icon, colorMap[color], 'fs-0', className)}
       aria-hidden="true"
       {...props}
     />

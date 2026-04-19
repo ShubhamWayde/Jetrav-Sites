@@ -1,35 +1,138 @@
 html {
-	scroll-padding-block-start: var(--section-margin);
+  scroll-padding-block-start: var(--section-margin);
+  position: relative;
+  cursor:
+    url('../public/cursor_default.svg') 0 0,
+    auto;
+}
+
+/* --- custom cursor --- */
+a,
+button,
+[role='button'],
+input[type='submit'],
+input[type='button'] {
+  /* We add ', pointer' as a fallback in case the SVG fails to load */
+  cursor:
+    url('../public/cursor_pointer.svg') 0 0,
+    pointer;
+}
+
+/* --- custom selection color --- */
+::selection {
+  background-color: var(--jt-neutral-200);
+  color: var(--jt-dark-exact);
+}
+
+::-moz-selection {
+  background-color: var(--jt-neutral-200);
+  color: var(--jt-dark-exact);
+}
+
+/* --- custom scrollbar --- */
+
+/* Firefox Setup */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--jt-neutral-200) var(--jt-neutral-950); /* thumb color | track color */
+}
+
+/* Chrome, Edge, and Safari Setup */
+::-webkit-scrollbar {
+  width: 8px; /* Width of the vertical scrollbar */
+  height: 8px; /* Height of the horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: var(
+    --jt-neutral-950
+  ); /* Background of the scrollbar track (e.g., Tailwind gray-800) */
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--jt-neutral-200); /* The actual draggable part */
+  border-radius: 8px; /* Rounded corners */
+  border: 2px solid var(--jt-neutral-950); /* Creates a nice padding effect around the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--jt-neutral-950); /* Slightly darker on hover */
 }
 
 .glowHover {
-	position: relative;
-	isolation: isolate;
-	overflow: clip;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
 
-	&:hover {
-		background: linear-gradient(180deg, oklch(from var(--jt-dark-exact) l c h/0.4) 0%, oklch(from var(--jt-dark-exact) l c h/0.8) 100%);
-		box-shadow: 0 4px 8px 2px oklch(from var(--jt-dark-exact) l c h/0.8) inset;
+  &:hover {
+    background: linear-gradient(
+      180deg,
+      oklch(from var(--jt-dark-exact) l c h/0.4) 0%,
+      oklch(from var(--jt-dark-exact) l c h/0.8) 100%
+    );
+    box-shadow: 0 4px 8px 2px oklch(from var(--jt-dark-exact) l c h/0.8) inset;
 
-		&::after {
-			content: "";
-			position: absolute;
-			border-radius: inherit;
-			border-block-end: 3px solid var(--jt-skyBlue-exact);
-			filter: blur(1px);
-			inset: 0;
-			z-index: -2;
-		}
+    &::after {
+      content: '';
+      position: absolute;
+      border-radius: inherit;
+      border-block-end: 3px solid var(--jt-skyBlue-exact);
+      filter: blur(1px);
+      inset: 0;
+      z-index: -2;
+    }
 
-		&::before {
-			content: "";
-			position: absolute;
-			border-radius: inherit;
-			border-block-start: 3px solid var(--jt-skyBlue-exact);
-			filter: blur(1px);
-			inset: 0;
-			bottom: 2px;
-			z-index: -1;
-		}
-	}
+    &::before {
+      content: '';
+      position: absolute;
+      border-radius: inherit;
+      border-block-start: 3px solid var(--jt-skyBlue-exact);
+      filter: blur(1px);
+      inset: 0;
+      bottom: 2px;
+      z-index: -1;
+    }
+  }
+}
+
+.gradientBox {
+  --gradientBox-angle: -90deg;
+  color: var(--jt-light-exact);
+  background-color: transparent;
+  border: none;
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--radius-full);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: -1;
+    border: 1px solid transparent;
+    background: linear-gradient(
+        var(--gradientBox-angle),
+        oklch(from var(--jt-skyBlue-600) l c h/0.6),
+        oklch(from var(--jt-neutral-800) l c h / 0)
+      )
+      border-box;
+    mask:
+      linear-gradient(#fff 0 0) padding-box,
+      linear-gradient(#fff 0 0) border-box;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) padding-box,
+      linear-gradient(#fff 0 0) border-box;
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+  }
+
+  &:hover {
+    background: linear-gradient(
+        var(--gradientBox-angle),
+        oklch(from var(--jt-skyBlue-600) l c h/0.2),
+        oklch(from var(--jt-neutral-800) l c h / 0)
+      )
+      border-box;
+  }
 }

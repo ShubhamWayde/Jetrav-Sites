@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { clx } from "@repo/ui/utilities";
-import styles from "./header.module.css";
-import "@repo/ui/styles/css/utilities.css";
-import "@repo/ui/styles/css/base.css";
-import { Logo } from "@repo/ui/components/logo/logo";
-import { usePathname } from "next/navigation";
-import { Button } from "../ui/button/button";
-import { useEffect, useState } from "react";
-import { ROUTES } from "@repo/constants";
+import Link from 'next/link';
+import { clx } from '@repo/ui/utilities';
+import styles from './header.module.css';
+import '@repo/ui/styles/css/utilities.css';
+import '@repo/ui/styles/css/base.css';
+import { Logo } from '@repo/ui/components/logo/logo';
+import { usePathname } from 'next/navigation';
+import { Button } from '../ui/button/button';
+import { useEffect, useState } from 'react';
+import { ROUTES } from '@repo/constants';
 
 const NAV_LINKS = [
   { label: ROUTES.marketing.home.label, href: ROUTES.marketing.home.href },
@@ -40,7 +40,7 @@ function header() {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
-      const footerSection = document.getElementById("footer");
+      const footerSection = document.getElementById('footer');
       if (footerSection) {
         // 3. Hide the header as soon as the footer section enters the screen
         const sectionTop = footerSection.getBoundingClientRect().top;
@@ -50,28 +50,28 @@ function header() {
 
     handleScroll();
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <header
       className={clx(
         styles.headerMain,
-        isScrolled && ["container", styles.scroll],
+        isScrolled && ['container', styles.scroll],
         isHidden && [styles.isHidden],
       )}
     >
       <div
         className={clx(
           styles.headerContainer,
-          "flex",
-          isScrolled ? "" : "container",
-          "justify-between",
-          "items-center",
-          "px-8",
-          "py-4",
+          'flex',
+          isScrolled ? '' : 'container',
+          'justify-between',
+          'items-center',
+          'px-8',
+          'py-4',
         )}
       >
         <Link href="/home" area-label="Home">
@@ -82,14 +82,11 @@ function header() {
             {NAV_LINKS.map(({ label, href }) => {
               const isActive = pathname === href;
               return (
-                <li
-                  key={href}
-                  className={clx("flex", "items-center", "glowHover")}
-                >
+                <li key={href} className={clx('flex', 'items-center', 'glowHover')}>
                   <Link
                     href={href}
                     className={clx(pathname === href)}
-                    aria-current={isActive ? "page" : undefined}
+                    aria-current={isActive ? 'page' : undefined}
                   >
                     {label}
                   </Link>
@@ -98,18 +95,18 @@ function header() {
             })}
           </ul>
         </nav>
-        <div className={clx("flex", "items-center", "gap-2")}>
+        <div className={clx('flex', 'items-center', 'gap-2')}>
           <Button
-            className={clx("flex", "items-center", "px-4", "py-2", "gap-1")}
-            variant={"navSecondary"}
+            className={clx('flex', 'items-center', 'px-4', 'py-2', 'gap-1')}
+            variant={'navSecondary'}
             href={ROUTES.publicApp.login.href}
-            target={"_blank"}
+            target={'_blank'}
           >
             {ROUTES.publicApp.login.label}
           </Button>
           <Button
-            className={clx("flex", "items-center", "px-4", "py-2", "gap-1")}
-            variant={"navPrimary"}
+            className={clx('flex', 'items-center', 'px-4', 'py-2', 'gap-1')}
+            variant={'navPrimary'}
             href={ROUTES.publicApp.register.href}
           >
             {ROUTES.publicApp.register.label}

@@ -1,5 +1,5 @@
-import * as React from "react";
-import type { SVGProps } from "react";
+import * as React from 'react';
+import type { SVGProps } from 'react';
 const SvgHumanAi = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -17,7 +17,7 @@ const SvgHumanAi = (props: SVGProps<SVGSVGElement>) => (
       y={0}
       maskUnits="userSpaceOnUse"
       style={{
-        maskType: "alpha",
+        maskType: 'alpha',
       }}
     >
       <path fill="#D9D9D9" d="M0 0h24v24H0z" />
