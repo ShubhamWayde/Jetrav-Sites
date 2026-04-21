@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 const AUTH_ROUTES = ['/signin', '/signup', '/otp'];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token        = request.cookies.get('user_refresh_token')?.value;
 
