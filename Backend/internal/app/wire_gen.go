@@ -5,13 +5,12 @@
 //go:build !wireinject
 // +build !wireinject
 
-package bootstrap
+package app
 
 import (
 	"Backend/internal/handlers"
 	"Backend/internal/repository"
 	"Backend/internal/service"
-	"Backend/pkg/cache"
 	"Backend/pkg/sms"
 	"Backend/pkg/socket"
 	"gorm.io/gorm"
@@ -26,13 +25,7 @@ func InitializeApp(db *gorm.DB) (*App, error) {
 	// ── Repositories ─────────────────────────────────────────────────────────
 	userRepository := repository.NewUserRepository(db)
 	sessionRepository := repository.NewSessionRepository(db)
-	// Use Redis OTP store when available, otherwise fall back to PostgreSQL.
-	var otpRepository repository.OTPRepository
-	if cache.IsAvailable() {
-		otpRepository = cache.NewOTPRepository()
-	} else {
-		otpRepository = repository.NewOTPRepository(db)
-	}
+	otpRepository := repository.NewOTPRepository(db)
 	customerRepository := repository.NewCustomerRepository(db)
 	quotationRepository := repository.NewQuotationRepository(db)
 	leadRepository := repository.NewLeadRepository(db)

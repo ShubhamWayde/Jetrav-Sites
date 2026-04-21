@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"sync"
@@ -12,11 +13,17 @@ var once sync.Once
 
 func LoadEnv() {
 	once.Do(func() {
-		err := godotenv.Load(".env")
+		env := os.Getenv("GO_ENV")
+		if env == "" {
+			env = "local"
+		}
+
+		file := fmt.Sprintf(".env.%s", env)
+		err := godotenv.Load(file)
 		if err != nil {
-			log.Println("⚠️ No .env file found, using system env")
+			log.Printf("⚠️  %s not found, using system env\n", file)
 		} else {
-			log.Println("✅ .env loaded")
+			log.Printf("✅ %s loaded\n", file)
 		}
 	})
 }

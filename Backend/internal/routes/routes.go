@@ -1,12 +1,13 @@
 package routes
 
 import (
-	"Backend/internal/bootstrap"
 	"Backend/internal/middleware"
 	"github.com/gin-gonic/gin"
+
+	appmod "Backend/internal/app"
 )
 
-func Register(r *gin.Engine, app *bootstrap.App) {
+func Register(r *gin.Engine, app *appmod.App) {
 
 	// ── WebSocket ─────────────────────────────────────────────────────────────
 	// GET /ws  — authenticated users connect here for real-time events.

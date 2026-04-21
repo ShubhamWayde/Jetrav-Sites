@@ -1,4 +1,4 @@
-package bootstrap
+package app
 
 import (
 	"Backend/internal/handlers"
