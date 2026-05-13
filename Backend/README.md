@@ -169,8 +169,8 @@ The env file loaded is selected by the `GO_ENV` shell variable:
 Copy `.env.example` and fill in your values:
 
 ```bash
-cp .env.example .env.local   # for local development
-cp .env.example .env.prod    # for production
+cp .env.local.example .env.local.local   # for local development
+cp .env.local.example .env.local.prod    # for production
 ```
 
 **All variables:**
@@ -221,8 +221,8 @@ RAZORPAY_KEY_SECRET=
 go mod download
 
 # Set up local env
-cp .env.example .env.local
-# Edit .env.local with your DB credentials, JWT secret, etc.
+cp .env.local.example .env.local.local
+# Edit .env.local.local with your DB credentials, JWT secret, etc.
 
 # Start server (migrations run automatically)
 go run ./cmd/server/

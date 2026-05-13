@@ -18,7 +18,7 @@ func LoadEnv() {
 			env = "local"
 		}
 
-		file := fmt.Sprintf(".env.%s", env)
+		file := fmt.Sprintf(".env.local.%s", env)
 		err := godotenv.Load(file)
 		if err != nil {
 			log.Printf("⚠️  %s not found, using system env\n", file)
