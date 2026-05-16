@@ -1,3 +1,4 @@
 Backend/.env.local
 .env.local
 .env.prod
+.env
