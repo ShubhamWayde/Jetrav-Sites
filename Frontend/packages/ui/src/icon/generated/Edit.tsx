@@ -1,23 +1,18 @@
-import * as React from "react";
-import type { SVGProps } from "react";
-
-const Edit = (props: SVGProps<SVGSVGElement>) => (
+import * as React from 'react';
+import type { SVGProps } from 'react';
+const SvgEdit = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    width="24"
-    height="24"
+    width="1em"
+    height="1em"
     fill="none"
-    stroke="currentColor"
-    strokeWidth={1.5}
-    strokeLinecap="round"
-    strokeLinejoin="round"
+    viewBox="0 0 24 24"
     {...props}
   >
-    <path d="M8.17151 19.8284L19.8284 8.17157C20.3736 7.62632 20.6462 7.3537 20.792 7.0596C21.0693 6.50005 21.0693 5.8431 20.792 5.28354C20.6462 4.98945 20.3736 4.71682 19.8284 4.17157C19.2831 3.62632 19.0105 3.3537 18.7164 3.20796C18.1568 2.93068 17.4999 2.93068 16.9403 3.20796C16.6462 3.3537 16.3736 3.62632 15.8284 4.17157L4.17151 15.8284C3.59345 16.4064 3.30442 16.6955 3.15218 17.063C2.99994 17.4305 2.99994 17.8393 2.99994 18.6568V20.9999H5.34308C6.16059 20.9999 6.56934 20.9999 6.93688 20.8477C7.30442 20.6955 7.59345 20.4064 8.17151 19.8284Z" />
-    <path d="M12 21H18" />
-    <path d="M14.5 5.5L18.5 9.5" />
+    <path
+      fill="currentColor"
+      d="M5 19h1.261L16.499 8.764l-1.262-1.262L5 17.739zm-.596 1.5a.87.87 0 0 1-.644-.26.87.87 0 0 1-.26-.644v-1.733q0-.365.14-.697a1.8 1.8 0 0 1 .387-.578L16.691 3.932q.226-.207.5-.319a1.5 1.5 0 0 1 .575-.112q.3 0 .583.107.282.106.499.34l1.221 1.236q.233.217.332.5.099.282.099.565 0 .301-.103.576t-.328.501L7.412 19.973a1.8 1.8 0 0 1-1.275.527zM15.856 8.144l-.62-.642 1.262 1.262z"
+    />
   </svg>
 );
-
-export default Edit;
+export default SvgEdit;

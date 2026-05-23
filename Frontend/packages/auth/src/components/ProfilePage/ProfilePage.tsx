@@ -1,13 +1,13 @@
 'use client';
 
-import {useEffect, useMemo, useState} from 'react';
-import {useAuth} from '../../context/AuthContext';
-import {api} from '../../api';
-import {showError, showSuccess} from '../../utils/toast';
+import { useEffect, useMemo, useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { api } from '../../api';
+import { showError, showSuccess } from '../../utils/toast';
 import Button from '@repo/ui/Button';
 import Spinner from '@repo/ui/Spinner';
 import InputField from '@repo/ui/InputField';
-import {Icon, JetravIconOutline, Edit, SmartSearch} from '@repo/ui/icon';
+import { Icon, JetravIconOutline, Edit, SmartSearch } from '@repo/ui/icon';
 import styles from './ProfilePage.module.css';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -25,9 +25,9 @@ type PwdErrors = { oldPwd?: string; newPwd?: string; confirmPwd?: string };
 type ShowPwd = { oldPwd: boolean; newPwd: boolean; confirmPwd: boolean };
 
 export interface ProfilePageProps {
-  /** GET  endpoint for fetching the profile  */
+  /** GET endpoint for fetching the profile  */
   profileGetUrl: string;
-  /** PUT  endpoint for updating name fields   */
+  /** PUT endpoint for updating name fields   */
   profilePutUrl: string;
   /** POST endpoint for setting/changing password */
   setPasswordUrl: string;
@@ -37,21 +37,29 @@ export interface ProfilePageProps {
 
 // ── Component ──────────────────────────────────────────────────────────────────
 
-export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUrl}: ProfilePageProps) {
-  const {isLoading: authLoading} = useAuth();
+export default function ProfilePage({
+  profileGetUrl,
+  profilePutUrl,
+  setPasswordUrl,
+}: ProfilePageProps) {
+  const { isLoading: authLoading } = useAuth();
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [fetching, setFetching] = useState(true);
 
   const [editMode, setEditMode] = useState(false);
-  const [form, setForm] = useState({firstName: '', lastName: ''});
+  const [form, setForm] = useState({ firstName: '', lastName: '' });
   const [infoErrors, setInfoErrors] = useState<InfoErrors>({});
   const [infoSaving, setInfoSaving] = useState(false);
 
-  const [pwdForm, setPwdForm] = useState({oldPwd: '', newPwd: '', confirmPwd: ''});
+  const [pwdForm, setPwdForm] = useState({ oldPwd: '', newPwd: '', confirmPwd: '' });
   const [pwdErrors, setPwdErrors] = useState<PwdErrors>({});
   const [pwdSaving, setPwdSaving] = useState(false);
-  const [showPwd, setShowPwd] = useState<ShowPwd>({oldPwd: false, newPwd: false, confirmPwd: false});
+  const [showPwd, setShowPwd] = useState<ShowPwd>({
+    oldPwd: false,
+    newPwd: false,
+    confirmPwd: false,
+  });
 
   const fullName = profile ? `${profile.firstName} ${profile.lastName}` : '—';
 
@@ -64,11 +72,12 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
 
   useEffect(() => {
     if (authLoading) return;
-    api.get<Profile>(profileGetUrl)
+    api
+      .get<Profile>(profileGetUrl)
       .then((res) => {
         if (res.data) {
           setProfile(res.data);
-          setForm({firstName: res.data.firstName, lastName: res.data.lastName});
+          setForm({ firstName: res.data.firstName, lastName: res.data.lastName });
         }
       })
       .catch((err) => showError(err instanceof Error ? err.message : 'Failed to load profile.'))
@@ -78,23 +87,22 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
   // ── General Info ──────────────────────────────────────────────────────────
 
   const startEdit = () => {
-    if (profile) setForm({firstName: profile.firstName, lastName: profile.lastName});
+    if (profile) setForm({ firstName: profile.firstName, lastName: profile.lastName });
     setInfoErrors({});
     setEditMode(true);
   };
 
   const cancelEdit = () => {
-    if (profile) setForm({firstName: profile.firstName, lastName: profile.lastName});
+    if (profile) setForm({ firstName: profile.firstName, lastName: profile.lastName });
     setInfoErrors({});
     setEditMode(false);
   };
 
   const handleInfoChange =
-    (field: 'firstName' | 'lastName') =>
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm((prev) => ({...prev, [field]: e.target.value}));
-        setInfoErrors((prev) => ({...prev, [field]: ''}));
-      };
+    (field: 'firstName' | 'lastName') => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
+      setInfoErrors((prev) => ({ ...prev, [field]: '' }));
+    };
 
   const saveInfo = async () => {
     const errs: InfoErrors = {};
@@ -112,7 +120,7 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
         lastName: form.lastName.trim(),
       });
       setProfile((prev) =>
-        prev ? {...prev, firstName: form.firstName.trim(), lastName: form.lastName.trim()} : prev,
+        prev ? { ...prev, firstName: form.firstName.trim(), lastName: form.lastName.trim() } : prev,
       );
       showSuccess(res.message ?? 'Profile updated successfully.');
       setEditMode(false);
@@ -126,27 +134,21 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
   // ── Password ──────────────────────────────────────────────────────────────
 
   const handlePwdChange =
-    (field: keyof typeof pwdForm) =>
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPwdForm((prev) => ({...prev, [field]: e.target.value}));
-        setPwdErrors((prev) => ({...prev, [field]: ''}));
-      };
+    (field: keyof typeof pwdForm) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPwdForm((prev) => ({ ...prev, [field]: e.target.value }));
+      setPwdErrors((prev) => ({ ...prev, [field]: '' }));
+    };
 
   const toggleShow = (field: keyof ShowPwd) =>
-    setShowPwd((prev) => ({...prev, [field]: !prev[field]}));
+    setShowPwd((prev) => ({ ...prev, [field]: !prev[field] }));
 
   const savePwd = async () => {
     const errs: PwdErrors = {};
-    if (profile?.hasPassword && !pwdForm.oldPwd.trim())
-      errs.oldPwd = 'Old password is required.';
-    if (!pwdForm.newPwd.trim())
-      errs.newPwd = 'New password is required.';
-    else if (pwdForm.newPwd.length < 8)
-      errs.newPwd = 'Password must be at least 8 characters.';
-    if (!pwdForm.confirmPwd.trim())
-      errs.confirmPwd = 'Please confirm your new password.';
-    else if (pwdForm.newPwd !== pwdForm.confirmPwd)
-      errs.confirmPwd = 'Passwords do not match.';
+    if (profile?.hasPassword && !pwdForm.oldPwd.trim()) errs.oldPwd = 'Old password is required.';
+    if (!pwdForm.newPwd.trim()) errs.newPwd = 'New password is required.';
+    else if (pwdForm.newPwd.length < 8) errs.newPwd = 'Password must be at least 8 characters.';
+    if (!pwdForm.confirmPwd.trim()) errs.confirmPwd = 'Please confirm your new password.';
+    else if (pwdForm.newPwd !== pwdForm.confirmPwd) errs.confirmPwd = 'Passwords do not match.';
     if (Object.keys(errs).length > 0) {
       setPwdErrors(errs);
       return;
@@ -158,8 +160,8 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
         password: pwdForm.newPwd.trim(),
         confirmPassword: pwdForm.confirmPwd.trim(),
       });
-      setProfile((prev) => prev ? {...prev, hasPassword: true} : prev);
-      setPwdForm({oldPwd: '', newPwd: '', confirmPwd: ''});
+      setProfile((prev) => (prev ? { ...prev, hasPassword: true } : prev));
+      setPwdForm({ oldPwd: '', newPwd: '', confirmPwd: '' });
       showSuccess(res.message ?? 'Password saved successfully.');
     } catch (err) {
       showError(err instanceof Error ? err.message : 'Failed to save password.');
@@ -183,7 +185,6 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
 
   return (
     <div className={styles.page}>
-
       {/* Page header */}
       <div className={styles.pageHeader}>
         <div>
@@ -234,7 +235,13 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
 
         {editMode && (
           <div className={styles.cardFooter}>
-            <Button title="Cancel" variant="ghost" type="button" onClick={cancelEdit} disabled={infoSaving}>
+            <Button
+              title="Cancel"
+              variant="ghost"
+              type="button"
+              onClick={cancelEdit}
+              disabled={infoSaving}
+            >
               Cancel
             </Button>
             <Button
@@ -266,11 +273,17 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
               autoComplete="current-password"
               error={pwdErrors.oldPwd}
               suffix={
-                <button className={styles.eyeBtn}
-                        type="button"
-                        onClick={() => toggleShow('oldPwd')}
-                        aria-label={showPwd.oldPwd ? 'Hide' : 'Show'}>
-                  {showPwd.oldPwd ? <Icon icon={SmartSearch} size="sm" /> : <Icon icon={JetravIconOutline} size="sm" />}
+                <button
+                  className={styles.eyeBtn}
+                  type="button"
+                  onClick={() => toggleShow('oldPwd')}
+                  aria-label={showPwd.oldPwd ? 'Hide' : 'Show'}
+                >
+                  {showPwd.oldPwd ? (
+                    <Icon icon={SmartSearch} size="sm" />
+                  ) : (
+                    <Icon icon={JetravIconOutline} size="sm" />
+                  )}
                 </button>
               }
             />
@@ -285,11 +298,17 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
             autoComplete="new-password"
             error={pwdErrors.newPwd}
             suffix={
-              <button className={styles.eyeBtn}
-                      type="button"
-                      onClick={() => toggleShow('newPwd')}
-                      aria-label={showPwd.newPwd ? 'Hide' : 'Show'}>
-                {showPwd.newPwd ? <Icon icon={SmartSearch} size="sm" /> : <Icon icon={JetravIconOutline} size="sm" />}
+              <button
+                className={styles.eyeBtn}
+                type="button"
+                onClick={() => toggleShow('newPwd')}
+                aria-label={showPwd.newPwd ? 'Hide' : 'Show'}
+              >
+                {showPwd.newPwd ? (
+                  <Icon icon={SmartSearch} size="sm" />
+                ) : (
+                  <Icon icon={JetravIconOutline} size="sm" />
+                )}
               </button>
             }
           />
@@ -303,11 +322,17 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
             autoComplete="new-password"
             error={pwdErrors.confirmPwd}
             suffix={
-              <button className={styles.eyeBtn}
-                      type="button"
-                      onClick={() => toggleShow('confirmPwd')}
-                      aria-label={showPwd.confirmPwd ? 'Hide' : 'Show'}>
-                {showPwd.confirmPwd ? <Icon icon={SmartSearch} size="sm" /> : <Icon icon={JetravIconOutline} size="sm" />}
+              <button
+                className={styles.eyeBtn}
+                type="button"
+                onClick={() => toggleShow('confirmPwd')}
+                aria-label={showPwd.confirmPwd ? 'Hide' : 'Show'}
+              >
+                {showPwd.confirmPwd ? (
+                  <Icon icon={SmartSearch} size="sm" />
+                ) : (
+                  <Icon icon={JetravIconOutline} size="sm" />
+                )}
               </button>
             }
           />
@@ -326,8 +351,6 @@ export default function ProfilePage({profileGetUrl, profilePutUrl, setPasswordUr
           </Button>
         </div>
       </div>
-
     </div>
   );
 }
-

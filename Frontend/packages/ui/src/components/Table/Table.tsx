@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
-import Spinner from '../spinner/Spinner';
+import Spinner from '../Spinner';
 import styles from './Table.module.css';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -40,7 +40,6 @@ export default function Table<T>({
   return (
     <div className={styles.wrap}>
       <table className={`${styles.table}${className ? ` ${className}` : ''}`}>
-
         <thead>
           <tr>
             {columns.map((col) => (
@@ -93,7 +92,6 @@ export default function Table<T>({
             ))
           )}
         </tbody>
-
       </table>
     </div>
   );
