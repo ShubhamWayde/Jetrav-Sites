@@ -30,3 +30,6 @@ vendor/
 
 # Windows
 Thumbs.db
+
+.env.*
+.env
