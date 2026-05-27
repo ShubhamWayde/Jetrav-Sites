@@ -16,7 +16,7 @@
 vendor/
 
 # Environment files
-.env
+.env.local
 
 # Various IDEs and OS files (optional, can also be set globally)
 # JetBrains IDEs (GoLand, IntelliJ, etc.)

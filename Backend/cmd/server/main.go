@@ -8,17 +8,13 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"Backend/config"
-	"Backend/internal/bootstrap"
+	"Backend/internal/app"
 	"Backend/internal/routes"
-	"Backend/pkg/cache"
 	"Backend/pkg/database"
 )
 
 func main() {
 	config.LoadEnv()
-
-	// Redis
-	cache.Connect()
 
 	// DB
 	database.Connect()
@@ -35,22 +31,26 @@ func main() {
 
 	database.RunMigrations(dbURL)
 
-	app, err := bootstrap.InitializeApp(database.DB)
+	application, err := app.InitializeApp(database.DB)
 	if err != nil {
 		panic(err)
 	}
 
 	// Start WebSocket hub event loop
-	go app.Hub.Run()
+	go application.Hub.Run()
 
 	// Server
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
-			"http://localhost:3000",
-			"http://localhost:3001", // admin app
-			"http://localhost:3002", // user app
+// 			"http://localhost:3000",
+// 			"http://localhost:3001", // admin app
+// 			"http://localhost:3002", // user app
+
+// 			"https://api.jetrav.com",
+            "https://admin.jetrav.com", // admin app
+            "https://app.jetrav.com", // user app
 		},
 		// OPTIONS must be listed so preflight requests are answered, not rejected
 		AllowMethods: []string{
@@ -75,7 +75,7 @@ func main() {
 		MaxAge: 12 * time.Hour,
 	}))
 
-	routes.Register(r, app)
+	routes.Register(r, application)
 
 	r.Run(":" + config.GetEnv("PORT"))
 }

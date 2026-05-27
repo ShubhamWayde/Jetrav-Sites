@@ -2,38 +2,40 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Icon, Notification, Login, Edit } from '@repo/ui/icon';
+import { Edit, Icon, Login, Notifications } from '../../icon';
 import styles from './AppHeader.module.css';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
 export interface AppHeaderProfile {
-  firstName?:    string;
-  lastName?:     string;
-  email?:        string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
   mobileNumber?: string;
-  role?:         string;
+  role?: string;
 }
 
 export interface AppNotification {
-  id:        string;
-  icon:      string;
-  title:     string;
-  body:      string;
-  read:      boolean;
+  id: string;
+  icon: string;
+  title: string;
+  body: string;
+  read: boolean;
   timestamp: Date;
 }
 
 export interface AppHeaderProps {
-  logoText:            string;
-  showNotifications?:  boolean;
-  profile?:            AppHeaderProfile | null;
+  logoText: string;
+  showNotifications?: boolean;
+  profile?: AppHeaderProfile | null;
   profileSettingsPath: string;
-  onLogout():          void;
-  notifications?:      AppNotification[];
-  onMarkAllRead?():    void;
+  notifications?: AppNotification[];
+
+  onLogout(): void;
+
+  onMarkAllRead?(): void;
   onDismiss?(id: string): void;
-  onDismissAll?():     void;
+  onDismissAll?(): void;
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
@@ -44,7 +46,7 @@ function getInitials(firstName = '', lastName = ''): string {
 
 function timeAgo(date: Date): string {
   const secs = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (secs < 60)   return 'Just now';
+  if (secs < 60) return 'Just now';
   if (secs < 3600) return `${Math.floor(secs / 60)}m ago`;
   if (secs < 86400) return `${Math.floor(secs / 3600)}h ago`;
   return `${Math.floor(secs / 86400)}d ago`;
@@ -64,18 +66,19 @@ export function AppHeader({
   onDismissAll,
 }: AppHeaderProps) {
   const [profileOpen, setProfileOpen] = useState(false);
-  const [notifOpen,   setNotifOpen]   = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
-  const notifRef   = useRef<HTMLDivElement>(null);
-  const initials   = getInitials(profile?.firstName, profile?.lastName);
-  const unread     = notifications.filter(n => !n.read).length;
+  const notifRef = useRef<HTMLDivElement>(null);
+  const initials = getInitials(profile?.firstName, profile?.lastName);
+  const unread = notifications.filter((n) => !n.read).length;
 
   // Close on outside click
   useEffect(() => {
     if (!profileOpen && !notifOpen) return;
     const onMouseDown = (e: MouseEvent) => {
-      if (profileRef.current && !profileRef.current.contains(e.target as Node)) setProfileOpen(false);
-      if (notifRef.current   && !notifRef.current.contains(e.target as Node))   setNotifOpen(false);
+      if (profileRef.current && !profileRef.current.contains(e.target as Node))
+        setProfileOpen(false);
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) setNotifOpen(false);
     };
     document.addEventListener('mousedown', onMouseDown);
     return () => document.removeEventListener('mousedown', onMouseDown);
@@ -84,7 +87,12 @@ export function AppHeader({
   // Close on Escape
   useEffect(() => {
     if (!profileOpen && !notifOpen) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setProfileOpen(false); setNotifOpen(false); } };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setProfileOpen(false);
+        setNotifOpen(false);
+      }
+    };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [profileOpen, notifOpen]);
@@ -96,7 +104,6 @@ export function AppHeader({
       </div>
 
       <div className={styles.actions}>
-
         {/* ── Bell ─────────────────────────────────────────────────────── */}
         {showNotifications && (
           <div className={styles.notifWrap} ref={notifRef}>
@@ -106,12 +113,13 @@ export function AppHeader({
               type="button"
               aria-label="Notifications"
               aria-expanded={notifOpen}
-              onClick={() => { setNotifOpen(p => !p); setProfileOpen(false); }}
+              onClick={() => {
+                setNotifOpen((p) => !p);
+                setProfileOpen(false);
+              }}
             >
-              <Icon icon={Notification} size="md" />
-              {unread > 0 && (
-                <span className={styles.badge}>{unread > 99 ? '99+' : unread}</span>
-              )}
+              <Icon icon={Notifications} size="md" />
+              {unread > 0 && <span className={styles.badge}>{unread > 99 ? '99+' : unread}</span>}
             </button>
 
             {notifOpen && (
@@ -122,7 +130,9 @@ export function AppHeader({
                   {notifications.length > 0 && (
                     <button
                       className={styles.markAllBtn}
-                      onClick={() => { onMarkAllRead?.(); }}
+                      onClick={() => {
+                        onMarkAllRead?.();
+                      }}
                     >
                       ✔✔ Mark all as read
                     </button>
@@ -136,8 +146,11 @@ export function AppHeader({
                   {notifications.length === 0 ? (
                     <p className={styles.notifEmpty}>No notifications</p>
                   ) : (
-                    notifications.map(n => (
-                      <div key={n.id} className={`${styles.notifItem} ${n.read ? '' : styles.notifUnread}`}>
+                    notifications.map((n) => (
+                      <div
+                        key={n.id}
+                        className={`${styles.notifItem} ${n.read ? '' : styles.notifUnread}`}
+                      >
                         <span className={styles.notifIcon}>{n.icon}</span>
                         <div className={styles.notifContent}>
                           <div className={styles.notifItemHeader}>
@@ -162,7 +175,12 @@ export function AppHeader({
                 {notifications.length > 0 && (
                   <>
                     <div className={styles.divider} />
-                    <button className={styles.clearAllBtn} onClick={() => { onDismissAll?.(); }}>
+                    <button
+                      className={styles.clearAllBtn}
+                      onClick={() => {
+                        onDismissAll?.();
+                      }}
+                    >
                       Clear all notifications
                     </button>
                   </>
@@ -180,7 +198,10 @@ export function AppHeader({
             type="button"
             aria-label="Open user menu"
             aria-expanded={profileOpen}
-            onClick={() => { setProfileOpen(prev => !prev); setNotifOpen(false); }}
+            onClick={() => {
+              setProfileOpen((prev) => !prev);
+              setNotifOpen(false);
+            }}
           >
             <span className={styles.avatarText}>{initials}</span>
           </button>
@@ -211,7 +232,9 @@ export function AppHeader({
                 role="menuitem"
                 onClick={() => setProfileOpen(false)}
               >
-                <span className={styles.dropdownItemIcon}><Icon icon={Edit} size="sm" /></span>
+                <span className={styles.dropdownItemIcon}>
+                  <Icon icon={Edit} size="sm" />
+                </span>
                 Profile Configuration
               </Link>
 
@@ -222,9 +245,14 @@ export function AppHeader({
                 className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`}
                 type="button"
                 role="menuitem"
-                onClick={() => { setProfileOpen(false); onLogout(); }}
+                onClick={() => {
+                  setProfileOpen(false);
+                  onLogout();
+                }}
               >
-                <span className={styles.dropdownItemIcon}><Icon icon={Login} size="sm" /></span>
+                <span className={styles.dropdownItemIcon}>
+                  <Icon icon={Login} size="sm" />
+                </span>
                 Log out
               </button>
             </div>

@@ -1,6 +1,6 @@
-# Jetrav Admin — Backend
+# Jetrav — Backend
 
-Go REST API for the Jetrav travel agency admin platform. Built with **Gin**, **PostgreSQL**, **GORM**, and **Clean Architecture**.
+Go REST API for the Jetrav travel agency platform. Built with **Gin**, **PostgreSQL**, **GORM**, **WebSockets**, and **Clean Architecture**.
 
 ---
 
@@ -12,11 +12,13 @@ Go REST API for the Jetrav travel agency admin platform. Built with **Gin**, **P
 | Web Framework | Gin v1.11.0 |
 | ORM | GORM v1.31.1 |
 | Database | PostgreSQL |
-| Migrations | golang-migrate v4 |
+| Migrations | golang-migrate v4.19.1 |
 | Auth | JWT (golang-jwt/jwt v5) + Bcrypt |
+| Real-time | Gorilla WebSocket v1.5.3 |
 | SMS | Twilio |
+| Payments | Razorpay |
 | DI | Google Wire v0.7.0 |
-| Config | godotenv |
+| Config | godotenv v1.5.1 |
 
 ---
 
@@ -25,7 +27,7 @@ Go REST API for the Jetrav travel agency admin platform. Built with **Gin**, **P
 Clean Architecture with strict layer separation:
 
 ```
-Handler (HTTP) → Service (Business Logic) → Repository (Data Access) → Database
+Handler (HTTP) → Service (Business Logic) → Repository (Data Access) → PostgreSQL
 ```
 
 Each layer communicates only through interfaces, enabling testability and dependency inversion.
@@ -34,105 +36,23 @@ Each layer communicates only through interfaces, enabling testability and depend
 
 ## Project Structure
 
-```
-Backend/
-├── cmd/
-│   └── server/
-│       └── main.go                  # Entry point, CORS setup, server start
-│
-├── config/
-│   ├── config.go                    # Environment variable loader (godotenv)
-│   └── database.go                  # Database config struct
-│
-├── internal/
-│   ├── bootstrap/
-│   │   ├── app.go                   # App initialization
-│   │   ├── wire.go                  # Dependency injection wiring
-│   │   └── wire_gen.go              # Wire-generated DI code
-│   │
-│   ├── handlers/                    # HTTP controllers
-│   │   ├── admin_controller.go      # Admin auth, profile, password
-│   │   ├── customer_controller.go   # Customer CRUD
-│   │   ├── lead_controller.go       # Lead CRUD
-│   │   ├── quotation_controller.go  # Quotation CRUD
-│   │   ├── user_controller.go       # User auth
-│   │   └── wire.go                  # Handler DI providers
-│   │
-│   ├── middleware/
-│   │   ├── auth_middleware.go       # JWT token validation
-│   │   └── role_middleware.go       # Role-based access control (admin)
-│   │
-│   ├── models/                      # GORM entity definitions
-│   │   ├── admin.go
-│   │   ├── customer.go
-│   │   ├── lead.go
-│   │   ├── otp.go
-│   │   ├── quotation.go
-│   │   ├── user.go
-│   │   └── userSession.go
-│   │
-│   ├── repository/                  # Data access layer
-│   │   ├── customer_interface.go
-│   │   ├── customer_repo.go
-│   │   ├── lead_interface.go
-│   │   ├── lead_repo.go
-│   │   ├── otp_interface.go
-│   │   ├── otp_repo.go
-│   │   ├── quotation_interface.go
-│   │   ├── quotation_repo.go
-│   │   ├── session_interface.go
-│   │   ├── session_repo.go
-│   │   ├── user_interfaces.go
-│   │   ├── user_repo.go
-│   │   └── wire.go
-│   │
-│   ├── service/                     # Business logic layer
-│   │   ├── admin_interface.go
-│   │   ├── admin_service.go
-│   │   ├── customer_interface.go
-│   │   ├── customer_service.go
-│   │   ├── lead_interface.go
-│   │   ├── lead_service.go
-│   │   ├── otp_interface.go
-│   │   ├── otp_service.go
-│   │   ├── quotation_interface.go
-│   │   ├── quotation_service.go
-│   │   ├── session_interface.go
-│   │   ├── session_service.go
-│   │   ├── user_interface.go
-│   │   ├── user_service.go
-│   │   └── wire.go
-│   │
-│   └── routes/
-│       └── routes.go                # API route registration
-│
-├── pkg/
-│   ├── database/
-│   │   ├── postgres.go              # GORM PostgreSQL connection
-│   │   └── migrate.go               # Migration runner
-│   ├── sms/
-│   │   └── sms.go                   # Twilio SMS integration
-│   └── utils/
-│       ├── jwt.go                   # JWT generation & validation
-│       └── response.go              # Standard API response helpers
-│
-├── migrations/                      # SQL migration files (up/down)
-│   ├── 000001_create_users_table
-│   ├── 000002_create_user_sessions
-│   ├── 000003_create_reward
-│   ├── 000004_create_plan
-│   ├── 000005_create_payment
-│   ├── 000006_create_subscription
-│   ├── 000007_create_otps_table
-│   ├── 000008_create_customers_table
-│   ├── 000009_unique_customer_mobile
-│   ├── 000010_create_quotations_table
-│   └── 000011_create_leads_table
-│
-├── .env.example                     # Environment variable template
-├── go.mod
-└── go.sum
-```
+| Folder | Purpose |
+|---|---|
+| `cmd/server/` | Entry point — starts server, CORS, WebSocket hub |
+| `config/` | Env file loading and database config |
+| `internal/app/` | Dependency injection wiring (Google Wire) |
+| `internal/handlers/` | HTTP controllers, one per domain |
+| `internal/middleware/` | JWT auth and role guards |
+| `internal/models/` | GORM entity definitions and request/response types |
+| `internal/repository/` | Data access layer — interfaces and PostgreSQL implementations |
+| `internal/service/` | Business logic layer |
+| `internal/routes/` | All route registration in one place |
+| `pkg/database/` | GORM connection singleton and auto-migration runner |
+| `pkg/socket/` | WebSocket hub and client lifecycle |
+| `pkg/sms/` | Twilio SMS integration |
+| `pkg/razorpay/` | Razorpay order creation and payment verification |
+| `pkg/utils/` | JWT helpers and HTTP response utilities |
+| `migrations/` | SQL migration files (up/down pairs) |
 
 ---
 
@@ -140,84 +60,120 @@ Backend/
 
 **Base URL:** `http://localhost:8080`
 
-### User Auth
+| Group | Prefix | Auth | Description |
+|---|---|---|---|
+| Auth | `/api/auth` | Public / JWT | Signup, OTP, login, token refresh, logout |
+| Admin | `/api/admin` | JWT + role=admin | Profile, customers, leads, quotations, dashboard |
+| User | `/api/user` | JWT | Profile, dashboard, leads, quotations, plans |
+| WebSocket | `/ws` | JWT | Real-time event stream |
 
-| Method | Path | Description |
+Full route definitions are in [`internal/routes/routes.go`](internal/routes/routes.go).
+
+---
+
+## Authentication
+
+### OTP flow
+
+```
+POST /api/auth/signup   → User created + OTP sent via SMS
+POST /api/auth/send-otp → OTP sent to existing mobile number
+POST /api/auth/verify-otp → OTP validated → access token (body) + refresh token (HttpOnly cookie)
+```
+
+### Password flow
+
+```
+POST /api/auth/login → bcrypt validated → access token (body) + refresh token (HttpOnly cookie)
+```
+
+### Tokens
+
+| Token | Algorithm | Expiry | Transport |
+|---|---|---|---|
+| Access | HS256 JWT | 15 minutes | Response body |
+| Refresh | HS256 JWT | 7 days | HttpOnly cookie (`admin_refresh_token` / `user_refresh_token`) |
+
+### Session management
+
+- Maximum **3 active sessions per user** across devices.
+- Each session tracks `deviceID`, `deviceName`, `browser`, and `ipAddress`.
+- `POST /api/auth/logout` — invalidates the current session.
+- `POST /api/auth/logout-all` — invalidates all sessions.
+
+---
+
+## Real-time Events (WebSocket)
+
+Connect once and receive push events without polling.
+
+**Connection:**
+```
+ws://localhost:8080/ws?token=<accessToken>
+```
+Or via `Authorization: Bearer <token>` header.
+
+**Message format:**
+```json
+{ "event": "event_name", "data": {} }
+```
+
+**Broadcast scopes:**
+
+| Scope | API | Example |
 |---|---|---|
-| POST | `/api/auth/signup` | User registration |
-| POST | `/api/auth/login` | User login |
-| POST | `/api/auth/refresh` | Refresh JWT token |
-| POST | `/api/auth/logout` | Logout current session |
-| POST | `/api/auth/logout-all` | Logout all devices (protected) |
-
-### Admin Auth & Profile
-
-| Method | Path | Description |
-|---|---|---|
-| POST | `/api/admin/auth/signup` | Admin registration (OTP flow) |
-| POST | `/api/admin/auth/send-otp` | Send OTP to mobile number |
-| POST | `/api/admin/auth/verify-otp` | Verify OTP |
-| POST | `/api/admin/auth/login` | Admin password login |
-| POST | `/api/admin/auth/refresh` | Refresh admin token |
-| POST | `/api/admin/auth/logout` | Admin logout |
-| POST | `/api/admin/auth/logout-all` | Logout all sessions (protected) |
-| GET | `/api/admin/profile` | Get admin profile (protected) |
-| PUT | `/api/admin/profile` | Update admin profile (protected) |
-| POST | `/api/admin/profile/set-password` | Set/change password (protected) |
-
-### Customers (all protected)
-
-| Method | Path | Description |
-|---|---|---|
-| POST | `/api/admin/customers` | Create customer |
-| GET | `/api/admin/customers` | List all customers |
-| GET | `/api/admin/customers/:id` | Get customer by ID |
-| PUT | `/api/admin/customers/:id` | Update customer |
-| DELETE | `/api/admin/customers/:id` | Delete customer |
-
-### Quotations (all protected, nested under customer)
-
-| Method | Path | Description |
-|---|---|---|
-| POST | `/api/admin/customers/:id/quotations` | Create quotation |
-| GET | `/api/admin/customers/:id/quotations` | List customer quotations |
-| DELETE | `/api/admin/customers/:id/quotations/:quotationId` | Delete quotation |
-
-### Leads (all protected)
-
-| Method | Path | Description |
-|---|---|---|
-| POST | `/api/admin/leads` | Create lead |
-| GET | `/api/admin/leads` | List all leads |
-| GET | `/api/admin/leads/:id` | Get lead by ID |
-| PUT | `/api/admin/leads/:id` | Update lead |
-| DELETE | `/api/admin/leads/:id` | Delete lead |
+| All admins | `hub.BroadcastToRole("admin", event, data)` | New user signup |
+| Specific user | `hub.Emit(userID, event, data)` | Order status update |
+| Everyone | `hub.Broadcast(event, data)` | Global announcements |
 
 ---
 
 ## Database Schema
 
-PostgreSQL with 11 migrations:
+17 migrations run automatically on server startup.
 
-| # | Table | Purpose |
+| # | Migration | Description |
 |---|---|---|
-| 1 | `users` | User accounts |
-| 2 | `user_sessions` | Multi-device session management |
-| 3 | `rewards` | Reward system |
-| 4 | `plans` | Travel plans |
-| 5 | `payments` | Payment records |
-| 6 | `subscriptions` | Subscription data |
-| 7 | `otps` | SMS one-time passwords |
-| 8 | `customers` | Customer records |
-| 9 | — | Unique constraint on customer mobile |
-| 10 | `quotations` | Travel quotations (per customer) |
-| 11 | `leads` | Sales leads |
+| 1 | `create_users_table` | Users (admin & user roles, phone/email unique) |
+| 2 | `create_user_sessions` | Multi-device session tracking |
+| 3 | `create_reward` | Jetcoins loyalty system |
+| 4 | `create_plan` | Subscription plans |
+| 5 | `create_payment` | Payment records |
+| 6 | `create_subscription` | Active subscriptions |
+| 7 | `create_otps_table` | OTP store with 10-min expiry |
+| 8 | `create_customers_table` | Customer records (legacy) |
+| 9 | `unique_customer_mobile` | Unique constraint on mobile |
+| 10 | `create_quotations_table` | Quotations (JSONB details) |
+| 11 | `create_leads_table` | Leads with type, status, JSONB details |
+| 12 | `alter_plan_table` | Add billingCycle, category, tier |
+| 13 | `alter_payment_table` | Add Razorpay fields |
+| 14 | `alter_subscription_table` | Add paymentID FK |
+| 15 | `seed_plans` | 6 default plans (Silver/Gold/Platinum × individual/corporate) |
+| 16 | `merge_customers_into_users` | Merged customers table into users |
+| 17 | `add_plantype_to_users` | Add planType column to users |
+
+Migrations auto-run on server start. If a migration is in a dirty state, the runner resets it and retries.
 
 ---
 
 ## Environment Variables
 
-Copy `.env.example` to `.env` and fill in values:
+The env file loaded is selected by the `GO_ENV` shell variable:
+
+| `GO_ENV` | File loaded |
+|---|---|
+| unset (default) | `.env.local` |
+| `local` | `.env.local` |
+| `prod` | `.env.prod` |
+
+Copy `.env.example` and fill in your values:
+
+```bash
+cp .env.local.example .env.local.local   # for local development
+cp .env.local.example .env.local.prod    # for production
+```
+
+**All variables:**
 
 ```env
 # Database
@@ -226,12 +182,12 @@ DB_PORT=5432
 DB_USER=
 DB_PASSWORD=
 DB_NAME=
-DB_SSLMODE=disable
+DB_SSLMODE=disable          # use "require" in production
 
 # Server
 PORT=8080
 
-# JWT
+# JWT  (use a long random string in production)
 JWT_SECRET=
 
 # Twilio SMS
@@ -239,9 +195,14 @@ TWILIO_ACCOUNT_SID=
 TWILIO_AUTH_TOKEN=
 TWILIO_FROM_NUMBER=
 
-# development = logs OTP to console (no SMS sent)
-# production  = sends SMS via Twilio
+# App mode
+# development → OTP logged to console + returned in API response (no SMS sent)
+# production  → OTP sent via Twilio
 APP_ENV=development
+
+# Razorpay
+RAZORPAY_KEY_ID=
+RAZORPAY_KEY_SECRET=
 ```
 
 ---
@@ -251,49 +212,74 @@ APP_ENV=development
 ### Prerequisites
 
 - Go 1.24+
-- PostgreSQL
-- [golang-migrate CLI](https://github.com/golang-migrate/migrate)
+- PostgreSQL (running locally or remote)
 
-### Run locally
+### Run
 
 ```bash
-# Install dependencies
+# Clone and install dependencies
 go mod download
 
-# Copy and fill env
-cp .env.example .env
+# Set up local env
+cp .env.local.example .env.local.local
+# Edit .env.local.local with your DB credentials, JWT secret, etc.
 
-# Run database migrations
-migrate -path migrations -database "postgres://user:pass@localhost:5432/dbname?sslmode=disable" up
+# Start server (migrations run automatically)
+go run ./cmd/server/
 
-# Start server
-go run ./cmd/server/main.go
+# Or explicitly load a specific env
+GO_ENV=prod go run ./cmd/server/
 ```
 
-## Migrations
+Server startup sequence:
+1. Load env file based on `GO_ENV`
+2. Connect to PostgreSQL
+3. Run pending migrations (auto)
+4. Wire all dependencies
+5. Start WebSocket hub
+6. Start HTTP server on `PORT`
+
+---
+
+## Creating Migrations
 
 ```bash
+# Install migrate CLI
+go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+
 # Create a new migration
 migrate create -ext sql -dir migrations -seq <migration_name>
 
-# Apply all pending migrations
-migrate -path migrations -database "<DB_URL>" up
+# Apply manually (server does this automatically on startup)
+migrate -path migrations -database "postgres://user:pass@localhost:5432/dbname?sslmode=disable" up
 
-# Roll back last migration
-migrate -path migrations -database "<DB_URL>" down 1
-
-# Check current version
-migrate -path migrations -database "<DB_URL>" version
+# Roll back one step
+migrate -path migrations -database "..." down 1
 ```
 
 ---
 
 ## Dependency Injection
 
-This project uses [Google Wire](https://github.com/google/wire) for compile-time dependency injection.
+Uses [Google Wire](https://github.com/google/wire) for compile-time DI. The generated file `internal/app/wire_gen.go` is manually maintained to allow custom wiring logic.
+
+To regenerate after adding a new provider:
 
 ```bash
-# Regenerate wire_gen.go after changing providers
-cd internal/bootstrap
+cd internal/app
 wire
 ```
+
+---
+
+## CORS
+
+Configured in `cmd/server/main.go`. Allowed origins by default:
+
+| Origin | Purpose |
+|---|---|
+| `http://localhost:3000` | Main frontend |
+| `http://localhost:3001` | Admin app |
+| `http://localhost:3002` | User app |
+
+Preflight responses are cached for 12 hours.

@@ -1,7 +1,7 @@
 'use client';
 
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
-import Spinner from '../spinner/Spinner';
+import Spinner from '../Spinner';
 import styles from './Button.module.css';
 
 type Variant = 'primary' | 'secondary' | 'ghost';
@@ -25,12 +25,7 @@ export default function Button({
   return (
     <button
       disabled={disabled ?? loading}
-      className={[
-        styles.btn,
-        styles[variant],
-        fullWidth ? styles.full : '',
-        className ?? '',
-      ]
+      className={[styles.btn, styles[variant], fullWidth ? styles.full : '', className ?? '']
         .filter(Boolean)
         .join(' ')}
       {...rest}
