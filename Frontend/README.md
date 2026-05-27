@@ -7,7 +7,7 @@ Turborepo monorepo containing three Next.js applications for the Jetrav travel a
 ## Tech Stack
 
 | Tool            | Version                     |
-|-----------------|-----------------------------|
+| --------------- | --------------------------- |
 | Package Manager | pnpm 9.0.0                  |
 | Monorepo        | Turborepo 2.8.7             |
 | Framework       | Next.js 16.1.6 (App Router) |
@@ -286,7 +286,7 @@ pnpm format                      # Format all files with Prettier
 Each app reads its own `.env.local`. For the admin app:
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:8080
+JETRAV_API_URL=http://localhost:8080
 ```
 
 ---
@@ -294,7 +294,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8080
 ## Dev Ports
 
 | App       | Port |
-|-----------|------|
+| --------- | ---- |
 | user      | 3000 |
 | admin     | 3001 |
 | marketing | 3001 |

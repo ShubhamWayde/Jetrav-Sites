@@ -15,16 +15,15 @@ type EventHandler = (data: unknown) => void;
 // ── Defaults ───────────────────────────────────────────────────────────────────
 
 const WS_BASE =
-  (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_WS_URL) ||
-  'ws://localhost:8080';
+  (typeof process !== 'undefined' && process.env?.JETRAV_WS_URL) || 'ws://localhost:8080';
 
 // ── Hook ───────────────────────────────────────────────────────────────────────
 
 export function useSocket() {
-  const ws        = useRef<WebSocket | null>(null);
-  const handlers  = useRef<Map<string, Set<EventHandler>>>(new Map());
+  const ws = useRef<WebSocket | null>(null);
+  const handlers = useRef<Map<string, Set<EventHandler>>>(new Map());
   const reconnect = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const stopped   = useRef(false);
+  const stopped = useRef(false);
 
   const connect = useCallback(() => {
     if (stopped.current) return;
@@ -37,9 +36,9 @@ export function useSocket() {
       return;
     }
 
-    const url    = `${WS_BASE}/ws?token=${token}`;
+    const url = `${WS_BASE}/ws?token=${token}`;
     const socket = new WebSocket(url);
-    ws.current   = socket;
+    ws.current = socket;
 
     socket.onopen = () => {
       // Clear any pending reconnect timer on successful open.
@@ -52,7 +51,7 @@ export function useSocket() {
     socket.onmessage = (e) => {
       try {
         const msg: SocketMessage = JSON.parse(e.data as string);
-        handlers.current.get(msg.event)?.forEach(fn => fn(msg.data));
+        handlers.current.get(msg.event)?.forEach((fn) => fn(msg.data));
       } catch {
         // ignore malformed frames
       }
