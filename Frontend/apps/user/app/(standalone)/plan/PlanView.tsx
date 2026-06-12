@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api, API_BASE_URL } from '@repo/auth';
 import { showSuccess, showError } from '@repo/auth';
-import Button from '@repo/ui/Button';
+import Button from '@repo/ui/button';
 
 import styles from './PlanView.module.css';
 

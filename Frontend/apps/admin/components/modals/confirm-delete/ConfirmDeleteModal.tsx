@@ -1,7 +1,7 @@
 "use client";
 
-import Button from "@repo/ui/Button";
-import Modal from "@repo/ui/Modal";
+import Button from "@repo/ui/button";
+import Modal from "@repo/ui/modal";
 import { Icon, Delete } from "@repo/ui/icon";
 import styles from "./ConfirmDeleteModal.module.css";
 

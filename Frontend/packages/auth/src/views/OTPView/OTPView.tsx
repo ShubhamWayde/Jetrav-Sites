@@ -4,7 +4,7 @@ import { SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-import Button from '@repo/ui/Button';
+import Button from '@repo/ui/button';
 import AuthCard from '../../components/AuthCard/AuthCard';
 import OTPInput from '../../components/OTPInput/OTPInput';
 import { useAuth } from '../../context/AuthContext';

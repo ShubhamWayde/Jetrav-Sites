@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { showSuccess, showError } from "@repo/auth";
-import Button from "@repo/ui/Button";
-import InputField from "@repo/ui/InputField";
-import SelectField from "@repo/ui/SelectField";
-import Modal, { ModalFooter } from "@repo/ui/Modal";
-import Spinner from "@repo/ui/Spinner";
+import Button from "@repo/ui/button";
+import InputField from "@repo/ui/inputfield";
+import SelectField from "@repo/ui/selectfield";
+import Modal, { ModalFooter } from "@repo/ui/modal";
+import Spinner from "@repo/ui/spinner";
 import { api } from "@/lib/api";
 import { ADMIN_API } from "@/lib/constants";
 import styles from "./CustomerModal.module.css";

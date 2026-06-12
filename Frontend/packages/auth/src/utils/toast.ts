@@ -1,6 +1,6 @@
 import { createElement } from 'react';
 import { toast } from 'react-toastify';
-import { ToastMessage } from '@repo/ui/ToastMessage';
+import { ToastMessage } from '@repo/ui/toastmessage';
 
 export function showSuccess(description: string, title = 'Success'): void {
   toast.success(createElement(ToastMessage, { title, description }));

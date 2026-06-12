@@ -12,9 +12,9 @@ import type {
 } from "@/app/types/dashboard";
 import type { LeadResponse } from "@/app/types/lead";
 import styles from "./dashboard.module.css";
-import Table, { type Column } from "@repo/ui/Table";
-import Spinner from "@repo/ui/Spinner";
-import Button from "@repo/ui/Button";
+import Table, { type Column } from "@repo/ui/table";
+import Spinner from "@repo/ui/spinner";
+import Button from "@repo/ui/button";
 
 function fmt(val: string): string {
   if (!val || val === "—") return "—";

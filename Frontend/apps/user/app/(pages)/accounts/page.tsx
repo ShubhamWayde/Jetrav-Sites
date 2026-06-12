@@ -3,8 +3,8 @@
 import {useEffect, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {api} from '@repo/auth';
-import Button from '@repo/ui/Button';
-import Spinner from '@repo/ui/Spinner';
+import Button from '@repo/ui/button';
+import Spinner from '@repo/ui/spinner';
 import {CarryOnBagChecked, Icon} from '@repo/ui/icon';
 import {USER_API} from '@/lib/constants';
 import {SubscriptionStatus} from '@/app/types/account';

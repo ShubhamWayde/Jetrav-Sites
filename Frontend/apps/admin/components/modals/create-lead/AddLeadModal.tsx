@@ -1,7 +1,7 @@
 "use client";
 
-import InputField from "@repo/ui/InputField";
-import TextareaField from "@repo/ui/TextareaField";
+import InputField from "@repo/ui/inputfield";
+import TextareaField from "@repo/ui/textareafield";
 import { useCallback, useEffect, useState } from "react";
 import { showSuccess, showError } from "@repo/auth";
 import { api } from "@/lib/api";
@@ -15,9 +15,9 @@ import {
   LeadStatus,
   LeadType,
 } from "@/app/types/lead";
-import SelectField from "@repo/ui/SelectField";
-import Button from "@repo/ui/Button";
-import Modal, { ModalFooter } from "@repo/ui/Modal";
+import SelectField from "@repo/ui/selectfield";
+import Button from "@repo/ui/button";
+import Modal, { ModalFooter } from "@repo/ui/modal";
 import styles from "./AddLeadModal.module.css";
 
 function countOptions(max: number) {

@@ -10,10 +10,10 @@ import { CustomerResponse } from "@/app/types/customer";
 import ConfirmDeleteModal from "@/components/modals/confirm-delete/ConfirmDeleteModal";
 import AddQuotationModal from "@/components/modals/create-quotation/AddQuotationModal";
 import { Icon, Delete, TrackBooking } from "@repo/ui/icon";
-import Table, { type Column } from "@repo/ui/Table";
+import Table, { type Column } from "@repo/ui/table";
 import styles from "./quotations.module.css";
 import { formatDate } from "@/utility/date";
-import Button from "@repo/ui/Button";
+import Button from "@repo/ui/button";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

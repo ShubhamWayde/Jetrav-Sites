@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 import {api} from '@repo/auth';
-import Spinner from '@repo/ui/Spinner';
+import Spinner from '@repo/ui/spinner';
 import {Icon, SmartSearch, TrackBooking} from '@repo/ui/icon';
 import {USER_API} from '@/lib/constants';
 import type {LeadResponse, QuotationResponse, UserDashboard} from '@/app/types/profile';

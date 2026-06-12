@@ -4,9 +4,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../api';
 import { showError, showSuccess } from '../../utils/toast';
-import Button from '@repo/ui/Button';
-import Spinner from '@repo/ui/Spinner';
-import InputField from '@repo/ui/InputField';
+import Button from '@repo/ui/button';
+import Spinner from '@repo/ui/spinner';
+import InputField from '@repo/ui/inputfield';
 import { Icon, JetravIconOutline, Edit, SmartSearch } from '@repo/ui/icon';
 import styles from './ProfilePage.module.css';
 

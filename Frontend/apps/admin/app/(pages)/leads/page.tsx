@@ -9,10 +9,10 @@ import AddLeadModal from "@/components/modals/create-lead/AddLeadModal";
 import EditLeadModal from "@/components/modals/edit-lead/EditLeadModal";
 import ConfirmDeleteModal from "@/components/modals/confirm-delete/ConfirmDeleteModal";
 import { Icon, Edit, Delete, SmartSearch } from "@repo/ui/icon";
-import Table, { type Column } from "@repo/ui/Table";
+import Table, { type Column } from "@repo/ui/table";
 import styles from "./leads.module.css";
 import { formatDate } from "@/utility/date";
-import Button from "@repo/ui/Button";
+import Button from "@repo/ui/button";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-import Button from '@repo/ui/Button';
-import InputField from '@repo/ui/InputField';
+import Button from '@repo/ui/button';
+import InputField from '@repo/ui/inputfield';
 import AuthCard from '../../components/AuthCard/AuthCard';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../api';

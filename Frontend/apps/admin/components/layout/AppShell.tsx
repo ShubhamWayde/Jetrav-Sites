@@ -2,9 +2,9 @@
 
 import {useEffect, useState} from 'react';
 import {api, useAuth, useNotifications} from '@repo/auth';
-import {AppLayout} from '@repo/ui/AppLayout';
-import {AppHeader} from '@repo/ui/AppHeader';
-import {AppSidebar} from '@repo/ui/AppSidebar';
+import {AppLayout} from '@repo/ui/applayout';
+import {AppHeader} from '@repo/ui/appheader';
+import {AppSidebar} from '@repo/ui/appsidebar';
 import {Analytics, Icon, SmartSearch, Workspaces, YourTrips} from '@repo/ui/icon';
 import {ADMIN_API} from '@/lib/constants';
 import type {AdminProfile} from '@/app/types/profile';

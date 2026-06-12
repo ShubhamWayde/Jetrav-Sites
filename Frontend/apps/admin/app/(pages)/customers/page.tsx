@@ -9,10 +9,10 @@ import CustomerModal from "@/components/modals/create-customer/CustomerModal";
 import ConfirmDeleteModal from "@/components/modals/confirm-delete/ConfirmDeleteModal";
 import AddQuotationModal from "@/components/modals/create-quotation/AddQuotationModal";
 import { Icon, Edit, Delete, Workspaces } from "@repo/ui/icon";
-import Table, { type Column } from "@repo/ui/Table";
+import Table, { type Column } from "@repo/ui/table";
 import styles from "./customers.module.css";
 import { CustomerResponse } from "@/app/types/customer";
-import Button from "@repo/ui/Button";
+import Button from "@repo/ui/button";
 import { formatDate, formatNumber } from "@/utility/date";
 
 // ── Component ─────────────────────────────────────────────────────────────────
