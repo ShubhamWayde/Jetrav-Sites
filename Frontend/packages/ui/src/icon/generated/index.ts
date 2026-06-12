@@ -7,6 +7,7 @@ export { default as CurrencyExchange } from './CurrencyExchange';
 export { default as CurrencyRupeeCircle } from './CurrencyRupeeCircle';
 export { default as DinnerDining } from './DinnerDining';
 export { default as Discord } from './Discord';
+export { default as Delete } from './Delete';
 export { default as Edit } from './Edit';
 export { default as Email } from './Email';
 export { default as FlightTakeoff } from './FlightTakeoff';

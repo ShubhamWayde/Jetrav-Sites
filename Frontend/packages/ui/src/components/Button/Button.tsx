@@ -1,7 +1,7 @@
 'use client';
 
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
-import Spinner from '../Spinner';
+import Spinner from '../spinner';
 import styles from './Button.module.css';
 
 type Variant = 'primary' | 'secondary' | 'ghost';
