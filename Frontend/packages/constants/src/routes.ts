@@ -17,8 +17,8 @@ export const ROUTES = {
     email: {label: 'contact@jetrav.com', href: 'mailto:contact@jetrav.com'},
   },
   publicApp: {
-    login: {label: 'Login', href: 'https://app.jetrav.com/login', target: '_blank'},
-    register: {label: 'Register', href: 'https://app.jetrav.com/register', target: '_blank'},
+    login: {label: 'Login', href: 'https://user.jetrav.com/signin', target: '_blank'},
+    register: {label: 'Register', href: 'https://user.jetrav.com/signup', target: '_blank'},
     trackBooking: {label: 'Track Booking', href: 'https://app.jetrav.com/track-booking', target: '_blank'},
   }
 

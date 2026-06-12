@@ -44,13 +44,13 @@ func main() {
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
-// 			"http://localhost:3000",
-// 			"http://localhost:3001", // admin app
-// 			"http://localhost:3002", // user app
+			// 			"http://localhost:3000",
+			// 			"http://localhost:3001", // admin app
+			// 			"http://localhost:3002", // user app
 
-// 			"https://api.jetrav.com",
-            "https://admin.jetrav.com", // admin app
-            "https://app.jetrav.com", // user app
+			"https://admin.jetrav.com",
+			"https://app.jetrav.com",
+			"https://user.jetrav.com",
 		},
 		// OPTIONS must be listed so preflight requests are answered, not rejected
 		AllowMethods: []string{
