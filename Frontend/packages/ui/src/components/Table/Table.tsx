@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
-import Spinner from '../Spinner';
+import Spinner from '../spinner';
 import styles from './Table.module.css';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
