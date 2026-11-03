@@ -1,6 +1,6 @@
 "use client"
 
-import {useRef, useState} from "react"
+import {useEffect, useRef, useState} from "react"
 import {clx} from "@repo/ui/utilities";
 import {Logo} from "@repo/ui/components/logo/logo";
 
@@ -13,16 +13,26 @@ export default function GlowingLogo({className, ...props}: GlowingLogoProps) {
 
   // 1. Create state to hold the coordinates (defaults to center: 50%)
   const [mousePos, setMousePos] = useState({x: 50, y: 50});
+  const frameRef = useRef(0);
+
+  useEffect(() => () => cancelAnimationFrame(frameRef.current), []);
 
   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || frameRef.current) return;
 
-    const rect = containerRef.current.getBoundingClientRect();
-    const xPct = ((e.clientX - rect.left) / rect.width) * 100;
-    const yPct = ((e.clientY - rect.top) / rect.height) * 100;
+    const {clientX, clientY} = e;
+    // Re-render at most once per frame to keep the glow smooth
+    frameRef.current = requestAnimationFrame(() => {
+      frameRef.current = 0;
+      if (!containerRef.current) return;
 
-    // 2. Update state instead of CSS variables
-    setMousePos({x: xPct, y: yPct});
+      const rect = containerRef.current.getBoundingClientRect();
+      const xPct = ((clientX - rect.left) / rect.width) * 100;
+      const yPct = ((clientY - rect.top) / rect.height) * 100;
+
+      // 2. Update state instead of CSS variables
+      setMousePos({x: xPct, y: yPct});
+    });
   }
 
   return (

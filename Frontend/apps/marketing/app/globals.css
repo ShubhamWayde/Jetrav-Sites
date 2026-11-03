@@ -59,38 +59,112 @@ input[type='button'] {
   background: var(--jt-neutral-950); /* Slightly darker on hover */
 }
 
+/* --- keyboard focus (only visible for keyboard users) --- */
+:focus-visible {
+  outline: 2px solid var(--jt-skyBlue-exact);
+  outline-offset: 3px;
+}
+
+/* Skip-link target is focused programmatically; no ring around the whole page */
+[tabindex='-1']:focus {
+  outline: none;
+}
+
+/* --- skip link: hidden until focused via keyboard --- */
+.skipLink {
+  position: fixed;
+  top: var(--space-4);
+  left: var(--space-4);
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  background: var(--jt-light-exact);
+  color: var(--jt-dark-exact);
+  transform: translateY(-200%);
+  transition: transform var(--time-fast) var(--jt-easeInOutQuart);
+
+  &:focus-visible {
+    transform: translateY(0);
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/*
+ * Registered properties let gradient/shadow hover states fade instead of snapping
+ * (gradients themselves can't be transitioned, but these alpha values can).
+ */
+@property --glowHover-alpha {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --gradientBox-alpha {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+a,
+button {
+  transition:
+    color var(--time-normal) var(--jt-easeInOutQuart),
+    background-color var(--time-normal) var(--jt-easeInOutQuart);
+}
+
 .glowHover {
   position: relative;
   isolation: isolate;
   overflow: clip;
+  background-image: linear-gradient(
+    180deg,
+    oklch(from var(--jt-dark-exact) l c h / calc(0.4 * var(--glowHover-alpha))) 0%,
+    oklch(from var(--jt-dark-exact) l c h / calc(0.8 * var(--glowHover-alpha))) 100%
+  );
+  box-shadow: 0 4px 8px 2px oklch(from var(--jt-dark-exact) l c h / calc(0.8 * var(--glowHover-alpha)))
+    inset;
+  transition: --glowHover-alpha var(--time-normal) var(--jt-easeInOutQuart);
+
+  &::after,
+  &::before {
+    content: '';
+    position: absolute;
+    border-radius: inherit;
+    filter: blur(1px);
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--time-normal) var(--jt-easeInOutQuart);
+  }
+
+  &::after {
+    border-block-end: 3px solid var(--jt-skyBlue-exact);
+    z-index: -2;
+  }
+
+  &::before {
+    border-block-start: 3px solid var(--jt-skyBlue-exact);
+    bottom: 2px;
+    z-index: -1;
+  }
 
   &:hover {
-    background: linear-gradient(
-      180deg,
-      oklch(from var(--jt-dark-exact) l c h/0.4) 0%,
-      oklch(from var(--jt-dark-exact) l c h/0.8) 100%
-    );
-    box-shadow: 0 4px 8px 2px oklch(from var(--jt-dark-exact) l c h/0.8) inset;
+    --glowHover-alpha: 1;
 
-    &::after {
-      content: '';
-      position: absolute;
-      border-radius: inherit;
-      border-block-end: 3px solid var(--jt-skyBlue-exact);
-      filter: blur(1px);
-      inset: 0;
-      z-index: -2;
-    }
-
+    &::after,
     &::before {
-      content: '';
-      position: absolute;
-      border-radius: inherit;
-      border-block-start: 3px solid var(--jt-skyBlue-exact);
-      filter: blur(1px);
-      inset: 0;
-      bottom: 2px;
-      z-index: -1;
+      opacity: 1;
     }
   }
 }
@@ -99,6 +173,16 @@ input[type='button'] {
   --gradientBox-angle: -90deg;
   color: var(--jt-light-exact);
   background-color: transparent;
+  background-image: linear-gradient(
+    var(--gradientBox-angle),
+    oklch(from var(--gradientBox-hover-color, var(--jt-skyBlue-600)) l c h / var(--gradientBox-alpha)),
+    oklch(from var(--jt-neutral-800) l c h / 0)
+  );
+  background-origin: border-box;
+  transition:
+    --gradientBox-alpha var(--time-normal) var(--jt-easeInOutQuart),
+    background-color var(--time-normal) var(--jt-easeInOutQuart),
+    color var(--time-normal) var(--jt-easeInOutQuart);
   border: none;
   position: relative;
   isolation: isolate;
@@ -128,11 +212,26 @@ input[type='button'] {
   }
 
   &:hover {
-    background: linear-gradient(
-        var(--gradientBox-angle),
-        oklch(from var(--jt-skyBlue-600) l c h/0.2),
-        oklch(from var(--jt-neutral-800) l c h / 0)
-      )
-      border-box;
+    --gradientBox-alpha: 0.2;
+  }
+}
+
+/* --- respect users who ask for less motion --- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Scroll-driven word reveal: show the text fully instead */
+  .textReveal > span {
+    opacity: 1 !important;
   }
 }

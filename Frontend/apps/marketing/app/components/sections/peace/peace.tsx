@@ -46,10 +46,10 @@ export default function Token() {
             icon={
               <Image
                 src={'/img-peace.png'}
-                alt={'Peace'}
+                alt={'Total peace of mind'}
                 width={160}
                 height={160}
-                sizes={'100vw'}
+                sizes={'160px'}
               />
             }
             title={'One Fee. Total Peace of Mind.'}

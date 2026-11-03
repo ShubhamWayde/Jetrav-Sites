@@ -17,14 +17,14 @@ const CARD_DATA = [
     title: 'The 15% Guarantee',
     description: `For every ${formattedPrice} you spend on flights, your digital wallet is credited with ${(PRICE * 15) / 100} Jet Points.`,
     image: '/img-the-guarantee.png',
-    imageAlt: 'Guarantee',
+    imageAlt: 'The 15% Jet Points guarantee',
   },
   {
     id: 'simple-math',
     title: 'Simple Math',
     description: '5 Jet Point = ₹1.',
     image: '/img-simple-math.png',
-    imageAlt: 'Simple Math',
+    imageAlt: 'Jet Points to rupee conversion',
   },
   {
     id: 'instant-utility',
@@ -32,7 +32,7 @@ const CARD_DATA = [
     description:
       'Track your growing balance on your Jetrav Dashboard and redeem them seamlessly on your next flight, hotel, or visa booking.',
     image: '/img-instant-utility.png',
-    imageAlt: 'No Middleman',
+    imageAlt: 'Instant Jet Points utility',
   },
 ];
 
@@ -46,10 +46,10 @@ export default function Token() {
             icon={
               <Image
                 src={'/img-token.png'}
-                alt={'Token'}
+                alt={'Jet Points token'}
                 width={160}
                 height={160}
-                sizes={'100vw'}
+                sizes={'160px'}
               />
             }
             title={'A Tokenized Travel Economy.'}
@@ -80,7 +80,7 @@ export default function Token() {
                   alt={card.imageAlt}
                   width={480}
                   height={220}
-                  sizes={'100vw'}
+                  sizes={'(max-width: 1024px) 80vw, 27vw'}
                 />
               }
               heading={card.title}

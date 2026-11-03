@@ -56,6 +56,7 @@ export const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Bu
           href={href}
           ref={ref as React.Ref<HTMLAnchorElement>}
           className={combinedClassName}
+          rel={linkProps.target === '_blank' ? 'noopener noreferrer' : undefined}
           {...linkProps}
         >
           {innerContent}

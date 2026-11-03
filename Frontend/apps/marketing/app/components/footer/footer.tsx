@@ -101,6 +101,8 @@ function Footer() {
                 className={clx('flex', 'items-center', 'justify-center', 'p-2', 'glowHover')}
                 href={'https://www.instagram.com/jetravco'}
                 target={'_blank'}
+                rel={'noopener noreferrer'}
+                aria-label={'Jetrav on Instagram'}
               >
                 <Icon icon={Instagram} size={'lg'} color={'secondaryGradient'} />
               </Link>
@@ -108,6 +110,8 @@ function Footer() {
                 className={clx('flex', 'items-center', 'justify-center', 'p-2', 'glowHover')}
                 href={'https://x.com/jetravco'}
                 target={'_blank'}
+                rel={'noopener noreferrer'}
+                aria-label={'Jetrav on X (Twitter)'}
               >
                 <Icon icon={XTwitter} size={'lg'} color={'secondaryGradient'} />
               </Link>
@@ -115,22 +119,25 @@ function Footer() {
                 className={clx('flex', 'items-center', 'justify-center', 'p-2', 'glowHover')}
                 href={'https://discord.gg/TPUS86Jv'}
                 target={'_blank'}
+                rel={'noopener noreferrer'}
+                aria-label={'Jetrav on Discord'}
               >
                 <Icon icon={Discord} size={'lg'} color={'secondaryGradient'} />
               </Link>
             </div>
           </div>
-          <div className={clx(styles.footerLinks)}>
+          <nav aria-label="Footer" className={clx(styles.footerLinks)}>
             <div className={clx('grid', 'grid-cols-3', 'sm-grid-cols-1', 'gap-6')}>
               {FOOTER_LINKS.map((section) => (
                 <div key={section.id} className={clx('flex', 'flex-col', 'gap-4')}>
-                  <h4>{section.title}</h4>
+                  <h2>{section.title}</h2>
                   <ul className={clx('flex', 'flex-col', 'gap-3')}>
                     {section.links.map((link) => (
                       <li key={link.label}>
                         <Link
                           href={link.href}
                           target={link.target}
+                          rel={link.target === '_blank' ? 'noopener noreferrer' : undefined}
                           className={clx('flex', 'gap-2', 'items-center')}
                         >
                           {link.icon}
@@ -142,7 +149,7 @@ function Footer() {
                 </div>
               ))}
             </div>
-          </div>
+          </nav>
         </div>
         <div className={clx(styles.terms, 'flex', 'justify-between', 'px-8', 'py-6', 'mt-12')}>
           <p>Copyright © {currentYear} Jetrav LLP. All rights reserved.</p>
@@ -152,7 +159,7 @@ function Footer() {
           {/*</div>*/}
         </div>
       </div>
-      <GlowingLogo className={clx(styles.width, 'p-20')} />
+      <GlowingLogo className={clx(styles.width, 'p-20')} aria-hidden />
     </footer>
   );
 }

@@ -48,9 +48,9 @@ func main() {
 			// 			"http://localhost:3001", // admin app
 			// 			"http://localhost:3002", // user app
 
+			"https://jetrav.com",
 			"https://admin.jetrav.com",
 			"https://app.jetrav.com",
-			"https://user.jetrav.com",
 		},
 		// OPTIONS must be listed so preflight requests are answered, not rejected
 		AllowMethods: []string{

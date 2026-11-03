@@ -61,7 +61,11 @@ export default function TripCard({
               </React.Fragment>
             ))}
             {rating && (
-              <div className={clx(styles.rating, 'flex')}>
+              <div
+                className={clx(styles.rating, 'flex')}
+                role="img"
+                aria-label={`${rating} out of 5 stars`}
+              >
                 {Array.from({ length: rating }).map((_, index) => (
                   <Icon key={index} icon={Star} size={'lg'} color={'secondaryGradient'} />
                 ))}
@@ -75,6 +79,7 @@ export default function TripCard({
         {highLights?.map((highlight, index) => (
           <div className={clx('flex')} key={index} title={highlight.label}>
             {highlight.icon}
+            <span className="sr-only">{highlight.label}</span>
           </div>
         ))}
       </div>

@@ -10,7 +10,7 @@ const CARD_DATA = [
     description:
       'We never charge an additional service fee to process your cancellations or modifications.',
     image: '/img-zero-fee.png',
-    imageAlt: 'Guarantee',
+    imageAlt: 'Zero internal change fees',
   },
   {
     id: 'transparent-fare',
@@ -18,7 +18,7 @@ const CARD_DATA = [
     description:
       'You only pay the actual fare difference mandated by the airline, hotel, or operator.',
     image: '/img-fare-adjustments.png',
-    imageAlt: 'Simple Math',
+    imageAlt: 'Transparent fare adjustments',
   },
 ];
 
@@ -44,7 +44,7 @@ export default function ChangePlans() {
                   alt={card.imageAlt}
                   width={480}
                   height={220}
-                  sizes="100vw"
+                  sizes="(max-width: 768px) 80vw, 40vw"
                 />
               }
               heading={card.title}

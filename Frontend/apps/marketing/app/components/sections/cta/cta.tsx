@@ -17,10 +17,10 @@ export default function Cta() {
             icon={
               <Image
                 src={'/jt-tag.png'}
-                alt={'comprehensive solutions'}
+                alt={'Jetrav travel tag'}
                 width={188}
                 height={72}
-                sizes={'100vw'}
+                sizes={'188px'}
               />
             }
             title={'Stop Searching. Start Traveling.'}

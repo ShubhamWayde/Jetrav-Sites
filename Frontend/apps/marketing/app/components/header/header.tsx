@@ -38,21 +38,31 @@ function header() {
   const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
+    // Batch scroll updates to one per frame so scrolling stays smooth
+    let frame = 0;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-      const footerSection = document.getElementById('footer');
-      if (footerSection) {
-        // 3. Hide the header as soon as the footer section enters the screen
-        const sectionTop = footerSection.getBoundingClientRect().top;
-        setIsHidden(sectionTop <= window.innerHeight);
-      }
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        setIsScrolled(window.scrollY > 10);
+      });
     };
 
     handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
-    window.addEventListener('scroll', handleScroll);
+    // Hide the header as soon as the footer section enters the screen
+    const footerSection = document.getElementById('footer');
+    const observer = footerSection
+      ? new IntersectionObserver(([entry]) => setIsHidden(entry?.isIntersecting ?? false))
+      : null;
+    if (footerSection) observer?.observe(footerSection);
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+    };
   }, []);
 
   return (
@@ -73,10 +83,10 @@ function header() {
           'py-4',
         )}
       >
-        <Link href="/home" area-label="Home">
+        <Link href="/home" aria-label="Jetrav home">
           <Logo className={styles.logoSize} />
         </Link>
-        <nav>
+        <nav aria-label="Main">
           <ul className={`flex gap-4`}>
             {NAV_LINKS.map(({ label, href }) => {
               const isActive = pathname === href;

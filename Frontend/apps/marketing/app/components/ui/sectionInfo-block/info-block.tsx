@@ -22,7 +22,7 @@ export default function InfoBlock({
   return (
     <div className={clx('flex', 'flex-col', 'gap-3', contentClassName)} {...props}>
       {icon}
-      {title && <h3 className={clx(styles.heading)}>{title}</h3>}
+      {title && <h2 className={clx(styles.heading)}>{title}</h2>}
       {description && <p className={clx(styles.description, 'paragraph')}>{description}</p>}
       {children}
     </div>

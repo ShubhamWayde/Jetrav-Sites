@@ -90,10 +90,10 @@ export default function Solutions() {
             icon={
               <Image
                 src={"/img-solutions.png"}
-                alt={"comprehensive solutions"}
+                alt={"Comprehensive travel solutions"}
                 width={160}
                 height={160}
-                sizes="100vw"
+                sizes="160px"
               />
             }
             title={"Comprehensive Travel Solutions."}

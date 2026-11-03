@@ -11,10 +11,15 @@ export default function PagesLayout({
 }) {
   return (
     <>
+      <a href="#main-content" className="skipLink">
+        Skip to main content
+      </a>
       <SvgGradients />
       <Glow />
       <Header />
-      <main>{children}</main>
+      <main id="main-content" tabIndex={-1}>
+        {children}
+      </main>
       <Footer />
     </>
   );

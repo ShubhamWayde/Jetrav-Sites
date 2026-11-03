@@ -27,7 +27,7 @@ const PACKAGE_DATA = [
     rating: 4,
     tag: 'Optimized Routing - From Mumbai',
     image: '/img-thailand.png',
-    imageAlt: 'Pileh cove is located close to Phuket, Thailand is is such a serene area.',
+    imageAlt: 'Pileh cove is located close to Phuket, Thailand, is such a serene area.',
     link: '/',
     highlights: [
       {
@@ -153,10 +153,10 @@ export default function Packages() {
             icon={
               <Image
                 src={'/img-packages.png'}
-                alt={'comprehensive solutions'}
+                alt={'Smart travel packages'}
                 width={160}
                 height={160}
-                sizes="100vw"
+                sizes="160px"
                 loading={'eager'}
               />
             }
@@ -180,7 +180,7 @@ export default function Packages() {
                   alt={card.imageAlt}
                   width={480}
                   height={280}
-                  sizes={'100vw'}
+                  sizes={'(max-width: 1024px) 80vw, 40vw'}
                 />
               }
               tripHeading={card.title}

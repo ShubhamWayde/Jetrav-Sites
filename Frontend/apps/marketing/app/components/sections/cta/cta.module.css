@@ -36,6 +36,7 @@
 }
 
 .btnDark {
+  --gradientBox-hover-color: var(--jt-dark-exact);
   background-color: transparent;
   font-size: var(--h5-font);
 
@@ -48,12 +49,4 @@
       border-box;
   }
 
-  &:hover {
-    background: linear-gradient(
-        var(--gradientBox-angle),
-        oklch(from var(--jt-dark-exact) l c h/0.2),
-        oklch(from var(--jt-neutral-800) l c h / 0)
-      )
-      border-box;
-  }
 }

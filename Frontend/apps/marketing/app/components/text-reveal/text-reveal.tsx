@@ -16,7 +16,7 @@ interface TextRevealProps {
 }
 
 export const TextReveal = ({ text, className }: TextRevealProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLParagraphElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -32,9 +32,9 @@ export const TextReveal = ({ text, className }: TextRevealProps) => {
   const words = text.split(" ");
 
   return (
-    <div
+    <p
       ref={containerRef}
-      className={clx("flex", "flex-wrap", "gx-3", className)}
+      className={clx("textReveal", "flex", "flex-wrap", "gx-3", className)}
     >
       {words.map((word, index) => {
         const start = index / words.length;
@@ -46,7 +46,7 @@ export const TextReveal = ({ text, className }: TextRevealProps) => {
           </Word>
         );
       })}
-    </div>
+    </p>
   );
 };
 
