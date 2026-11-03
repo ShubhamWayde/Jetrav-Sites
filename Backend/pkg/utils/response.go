@@ -1,6 +1,18 @@
 package utils
 
-import "github.com/gin-gonic/gin"
+import (
+	"log"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
+
+// ServerError logs the real error and sends a generic 500, so database or
+// provider details never reach clients.
+func ServerError(c *gin.Context, err error, message string) {
+	log.Printf("%s %s: %v", c.Request.Method, c.FullPath(), err)
+	Error(c, http.StatusInternalServerError, message)
+}
 
 // ─── Standard API Response Helpers ───────────────────────────────────────────
 

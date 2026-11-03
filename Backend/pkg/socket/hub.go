@@ -19,13 +19,11 @@ type Message struct {
 
 // Hub manages all active WebSocket connections.
 type Hub struct {
-	mu        sync.RWMutex
-	users     map[uint]map[*Client]bool   // userID  → clients
-	roles     map[string]map[*Client]bool // role    → clients  (e.g. "admin")
-	all       map[*Client]bool            // every connected client
-	reg       chan *Client
-	unreg     chan *Client
-	emitCh    chan emitMsg
+	mu     sync.RWMutex
+	users  map[uint]map[*Client]bool   // userID  → clients
+	roles  map[string]map[*Client]bool // role    → clients  (e.g. "admin")
+	all    map[*Client]bool            // every connected client
+	emitCh chan emitMsg
 }
 
 type emitMsg struct {
@@ -41,71 +39,35 @@ func NewHub() *Hub {
 		users:  make(map[uint]map[*Client]bool),
 		roles:  make(map[string]map[*Client]bool),
 		all:    make(map[*Client]bool),
-		reg:    make(chan *Client, 64),
-		unreg:  make(chan *Client, 64),
 		emitCh: make(chan emitMsg, 256),
 	}
 }
 
-// Run processes events. Call as: go hub.Run()
+// Run delivers emitted events. Call as: go hub.Run()
+//
+// Register/unregister happen synchronously under the lock rather than via
+// channels: with two channels an instant disconnect could be processed before
+// its register, re-adding a client whose send channel was already closed, and
+// the next emit would panic on that closed channel.
 func (h *Hub) Run() {
-	for {
-		select {
-
-		case c := <-h.reg:
-			h.mu.Lock()
-			h.all[c] = true
-			// user room
-			if h.users[c.userID] == nil {
-				h.users[c.userID] = make(map[*Client]bool)
-			}
-			h.users[c.userID][c] = true
-			// role room
-			if h.roles[c.role] == nil {
-				h.roles[c.role] = make(map[*Client]bool)
-			}
-			h.roles[c.role][c] = true
-			h.mu.Unlock()
-			log.Printf("socket: connected userID=%d role=%s total=%d", c.userID, c.role, len(h.all))
-
-		case c := <-h.unreg:
-			h.mu.Lock()
-			delete(h.all, c)
-			if room := h.users[c.userID]; room != nil {
-				delete(room, c)
-				if len(room) == 0 {
-					delete(h.users, c.userID)
-				}
-			}
-			if room := h.roles[c.role]; room != nil {
-				delete(room, c)
-				if len(room) == 0 {
-					delete(h.roles, c.role)
-				}
-			}
-			h.mu.Unlock()
-			close(c.send)
-			log.Printf("socket: disconnected userID=%d role=%s total=%d", c.userID, c.role, len(h.all))
-
-		case m := <-h.emitCh:
-			h.mu.RLock()
-			var targets map[*Client]bool
-			switch {
-			case m.userID != nil:
-				targets = h.users[*m.userID]
-			case m.role != nil:
-				targets = h.roles[*m.role]
-			default:
-				targets = h.all
-			}
-			for c := range targets {
-				select {
-				case c.send <- m.msg:
-				default: // slow client — drop
-				}
-			}
-			h.mu.RUnlock()
+	for m := range h.emitCh {
+		h.mu.RLock()
+		var targets map[*Client]bool
+		switch {
+		case m.userID != nil:
+			targets = h.users[*m.userID]
+		case m.role != nil:
+			targets = h.roles[*m.role]
+		default:
+			targets = h.all
 		}
+		for c := range targets {
+			select {
+			case c.send <- m.msg:
+			default: // slow client — drop
+			}
+		}
+		h.mu.RUnlock()
 	}
 }
 
@@ -126,11 +88,47 @@ func (h *Hub) Broadcast(event string, data interface{}) {
 }
 
 func (h *Hub) register(c *Client) {
-	h.reg <- c
+	h.mu.Lock()
+	h.all[c] = true
+	// user room
+	if h.users[c.userID] == nil {
+		h.users[c.userID] = make(map[*Client]bool)
+	}
+	h.users[c.userID][c] = true
+	// role room
+	if h.roles[c.role] == nil {
+		h.roles[c.role] = make(map[*Client]bool)
+	}
+	h.roles[c.role][c] = true
+	total := len(h.all)
+	h.mu.Unlock()
+	log.Printf("socket: connected userID=%d role=%s total=%d", c.userID, c.role, total)
 }
 
 func (h *Hub) unregister(c *Client) {
-	h.unreg <- c
+	h.mu.Lock()
+	if !h.all[c] {
+		h.mu.Unlock()
+		return // already removed — never close send twice
+	}
+	delete(h.all, c)
+	if room := h.users[c.userID]; room != nil {
+		delete(room, c)
+		if len(room) == 0 {
+			delete(h.users, c.userID)
+		}
+	}
+	if room := h.roles[c.role]; room != nil {
+		delete(room, c)
+		if len(room) == 0 {
+			delete(h.roles, c.role)
+		}
+	}
+	// Closed under the write lock, so Run (which sends under the read lock) can't race it
+	close(c.send)
+	total := len(h.all)
+	h.mu.Unlock()
+	log.Printf("socket: disconnected userID=%d role=%s total=%d", c.userID, c.role, total)
 }
 
 func (h *Hub) marshal(event string, data interface{}) []byte {
@@ -146,5 +144,10 @@ func (h *Hub) send(m emitMsg) {
 	if m.msg == nil {
 		return
 	}
-	h.emitCh <- m
+	select {
+	case h.emitCh <- m:
+	default:
+		// Never block an HTTP handler on a backed-up hub
+		log.Printf("socket: emit queue full — dropping event")
+	}
 }

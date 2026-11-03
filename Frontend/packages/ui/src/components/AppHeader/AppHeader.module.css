@@ -1,77 +1,129 @@
 /* ── Header bar ────────────────────────────────────────────────────────────── */
 
 .header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  height: 55px;
-  padding: 0 24px;
-  background: #0d0d0d;
-  border-bottom: 1px solid var(--jt-neutral-800);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  gap: var(--space-4);
+  height: var(--app-header-height);
+  padding: 0 var(--space-8);
+  background: oklch(from var(--surface-0) l c h / 0.75);
+  border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: blur(14px);
   flex-shrink: 0;
 }
 
-.logo h1 {
-  font-size: var(--h5-font);
-  margin: 0;
+.start {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
 }
 
-/* ── Right-side action buttons ─────────────────────────────────────────────── */
+/* Scoped under .header so this beats .iconBtn's display (declared later) */
+.header .menuBtn,
+.header .mobileBrand {
+  display: none;
+}
+
+.mobileBrand {
+  font-size: var(--font-md);
+  font-weight: var(--font-weight-600);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 1023px) {
+  .header {
+    padding: 0 var(--space-3) 0 var(--space-2);
+  }
+
+  .header .menuBtn {
+    display: inline-flex;
+  }
+
+  .header .mobileBrand {
+    display: block;
+  }
+}
+
+/* ── Right-side actions ────────────────────────────────────────────────────── */
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .iconBtn {
-  display: flex;
+  position: relative;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius-lg, 8px);
+  width: 38px;
+  height: 38px;
   border: none;
+  border-radius: var(--radius-lg);
   background: transparent;
-  color: var(--jt-light-base, #a0a0a0);
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  color: var(--text-secondary);
+  transition:
+    background-color var(--time-fast) var(--ease-out),
+    color var(--time-fast) var(--ease-out);
 }
 
-.iconBtn:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--jt-light-base, #d0d0d0);
+.iconBtn:hover,
+.iconBtn[aria-expanded='true'] {
+  background: var(--surface-2);
+  color: var(--text-primary);
+}
+
+.badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--radius-full);
+  background: var(--danger);
+  color: var(--text-inverse);
+  font-size: 10px;
+  font-weight: var(--font-weight-700);
+  line-height: 16px;
+  text-align: center;
+  pointer-events: none;
 }
 
 /* ── Avatar button ─────────────────────────────────────────────────────────── */
 
-.avatarWrap {
+.avatarWrap,
+.notifWrap {
   position: relative;
 }
 
 .avatarBtn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--jt-light-base, #f5f5f5);
-  font-size: 12px;
-  font-weight: var(--font-weight-600, 600);
-  cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-full);
+  background: var(--accent-soft);
+  color: var(--text-primary);
+  font-size: var(--font-xs);
+  font-weight: var(--font-weight-600);
+  transition: border-color var(--time-fast), background-color var(--time-fast);
 }
 
-.avatarBtn:hover {
-  border-color: rgba(255, 255, 255, 0.32);
-  background: rgba(255, 255, 255, 0.13);
+.avatarBtn:hover,
+.avatarBtn[aria-expanded='true'] {
+  border-color: var(--accent);
 }
 
 .avatarText {
@@ -79,241 +131,178 @@
   user-select: none;
 }
 
-/* ── Dropdown ──────────────────────────────────────────────────────────────── */
+/* ── Dropdown panels ───────────────────────────────────────────────────────── */
+
+.dropdown,
+.notifDropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  z-index: var(--z-dropdown);
+  background: var(--surface-2);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: dropIn var(--time-fast) var(--ease-out);
+}
 
 .dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  width: 248px;
-  background: #161616;
-  border: 1px solid var(--jt-neutral-800);
-  border-radius: var(--radius-xl, 12px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
-  overflow: hidden;
-  animation: dropIn 0.15s ease;
-  z-index: 200;
+  width: min(264px, calc(100vw - var(--space-6)));
+}
+
+.notifDropdown {
+  width: min(340px, calc(100vw - var(--space-6)));
 }
 
 @keyframes dropIn {
   from { opacity: 0; transform: translateY(-6px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* ── User card inside dropdown ─────────────────────────────────────────────── */
+/* ── Profile card ──────────────────────────────────────────────────────────── */
 
 .userCard {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 22px 16px 18px;
+  gap: 2px;
+  padding: var(--space-5) var(--space-4) var(--space-4);
   text-align: center;
-  gap: 3px;
 }
 
 .userAvatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.16);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
-  font-weight: var(--font-weight-600, 600);
-  color: var(--primary-50, #f5f5f5);
-  margin-bottom: 10px;
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--space-3);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-full);
+  background: var(--accent-soft);
+  color: var(--text-primary);
+  font-size: 20px;
+  font-weight: var(--font-weight-600);
   user-select: none;
-  flex-shrink: 0;
 }
 
 .userName {
-  font-size: var(--font-sm, 14px);
-  font-weight: var(--font-weight-600, 600);
-  color: var(--primary-50, #f5f5f5);
-  line-height: 1.35;
+  font-size: var(--font-sm);
+  font-weight: var(--font-weight-600);
+  color: var(--text-primary);
 }
 
-.userEmail {
-  font-size: 12px;
-  color: var(--primary-200, #a0a0a0);
-  line-height: 1.4;
-  word-break: break-all;
-  margin-top: 1px;
-}
-
+.userEmail,
 .userMobile {
-  font-size: 12px;
-  color: var(--primary-200, #a0a0a0);
-  line-height: 1.4;
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+  word-break: break-all;
 }
 
 .roleBadge {
   display: inline-block;
-  margin-top: 8px;
-  padding: 3px 12px;
-  border-radius: var(--radius-3xl, 20px);
-  font-size: 11px;
-  font-weight: var(--font-weight-500, 500);
-  background: rgba(255, 255, 255, 0.07);
-  color: var(--primary-100, #d0d0d0);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  letter-spacing: 0.4px;
+  margin-top: var(--space-2);
+  padding: 2px var(--space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  background: var(--surface-3);
+  color: var(--text-secondary);
+  font-size: var(--font-xxs);
+  font-weight: var(--font-weight-500);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
-
-/* ── Divider ───────────────────────────────────────────────────────────────── */
 
 .divider {
   height: 1px;
-  background: var(--jt-neutral-800);
-  margin: 0;
+  background: var(--border-subtle);
 }
 
-/* ── Dropdown menu items ────────────────────────────────────────────────────── */
+/* ── Menu items ────────────────────────────────────────────────────────────── */
 
 .dropdownItem {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-3);
   width: 100%;
-  padding: 11px 16px;
-  font-size: var(--font-sm, 14px);
-  color: var(--primary-100, #d0d0d0);
-  background: transparent;
+  padding: var(--space-3) var(--space-4);
   border: none;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background 0.15s ease, color 0.15s ease;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-sm);
   text-align: left;
+  transition: background-color var(--time-fast), color var(--time-fast);
 }
 
 .dropdownItem:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--primary-50, #f5f5f5);
+  background: var(--surface-3);
+  color: var(--text-primary);
 }
 
 .dropdownItemIcon {
   display: flex;
   align-items: center;
-  color: var(--primary-200, #a0a0a0);
-  flex-shrink: 0;
+  color: var(--text-muted);
 }
 
-.dropdownItemDanger {
-  color: #ff6b6b;
+.dropdownItemDanger,
+.dropdownItemDanger .dropdownItemIcon,
+.dropdownItemDanger:hover {
+  color: var(--danger);
 }
 
 .dropdownItemDanger:hover {
-  background: rgba(255, 80, 80, 0.08);
-  color: #ff6b6b;
+  background: var(--danger-soft);
 }
 
-.dropdownItemDanger .dropdownItemIcon {
-  color: #ff6b6b;
-}
-
-/* ── Notification bell wrap ────────────────────────────────────────────────── */
-
-.notifWrap {
-  position: relative;
-}
-
-/* badge sits top-right of the bell button */
-.iconBtn {
-  position: relative;
-}
-
-.badge {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  border-radius: 999px;
-  background: #e53e3e;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 16px;
-  text-align: center;
-  pointer-events: none;
-  user-select: none;
-}
-
-/* ── Notification dropdown panel ───────────────────────────────────────────── */
-
-.notifDropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  width: 320px;
-  background: #161616;
-  border: 1px solid var(--jt-neutral-800);
-  border-radius: var(--radius-xl, 12px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
-  overflow: hidden;
-  animation: dropIn 0.15s ease;
-  z-index: 200;
-}
+/* ── Notifications ─────────────────────────────────────────────────────────── */
 
 .notifHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
+  padding: var(--space-3) var(--space-4);
 }
 
 .notifTitle {
-  font-size: var(--font-sm, 14px);
-  font-weight: var(--font-weight-600, 600);
-  color: var(--primary-50, #f5f5f5);
+  font-size: var(--font-sm);
+  font-weight: var(--font-weight-600);
+  color: var(--text-primary);
 }
 
 .markAllBtn {
-  font-size: 11px;
-  color: var(--primary-200, #a0a0a0);
-  background: transparent;
+  padding: var(--space-1) var(--space-2);
   border: none;
-  cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 4px;
-  transition: background 0.15s, color 0.15s;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--accent);
+  font-size: var(--font-xs);
 }
 
 .markAllBtn:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--primary-50, #f5f5f5);
+  background: var(--accent-soft);
 }
-
-/* ── Notification list ──────────────────────────────────────────────────────── */
 
 .notifList {
-  max-height: 320px;
+  max-height: min(360px, 60dvh);
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.1) transparent;
 }
 
-.notifList::-webkit-scrollbar { width: 4px; }
-.notifList::-webkit-scrollbar-track { background: transparent; }
-.notifList::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
-
 .notifEmpty {
-  padding: 24px 16px;
+  padding: var(--space-8) var(--space-4);
   text-align: center;
-  font-size: var(--font-sm, 14px);
-  color: var(--primary-200, #a0a0a0);
+  font-size: var(--font-sm);
+  color: var(--text-muted);
 }
 
 .notifItem {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  padding: 11px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  transition: background 0.15s;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background-color var(--time-fast);
 }
 
 .notifItem:last-child {
@@ -321,18 +310,18 @@
 }
 
 .notifItem:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-3);
 }
 
 .notifUnread {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--accent-soft);
 }
 
 .notifIcon {
-  font-size: 18px;
   flex-shrink: 0;
-  line-height: 1;
   margin-top: 1px;
+  font-size: 18px;
+  line-height: 1;
 }
 
 .notifContent {
@@ -344,72 +333,66 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 6px;
+  gap: var(--space-2);
   margin-bottom: 2px;
 }
 
 .notifItemTitle {
-  font-size: var(--font-sm, 13px);
-  font-weight: var(--font-weight-600, 600);
-  color: var(--primary-50, #f5f5f5);
-  white-space: nowrap;
   overflow: hidden;
+  font-size: var(--font-sm);
+  font-weight: var(--font-weight-600);
+  color: var(--text-primary);
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .notifTime {
-  font-size: 10px;
-  color: var(--primary-200, #a0a0a0);
   flex-shrink: 0;
+  font-size: var(--font-xxs);
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
 .notifBody {
-  font-size: 12px;
-  color: var(--primary-200, #a0a0a0);
-  line-height: 1.45;
-  word-break: break-word;
   margin: 0;
+  font-size: var(--font-xs);
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
+  word-break: break-word;
 }
 
 .notifDismiss {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  border: none;
-  background: transparent;
-  color: var(--primary-200, #a0a0a0);
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s, color 0.15s;
-  margin-top: 1px;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1;
 }
 
 .notifDismiss:hover {
-  background: rgba(255, 80, 80, 0.12);
-  color: #ff6b6b;
+  background: var(--danger-soft);
+  color: var(--danger);
 }
-
-/* ── Clear all footer ───────────────────────────────────────────────────────── */
 
 .clearAllBtn {
   display: block;
   width: 100%;
-  padding: 11px 16px;
-  font-size: var(--font-sm, 13px);
-  color: #ff6b6b;
-  background: transparent;
+  padding: var(--space-3) var(--space-4);
   border: none;
-  cursor: pointer;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--font-xs);
   text-align: center;
-  transition: background 0.15s;
 }
 
 .clearAllBtn:hover {
-  background: rgba(255, 80, 80, 0.07);
+  background: var(--surface-3);
+  color: var(--danger);
 }

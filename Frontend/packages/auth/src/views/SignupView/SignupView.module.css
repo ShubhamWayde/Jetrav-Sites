@@ -1,15 +1,17 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-4);
 }
 
 .nameRow {
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
 }
 
-.nameRow > * {
-  flex: 1;
-  min-width: 0;
+@media (max-width: 400px) {
+  .nameRow {
+    grid-template-columns: 1fr;
+  }
 }

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Edit, Icon, Login, Notifications } from '../../icon';
+import { useAppLayout } from '../AppLayout/AppLayout';
 import styles from './AppHeader.module.css';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -65,6 +66,7 @@ export function AppHeader({
   onDismiss,
   onDismissAll,
 }: AppHeaderProps) {
+  const { sidebarOpen, toggleSidebar } = useAppLayout();
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -99,8 +101,22 @@ export function AppHeader({
 
   return (
     <header className={styles.header}>
-      <div className={styles.logo}>
-        <h1>{logoText}</h1>
+      <div className={styles.start}>
+        <button
+          type="button"
+          className={`${styles.iconBtn} ${styles.menuBtn}`}
+          aria-label="Open navigation"
+          aria-controls="app-sidebar"
+          aria-expanded={sidebarOpen}
+          onClick={toggleSidebar}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </button>
+        {/* Brand lives in the sidebar on desktop; shown here only on small screens */}
+        <span className={styles.mobileBrand}>{logoText}</span>
       </div>
 
       <div className={styles.actions}>
@@ -134,7 +150,7 @@ export function AppHeader({
                         onMarkAllRead?.();
                       }}
                     >
-                      ✔✔ Mark all as read
+                      Mark all as read
                     </button>
                   )}
                 </div>
@@ -151,7 +167,7 @@ export function AppHeader({
                         key={n.id}
                         className={`${styles.notifItem} ${n.read ? '' : styles.notifUnread}`}
                       >
-                        <span className={styles.notifIcon}>{n.icon}</span>
+                        <span className={styles.notifIcon} aria-hidden="true">{n.icon}</span>
                         <div className={styles.notifContent}>
                           <div className={styles.notifItemHeader}>
                             <span className={styles.notifItemTitle}>{n.title}</span>
@@ -162,7 +178,7 @@ export function AppHeader({
                         <button
                           className={styles.notifDismiss}
                           onClick={() => onDismiss?.(n.id)}
-                          aria-label="Dismiss"
+                          aria-label={`Dismiss: ${n.title}`}
                         >
                           ×
                         </button>
@@ -203,11 +219,11 @@ export function AppHeader({
               setNotifOpen(false);
             }}
           >
-            <span className={styles.avatarText}>{initials}</span>
+            <span className={styles.avatarText} aria-hidden="true">{initials}</span>
           </button>
 
           {profileOpen && (
-            <div className={styles.dropdown} role="menu" aria-label="User menu">
+            <div className={styles.dropdown} aria-label="User menu">
               <div className={styles.userCard}>
                 <div className={styles.userAvatar}>{initials}</div>
                 <p className={styles.userName}>
@@ -229,7 +245,6 @@ export function AppHeader({
               <Link
                 href={profileSettingsPath}
                 className={styles.dropdownItem}
-                role="menuitem"
                 onClick={() => setProfileOpen(false)}
               >
                 <span className={styles.dropdownItemIcon}>
@@ -244,7 +259,6 @@ export function AppHeader({
                 title="Log out"
                 className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`}
                 type="button"
-                role="menuitem"
                 onClick={() => {
                   setProfileOpen(false);
                   onLogout();

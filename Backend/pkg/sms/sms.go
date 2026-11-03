@@ -8,6 +8,9 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"time"
+
+	"Backend/pkg/utils"
 )
 
 // ─── Interface ────────────────────────────────────────────────────────────────
@@ -42,11 +45,17 @@ type twilioResponse struct {
 	ErrorMessage *string `json:"error_message"` // null on success
 }
 
+// httpClient bounds every Twilio call so a slow provider can't hang requests.
+var httpClient = &http.Client{Timeout: 10 * time.Second}
+
 func (s *twilioService) SendOTP(mobileNumber string, otp string) error {
-	// ── Dev / no-key mode: just log OTP ──────────────────────────────────
-	if s.accountSID == "" || os.Getenv("APP_ENV") == "development" {
+	// ── Dev mode: log the OTP instead of sending (never in production) ───
+	if utils.OTPDebugEnabled() {
 		fmt.Printf("📱 [DEV-OTP] Mobile: %s  →  OTP: %s\n", mobileNumber, otp)
 		return nil
+	}
+	if s.accountSID == "" || s.authToken == "" || s.fromNumber == "" {
+		return fmt.Errorf("sms: Twilio is not configured")
 	}
 
 	// ── Normalise to E.164 (+91 for India if no prefix given) ────────────
@@ -83,7 +92,7 @@ func (s *twilioService) SendOTP(mobileNumber string, otp string) error {
 	req.SetBasicAuth(s.accountSID, s.authToken)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("sms: request failed: %w", err)
 	}

@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"Backend/internal/models"
 	"gorm.io/gorm"
 )
@@ -29,13 +31,29 @@ func (r *sessionRepository) CountActive(
 
 	err := r.db.
 		Model(&models.UserSession{}).
+		// Columns are camelCase, so they must be quoted (Postgres lowercases bare names)
 		Where(
-			"userID = ? AND isActive = true",
-			userID,
+			`"userID" = ? AND "isActive" = true AND "expiresAt" > ?`,
+			userID, time.Now(),
 		).
 		Count(&count).Error
 
 	return count, err
+}
+
+func (r *sessionRepository) DeactivateOldest(userID uint, keep int) error {
+
+	newest := r.db.
+		Model(&models.UserSession{}).
+		Select(`"ID"`).
+		Where(`"userID" = ? AND "isActive" = true AND "expiresAt" > ?`, userID, time.Now()).
+		Order(`"createdAt" DESC`).
+		Limit(keep)
+
+	return r.db.
+		Model(&models.UserSession{}).
+		Where(`"userID" = ? AND "isActive" = true AND "ID" NOT IN (?)`, userID, newest).
+		Update("isActive", false).Error
 }
 
 func (r *sessionRepository) FindByRefreshToken(token string) (*models.UserSession, error) {
@@ -55,7 +73,7 @@ func (r *sessionRepository) DeactivateByToken(
 
 	return r.db.
 		Model(&models.UserSession{}).
-		Where("refreshToken = ?", token).
+		Where(`"refreshToken" = ?`, token).
 		Update("isActive", false).Error
 }
 
@@ -64,6 +82,6 @@ func (r *sessionRepository) DeleteByUserID(
 ) error {
 
 	return r.db.
-		Where("userID = ?", userID).
+		Where(`"userID" = ?`, userID).
 		Delete(&models.UserSession{}).Error
 }

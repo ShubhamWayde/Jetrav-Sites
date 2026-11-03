@@ -1,59 +1,47 @@
 /**
  * auth.ts — Client-side token & session helpers.
  * All functions guard against SSR (typeof window check).
+ *
+ * The access token lives in memory only: it is never written to localStorage or
+ * a JS-readable cookie, so an XSS bug can't lift a long-lived copy of it. After a
+ * reload the API client silently gets a fresh one from the httpOnly refresh cookie.
  */
 
-import {
-  COOKIE_TOKEN,
-  SESSION_DAYS,
-  STORAGE_ACCESS_TOKEN,
-  STORAGE_DEVICE_ID,
-} from '../constants';
+import { STORAGE_DEVICE_ID } from '../constants';
 
 // ─── Per-app configuration ────────────────────────────────────────────────────
-// Call configureAuth('admin') in the admin app's AuthProvider so tokens are
-// stored under different localStorage keys and never bleed between apps.
+// AuthProvider calls configureAuth(role) so each app (admin / user) keeps its
+// own token and refresh cookie even when both run in the same browser.
 
-let _storageKey = STORAGE_ACCESS_TOKEN; // default: 'access_token'
+let _role = '';
+let _accessToken: string | null = null;
 
 export function configureAuth(role: string): void {
-  _storageKey = `${role}_access_token`;
+  if (role === _role) return;
+  _role = role;
+  _accessToken = null; // never reuse a token issued for another role
 }
 
-// ─── Cookie helpers ───────────────────────────────────────────────────────────
-
-function setCookie(name: string, value: string, days: number): void {
-  const expires = new Date(
-    Date.now() + days * 24 * 60 * 60 * 1000
-  ).toUTCString();
-  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; expires=${expires}; SameSite=Strict`;
-}
-
-function deleteCookie(name: string): void {
-  document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict`;
+export function getAuthRole(): string {
+  return _role;
 }
 
 // ─── Access Token ─────────────────────────────────────────────────────────────
 
 export function storeAccessToken(token: string): void {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(_storageKey, token);
-  setCookie(COOKIE_TOKEN, token, SESSION_DAYS);
+  _accessToken = token;
 }
 
 export function getAccessToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem(_storageKey);
+  return _accessToken;
 }
 
 export function clearAuth(): void {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem(_storageKey);
-  deleteCookie(COOKIE_TOKEN);
+  _accessToken = null;
 }
 
 export function isAuthenticated(): boolean {
-  return !!getAccessToken();
+  return !!_accessToken;
 }
 
 // ─── Device ID ───────────────────────────────────────────────────────────────
@@ -93,6 +81,7 @@ export function clearOTPContext(): void {
 }
 
 // ─── Dev-mode OTP ─────────────────────────────────────────────────────────────
+// The backend only returns an OTP when APP_ENV=development.
 
 export function storeDevOTP(otp: string): void {
   if (typeof window === 'undefined') return;

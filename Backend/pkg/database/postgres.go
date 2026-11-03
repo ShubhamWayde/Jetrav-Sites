@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"sync"
+	"time"
 
 	"Backend/config"
 	"gorm.io/driver/postgres"
@@ -31,6 +32,15 @@ func Connect() {
 		if err != nil {
 			log.Fatal("❌ DB connection failed:", err)
 		}
+
+		// Bound the pool so traffic spikes can't exhaust Postgres connections
+		sqlDB, err := db.DB()
+		if err != nil {
+			log.Fatal("❌ DB pool init failed:", err)
+		}
+		sqlDB.SetMaxOpenConns(25)
+		sqlDB.SetMaxIdleConns(10)
+		sqlDB.SetConnMaxLifetime(30 * time.Minute)
 
 		DB = db
 		log.Println("✅ PostgreSQL connected (initialized once)")

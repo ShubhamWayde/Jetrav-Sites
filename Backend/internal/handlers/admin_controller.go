@@ -60,7 +60,7 @@ func (h *AdminHandler) UpdateProfile(c *gin.Context) {
 	}
 
 	if err := h.adminService.UpdateProfile(userIDRaw.(uint), req); err != nil {
-		utils.Error(c, http.StatusInternalServerError, "Failed to update profile: "+err.Error())
+		utils.ServerError(c, err, "Failed to update profile")
 		return
 	}
 

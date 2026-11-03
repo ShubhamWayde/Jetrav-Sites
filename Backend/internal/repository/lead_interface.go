@@ -6,6 +6,8 @@ import "Backend/internal/models"
 type LeadRepository interface {
 	// Create inserts a new lead record.
 	Create(lead *models.Lead) error
+	// CreateWithNewCustomer inserts a customer and their first lead atomically.
+	CreateWithNewCustomer(customer *models.User, lead *models.Lead) error
 
 	// List returns leads created by the given admin, optionally filtered by type.
 	List(adminID uint, leadType string) ([]models.LeadRow, error)

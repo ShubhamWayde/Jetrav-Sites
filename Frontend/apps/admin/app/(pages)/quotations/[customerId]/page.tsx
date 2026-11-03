@@ -1,238 +1,205 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { showError, showSuccess } from "@repo/auth";
-import { api } from "@/lib/api";
-import { ADMIN_API } from "@/lib/constants";
-import { QUOTATION_TYPES, QuotationResponse } from "@/app/types/quotation";
-import { CustomerResponse } from "@/app/types/customer";
-import ConfirmDeleteModal from "@/components/modals/confirm-delete/ConfirmDeleteModal";
-import AddQuotationModal from "@/components/modals/create-quotation/AddQuotationModal";
-import { Icon, Delete, TrackBooking } from "@repo/ui/icon";
-import Table, { type Column } from "@repo/ui/Table";
-import styles from "./quotations.module.css";
-import { formatDate } from "@/utility/date";
-import Button from "@repo/ui/Button";
+import { useState } from 'react';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { api, getErrorMessage, showError, showSuccess } from '@repo/auth';
+import { Badge } from '@repo/ui/Badge';
+import Button from '@repo/ui/Button';
+import { Card } from '@repo/ui/Card';
+import { EmptyState } from '@repo/ui/EmptyState';
+import { PageHeader } from '@repo/ui/PageHeader';
+import Table, { type Column } from '@repo/ui/Table';
+import { Delete, Icon, TrackBooking } from '@repo/ui/icon';
+import { ADMIN_API } from '@/lib/constants';
+import { formatDate, formatNumber, humanizeKey } from '@/lib/format';
+import { planTone } from '@/lib/tones';
+import { useApiQuery } from '@/lib/useApiQuery';
+import type { CustomerResponse } from '@/app/types/customer';
+import { QUOTATION_TYPES, type QuotationResponse } from '@/app/types/quotation';
+import ConfirmDeleteModal from '@/components/modals/confirm-delete/ConfirmDeleteModal';
+import AddQuotationModal from '@/components/modals/create-quotation/AddQuotationModal';
+import styles from './quotations.module.css';
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+const DATE_KEY_RE = /date|departure|return|check(in|out)/i;
 
-function getTypeLabel(type: string): string {
-  const found = QUOTATION_TYPES.find((t) => t.value === type);
-  return found ? found.label : type;
+function typeLabel(type: string): string {
+  return QUOTATION_TYPES.find((t) => t.value === type)?.label ?? type;
+}
+
+/** Parses the route param; anything but a positive integer is "not found". */
+function parseCustomerId(raw: string | string[] | undefined): number | null {
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  if (!value || !/^\d+$/.test(value)) return null;
+  const id = Number(value);
+  return Number.isSafeInteger(id) && id > 0 ? id : null;
 }
 
 function DetailsList({ details }: { details: Record<string, unknown> }) {
-  const entries = Object.entries(details).filter(
-    ([, v]) => v !== "" && v !== null && v !== undefined,
-  );
+  const entries = Object.entries(details ?? {}).filter(([, v]) => v !== '' && v !== null && v !== undefined);
   if (entries.length === 0) return <span className={styles.muted}>—</span>;
   return (
-    <ul className={styles.detailsList}>
-      {entries.map(([k, v]) => (
-        <li key={k} className={styles.detailsItem}>
-          <span className={styles.detailsKey}>{k}</span>
-          <span className={styles.detailsVal}>{String(v)}</span>
-        </li>
+    <dl className={styles.details}>
+      {entries.map(([key, value]) => (
+        <div key={key} className={styles.detail}>
+          <dt>{humanizeKey(key)}</dt>
+          <dd>{DATE_KEY_RE.test(key) ? formatDate(value) : String(value)}</dd>
+        </div>
       ))}
-    </ul>
+    </dl>
   );
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function QuotationsPage() {
-  const params = useParams();
-  const router = useRouter();
-  const customerId = Number(params["customerId"]);
+  const customerId = parseCustomerId(useParams<{ customerId: string }>().customerId);
 
-  const [customer, setCustomer] = useState<CustomerResponse | null>(null);
-  const [quotations, setQuotations] = useState<QuotationResponse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [fetchError, setFetchError] = useState("");
-  const [showAdd, setShowAdd] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<QuotationResponse | null>(
-    null,
+  if (customerId === null) {
+    return (
+      <>
+        <PageHeader title="Customer not found" eyebrow={<Link href="/customers">← Customers</Link>} />
+        <Card>
+          <EmptyState
+            title="This customer doesn't exist"
+            description="The link may be wrong or the customer may have been deleted."
+            action={
+              <Link href="/customers" className={styles.backLink}>
+                Back to customers
+              </Link>
+            }
+          />
+        </Card>
+      </>
+    );
+  }
+
+  return <CustomerQuotations customerId={customerId} />;
+}
+
+function CustomerQuotations({ customerId }: { customerId: number }) {
+  const customerQuery = useApiQuery<CustomerResponse>(ADMIN_API.CUSTOMER_BY_ID(customerId), 'Failed to load customer.');
+  const quotationsQuery = useApiQuery<QuotationResponse[]>(
+    ADMIN_API.QUOTATIONS(customerId),
+    'Failed to load quotations.',
   );
-  const [deleteLoading, setDeleteLoading] = useState(false);
+  const customer = customerQuery.data;
+  const quotations = quotationsQuery.data ?? [];
 
-  // ── Fetch ─────────────────────────────────────────────────────────────────
-
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    setFetchError("");
-    try {
-      const [cRes, qRes] = await Promise.all([
-        api.get<CustomerResponse>(ADMIN_API.CUSTOMER_BY_ID(customerId)),
-        api.get<QuotationResponse[]>(ADMIN_API.QUOTATIONS(customerId)),
-      ]);
-      setCustomer(cRes.data ?? null);
-      setQuotations(qRes.data ?? []);
-    } catch (err) {
-      const msg =
-        err instanceof Error ? err.message : "Failed to load quotations.";
-      setFetchError(msg);
-      showError(msg);
-    } finally {
-      setLoading(false);
-    }
-  }, [customerId]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  // ── Delete ────────────────────────────────────────────────────────────────
+  const [showAdd, setShowAdd] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<QuotationResponse | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const handleDelete = async () => {
-    if (!deleteTarget) return;
-    setDeleteLoading(true);
+    if (!deleteTarget || deleting) return;
+    setDeleting(true);
     try {
-      const res = await api.delete(
-        ADMIN_API.QUOTATION_BY_ID(customerId, deleteTarget.id),
-      );
-      showSuccess(res.message ?? "Quotation deleted successfully.");
+      const res = await api.delete(ADMIN_API.QUOTATION_BY_ID(customerId, deleteTarget.id));
+      showSuccess(res.message || 'Quotation deleted.');
       setDeleteTarget(null);
-      fetchData();
+      quotationsQuery.reload();
     } catch (err) {
-      showError(
-        err instanceof Error ? err.message : "Failed to delete quotation.",
-      );
+      showError(getErrorMessage(err, 'Failed to delete quotation.'));
     } finally {
-      setDeleteLoading(false);
+      setDeleting(false);
     }
   };
 
-  // ── Columns ───────────────────────────────────────────────────────────────
-
   const columns: Column<QuotationResponse>[] = [
-    { key: "index", header: "#", render: (_, i) => i + 1 },
+    { key: 'index', header: '#', width: 48, render: (_, i) => i + 1 },
+    { key: 'type', header: 'Service', render: (q) => <Badge tone="accent">{typeLabel(q.type)}</Badge> },
+    { key: 'details', header: 'Details', render: (q) => <DetailsList details={q.details} /> },
+    { key: 'assignTo', header: 'Assigned to', render: (q) => q.assignTo || '—' },
     {
-      key: "type",
-      header: "Type",
+      key: 'remark',
+      header: 'Remark',
+      render: (q) => (q.remark ? <span className={styles.remark} title={q.remark}>{q.remark}</span> : '—'),
+    },
+    { key: 'createdAt', header: 'Created', render: (q) => formatDate(q.createdAt) },
+    {
+      key: 'actions',
+      header: 'Actions',
+      align: 'right',
       render: (q) => (
-        <span
-          className={`${styles.typeBadge} ${styles[`type_${q.type}`] ?? ""}`}
-        >
-          {getTypeLabel(q.type)}
-        </span>
-      ),
-    },
-    {
-      key: "details",
-      header: "Details",
-      render: (q) => (
-        <DetailsList details={q.details as Record<string, unknown>} />
-      ),
-    },
-    {
-      key: "assignTo",
-      header: "Assign To",
-      render: (q) => q.assignTo || <span className={styles.muted}>—</span>,
-    },
-    {
-      key: "remark",
-      header: "Remark",
-      render: (q) =>
-        q.remark ? (
-          <span className={styles.remarkText}>{q.remark}</span>
-        ) : (
-          <span className={styles.muted}>—</span>
-        ),
-    },
-    {
-      key: "createdAt",
-      header: "Created On",
-      render: (q) => formatDate(q.createdAt),
-    },
-    {
-      key: "actions",
-      header: "Actions",
-      render: (q) => (
-        <button
-          className={styles.deleteBtn}
-          type="button"
-          title="Delete quotation"
+        <Button
+          variant="ghost"
+          size="sm"
+          icon={<Icon icon={Delete} size="sm" />}
+          aria-label={`Delete ${typeLabel(q.type)} quotation #${q.id}`}
+          title="Delete"
+          className={styles.danger}
           onClick={() => setDeleteTarget(q)}
-        >
-          <Icon icon={Delete} size="sm" />
-        </button>
+        />
       ),
     },
   ];
 
-  // ── Render ────────────────────────────────────────────────────────────────
+  const name = customer?.fullName ?? '';
 
   return (
-    <div className={styles.page}>
-      <div className={styles.pageHeader}>
-        <div className={styles.headerLeft}>
-          <div className={styles.breadCrumbs}>
-            <Button
-              title="Back to Customers"
-              variant="ghost"
-              type="button"
-              onClick={() => router.push("/customers")}
-            >
-              ← Customers
-            </Button>
-            {customer && (
-              <span className={styles.breadCrumb}>
-                <span className={styles.breadSep}>/</span>
-                <span className={styles.breadName}>{customer.fullName}</span>
-              </span>
-            )}
-          </div>
-          <h1 className={styles.pageTitle}>Quotations</h1>
-        </div>
-        <Button
-          title="Add Quotation"
-          className="btn-md"
-          type="button"
-          onClick={() => setShowAdd(true)}
-        >
-          + Add Quotation
-        </Button>
-      </div>
-
-      <Table
-        columns={columns}
-        rows={quotations}
-        rowKey={(q) => q.id}
-        loading={loading}
-        error={fetchError}
-        onRetry={fetchData}
-        empty={
-          <div className={styles.empty}>
-            <span className={styles.emptyIcon}>
-              <Icon icon={TrackBooking} size="xl" />
+    <>
+      <PageHeader
+        eyebrow={<Link href="/customers">← Customers</Link>}
+        title={name ? `Quotations · ${name}` : 'Quotations'}
+        description={
+          customer ? (
+            <span className={styles.meta}>
+              <Badge tone={planTone(customer.planType)}>{customer.planType}</Badge>
+              <span>{customer.mobileNumber}</span>
+              {customer.email && <a href={`mailto:${customer.email}`}>{customer.email}</a>}
+              <span>{formatNumber(customer.jetcoins)} Jetcoins</span>
             </span>
-            <p>No quotations yet for this customer.</p>
-          </div>
+          ) : customerQuery.error ? (
+            customerQuery.error
+          ) : undefined
         }
+        actions={<Button onClick={() => setShowAdd(true)}>Add quotation</Button>}
       />
+
+      <Card
+        title="Quotations"
+        description={
+          quotationsQuery.loading ? 'Loading…' : `${quotations.length} quotation${quotations.length === 1 ? '' : 's'}`
+        }
+      >
+        <Table
+          caption={name ? `Quotations for ${name}` : 'Quotations'}
+          columns={columns}
+          rows={quotations}
+          rowKey={(q) => q.id}
+          loading={quotationsQuery.loading}
+          error={quotationsQuery.error}
+          onRetry={quotationsQuery.reload}
+          minWidth={900}
+          empty={
+            <EmptyState
+              icon={<Icon icon={TrackBooking} size="md" />}
+              title="No quotations yet"
+              description="Quotations you send this customer will be listed here."
+              action={<Button size="sm" onClick={() => setShowAdd(true)}>Add quotation</Button>}
+            />
+          }
+        />
+      </Card>
 
       <AddQuotationModal
         isOpen={showAdd}
         customerId={customerId}
-        customerName={customer?.fullName ?? ""}
+        customerName={name}
         onClose={() => setShowAdd(false)}
-        onSuccess={fetchData}
+        onSuccess={quotationsQuery.reload}
       />
 
       <ConfirmDeleteModal
         isOpen={!!deleteTarget}
-        title="Delete Quotation"
+        title="Delete quotation"
         description={
-          deleteTarget
-            ? `Are you sure you want to delete this ${getTypeLabel(deleteTarget.type)} quotation? This action cannot be undone.`
-            : ""
+          deleteTarget ? `Delete this ${typeLabel(deleteTarget.type)} quotation? This can't be undone.` : ''
         }
-        confirmLabel="Delete"
-        loading={deleteLoading}
+        loading={deleting}
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
       />
-    </div>
+    </>
   );
 }

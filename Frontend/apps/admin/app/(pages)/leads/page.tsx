@@ -1,276 +1,208 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
-import { showError, showSuccess } from "@repo/auth";
-import { api } from "@/lib/api";
-import { ADMIN_API } from "@/lib/constants";
-import { LEAD_TYPES, LeadResponse, LeadType } from "@/app/types/lead";
-import AddLeadModal from "@/components/modals/create-lead/AddLeadModal";
-import EditLeadModal from "@/components/modals/edit-lead/EditLeadModal";
-import ConfirmDeleteModal from "@/components/modals/confirm-delete/ConfirmDeleteModal";
-import { Icon, Edit, Delete, SmartSearch } from "@repo/ui/icon";
-import Table, { type Column } from "@repo/ui/Table";
-import styles from "./leads.module.css";
-import { formatDate } from "@/utility/date";
-import Button from "@repo/ui/Button";
+import { useState } from 'react';
+import { api, getErrorMessage, showError, showSuccess } from '@repo/auth';
+import { Badge } from '@repo/ui/Badge';
+import Button from '@repo/ui/Button';
+import { Card } from '@repo/ui/Card';
+import { EmptyState } from '@repo/ui/EmptyState';
+import { PageHeader } from '@repo/ui/PageHeader';
+import Table, { type Column } from '@repo/ui/Table';
+import { Tabs } from '@repo/ui/Tabs';
+import { Delete, Edit, Icon, SmartSearch } from '@repo/ui/icon';
+import { ADMIN_API } from '@/lib/constants';
+import { detailValue, formatDate } from '@/lib/format';
+import { capitalize, leadStatusTone } from '@/lib/tones';
+import { useApiQuery } from '@/lib/useApiQuery';
+import { LEAD_TYPES, type LeadResponse, type LeadType } from '@/app/types/lead';
+import AddLeadModal from '@/components/modals/create-lead/AddLeadModal';
+import EditLeadModal from '@/components/modals/edit-lead/EditLeadModal';
+import ConfirmDeleteModal from '@/components/modals/confirm-delete/ConfirmDeleteModal';
+import styles from './leads.module.css';
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+type LeadFilter = LeadType | 'all';
 
-function detailVal(
-  details: Record<string, unknown>,
-  ...keys: string[]
-): string {
-  for (const key of keys) {
-    const v = details[key];
-    if (v !== undefined && v !== null && v !== "") return String(v);
-  }
-  return "—";
+const FILTER_TABS: { value: LeadFilter; label: string }[] = [{ value: 'all', label: 'All' }, ...LEAD_TYPES];
+
+function typeLabel(type: string): string {
+  return LEAD_TYPES.find((t) => t.value === type)?.label ?? type;
 }
 
-function getTypeLabel(type: string): string {
-  const found = LEAD_TYPES.find((t) => t.value === type);
-  return found ? found.label : type;
-}
+// ── Detail columns per service ────────────────────────────────────────────────
 
-// ── Filter tabs ───────────────────────────────────────────────────────────────
-
-const FILTER_TABS: { value: string; label: string }[] = [
-  { value: "", label: "All" },
-  ...LEAD_TYPES,
-];
-
-// ── Dynamic column definitions per lead type ──────────────────────────────────
-
-interface ColDef {
+interface DetailColumn {
   header: string;
+  /** First non-empty key wins (lets "All" show mixed services in one column). */
   keys: string[];
+  date?: boolean;
 }
 
-const TYPE_COLUMNS: Record<string, ColDef[]> = {
-  "": [
-    { header: "Origin / City", keys: ["source", "city", "country"] },
-    { header: "Destination", keys: ["destination"] },
-    {
-      header: "Date",
-      keys: ["departure", "checkIn", "startDate", "travelDate", "pickupDate"],
-    },
-    {
-      header: "Return / Out",
-      keys: ["return", "checkOut", "endDate", "dropDate"],
-    },
-    { header: "Adults", keys: ["adults"] },
-    { header: "Children", keys: ["children"] },
+const DETAIL_COLUMNS: Record<LeadFilter, DetailColumn[]> = {
+  all: [
+    { header: 'From / where', keys: ['source', 'city', 'country', 'currency'] },
+    { header: 'To', keys: ['destination'] },
+    { header: 'Start', keys: ['departure', 'checkIn', 'startDate', 'travelDate', 'pickupDate'], date: true },
+    { header: 'End', keys: ['return', 'checkOut', 'endDate', 'dropDate'], date: true },
+    { header: 'Adults', keys: ['adults'] },
   ],
   air: [
-    { header: "Origin", keys: ["source"] },
-    { header: "Destination", keys: ["destination"] },
-    { header: "Departure", keys: ["departure"] },
-    { header: "Return", keys: ["return"] },
-    { header: "Adults", keys: ["adults"] },
-    { header: "Children", keys: ["children"] },
-    { header: "Infant", keys: ["infant"] },
-    { header: "SSR", keys: ["ssr"] },
+    { header: 'Origin', keys: ['source'] },
+    { header: 'Destination', keys: ['destination'] },
+    { header: 'Departure', keys: ['departure'], date: true },
+    { header: 'Return', keys: ['return'], date: true },
+    { header: 'Scope', keys: ['tripType'] },
+    { header: 'Adults', keys: ['adults'] },
+    { header: 'Children', keys: ['children'] },
+    { header: 'Infant', keys: ['infant'] },
+    { header: 'SSR', keys: ['ssr'] },
   ],
   train: [
-    { header: "Source", keys: ["source"] },
-    { header: "Destination", keys: ["destination"] },
-    { header: "Departure", keys: ["departure"] },
-    { header: "Return", keys: ["return"] },
-    { header: "Adults", keys: ["adults"] },
-    { header: "Children", keys: ["children"] },
+    { header: 'Source', keys: ['source'] },
+    { header: 'Destination', keys: ['destination'] },
+    { header: 'Departure', keys: ['departure'], date: true },
+    { header: 'Return', keys: ['return'], date: true },
+    { header: 'Adults', keys: ['adults'] },
+    { header: 'Children', keys: ['children'] },
   ],
   hotel: [
-    { header: "City", keys: ["city"] },
-    { header: "Check-In", keys: ["checkIn"] },
-    { header: "Check-Out", keys: ["checkOut"] },
-    { header: "Rooms", keys: ["rooms"] },
-    { header: "Adults", keys: ["adults"] },
-    { header: "Children", keys: ["children"] },
+    { header: 'City', keys: ['city'] },
+    { header: 'Scope', keys: ['tripType'] },
+    { header: 'Check-in', keys: ['checkIn'], date: true },
+    { header: 'Check-out', keys: ['checkOut'], date: true },
+    { header: 'Rooms', keys: ['rooms'] },
+    { header: 'Adults', keys: ['adults'] },
+    { header: 'Children', keys: ['children'] },
   ],
   visa: [
-    { header: "Country", keys: ["country"] },
-    { header: "Visa Type", keys: ["visaType"] },
-    { header: "Travel Date", keys: ["travelDate"] },
-    { header: "Adults", keys: ["adults"] },
-    { header: "Children", keys: ["children"] },
+    { header: 'Country', keys: ['country'] },
+    { header: 'Visa type', keys: ['visaType'] },
+    { header: 'Travel date', keys: ['travelDate'], date: true },
+    { header: 'Adults', keys: ['adults'] },
+    { header: 'Children', keys: ['children'] },
   ],
   insurance: [
-    { header: "Country", keys: ["country"] },
-    { header: "Start Date", keys: ["startDate"] },
-    { header: "End Date", keys: ["endDate"] },
-    { header: "Adults", keys: ["adults"] },
+    { header: 'Country', keys: ['country'] },
+    { header: 'Start date', keys: ['startDate'], date: true },
+    { header: 'End date', keys: ['endDate'], date: true },
+    { header: 'Adults', keys: ['adults'] },
   ],
   bus: [
-    { header: "Source", keys: ["source"] },
-    { header: "Destination", keys: ["destination"] },
-    { header: "Departure", keys: ["departure"] },
-    { header: "Adults", keys: ["adults"] },
-    { header: "Children", keys: ["children"] },
+    { header: 'Source', keys: ['source'] },
+    { header: 'Destination', keys: ['destination'] },
+    { header: 'Departure', keys: ['departure'], date: true },
+    { header: 'Adults', keys: ['adults'] },
+    { header: 'Children', keys: ['children'] },
   ],
   car: [
-    { header: "Source", keys: ["source"] },
-    { header: "Destination", keys: ["destination"] },
-    { header: "Pickup Date", keys: ["pickupDate"] },
-    { header: "Drop Date", keys: ["dropDate"] },
-    { header: "Car Type", keys: ["carType"] },
+    { header: 'Source', keys: ['source'] },
+    { header: 'Destination', keys: ['destination'] },
+    { header: 'Pickup', keys: ['pickupDate'], date: true },
+    { header: 'Drop', keys: ['dropDate'], date: true },
+    { header: 'Car type', keys: ['carType'] },
   ],
   foreign_exchange: [
-    { header: "Currency", keys: ["currency"] },
-    { header: "Amount", keys: ["amount"] },
-    { header: "Purpose", keys: ["purpose"] },
+    { header: 'Currency', keys: ['currency'] },
+    { header: 'Amount', keys: ['amount'] },
+    { header: 'Purpose', keys: ['purpose'] },
   ],
   package: [
-    { header: "Destination", keys: ["destination"] },
-    { header: "Start Date", keys: ["startDate"] },
-    { header: "End Date", keys: ["endDate"] },
-    { header: "Adults", keys: ["adults"] },
-    { header: "Children", keys: ["children"] },
-    { header: "Package Type", keys: ["packageType"] },
+    { header: 'Destination', keys: ['destination'] },
+    { header: 'Start date', keys: ['startDate'], date: true },
+    { header: 'End date', keys: ['endDate'], date: true },
+    { header: 'Adults', keys: ['adults'] },
+    { header: 'Children', keys: ['children'] },
+    { header: 'Package type', keys: ['packageType'] },
   ],
 };
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function LeadsPage() {
-  const [leads, setLeads] = useState<LeadResponse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [fetchError, setFetchError] = useState("");
-  const [activeFilter, setActiveFilter] = useState<LeadType | "">("");
+  // The filter is the single source of truth: changing it changes the URL, and
+  // useApiQuery refetches (aborting any request still in flight).
+  const [filter, setFilter] = useState<LeadFilter>('all');
+  const url = filter === 'all' ? ADMIN_API.LEADS : `${ADMIN_API.LEADS}?type=${encodeURIComponent(filter)}`;
+  const { data, loading, error, reload } = useApiQuery<LeadResponse[]>(url, 'Failed to load leads.');
+  const leads = data ?? [];
+
   const [showAdd, setShowAdd] = useState(false);
   const [editTarget, setEditTarget] = useState<LeadResponse | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<LeadResponse | null>(null);
-  const [deleteLoading, setDeleteLoading] = useState(false);
-
-  // ── Fetch ─────────────────────────────────────────────────────────────────
-
-  const fetchLeads = useCallback(
-    async (typeFilter?: string) => {
-      const filter = typeFilter !== undefined ? typeFilter : activeFilter;
-      setLoading(true);
-      setFetchError("");
-      try {
-        const url = filter
-          ? `${ADMIN_API.LEADS}?type=${filter}`
-          : ADMIN_API.LEADS;
-        const res = await api.get<LeadResponse[]>(url);
-        setLeads(res.data ?? []);
-      } catch (err) {
-        const msg =
-          err instanceof Error ? err.message : "Failed to fetch leads.";
-        setFetchError(msg);
-        showError(msg);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [activeFilter],
-  );
-
-  useEffect(() => {
-    fetchLeads();
-  }, [fetchLeads]);
-
-  const handleFilterChange = (value: LeadType | "") => {
-    setActiveFilter(value);
-    fetchLeads(value);
-  };
-
-  // ── Delete ────────────────────────────────────────────────────────────────
+  const [deleting, setDeleting] = useState(false);
 
   const handleDelete = async () => {
-    if (!deleteTarget) return;
-    setDeleteLoading(true);
+    if (!deleteTarget || deleting) return;
+    setDeleting(true);
     try {
       const res = await api.delete(ADMIN_API.LEAD_BY_ID(deleteTarget.id));
-      showSuccess(res.message ?? "Lead deleted successfully.");
+      showSuccess(res.message || 'Lead deleted.');
       setDeleteTarget(null);
-      fetchLeads();
+      reload();
     } catch (err) {
-      showError(err instanceof Error ? err.message : "Failed to delete lead.");
+      showError(getErrorMessage(err, 'Failed to delete lead.'));
     } finally {
-      setDeleteLoading(false);
+      setDeleting(false);
     }
   };
 
   // ── Columns ───────────────────────────────────────────────────────────────
 
-  const typeCols: ColDef[] = TYPE_COLUMNS[activeFilter] ?? [];
-  const showTypeCol = activeFilter === "";
-
   const columns: Column<LeadResponse>[] = [
     {
-      key: "customerName",
-      header: "Name",
+      key: 'customerName',
+      header: 'Customer',
       render: (lead) => (
-        <span className={styles.name}>{lead.customerName}</span>
+        <div className={styles.customer}>
+          <span className={styles.name}>{lead.customerName}</span>
+          <span className={styles.sub}>{lead.mobileNumber || '—'}</span>
+        </div>
       ),
     },
-    ...(showTypeCol
-      ? [
-          {
-            key: "type",
-            header: "Type",
-            render: (lead: LeadResponse) => getTypeLabel(lead.type),
-          },
-        ]
+    ...(filter === 'all'
+      ? [{ key: 'type', header: 'Service', render: (lead: LeadResponse) => typeLabel(lead.type) }]
       : []),
     {
-      key: "status",
-      header: "Status",
-      render: (lead) => {
-        const statusClass =
-          styles[`status${lead.status}` as keyof typeof styles];
-        return (
-          <span className={`${styles.statusBadge} ${statusClass ?? ""}`}>
-            {lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}
-          </span>
-        );
-      },
+      key: 'status',
+      header: 'Status',
+      render: (lead) => (
+        <Badge tone={leadStatusTone(lead.status)} dot>
+          {capitalize(lead.status)}
+        </Badge>
+      ),
     },
-    ...typeCols.map((col) => ({
-      key: col.header,
+    ...DETAIL_COLUMNS[filter].map((col) => ({
+      key: `detail-${col.header}`,
       header: col.header,
-      render: (lead: LeadResponse) =>
-        detailVal(lead.details ?? {}, ...col.keys),
+      render: (lead: LeadResponse) => {
+        const value = detailValue(lead.details, ...col.keys);
+        return col.date ? formatDate(value === '—' ? '' : value) : value;
+      },
     })),
+    { key: 'assignTo', header: 'Assigned to', render: (lead) => lead.assignTo || '—' },
+    { key: 'updatedAt', header: 'Updated', render: (lead) => formatDate(lead.updatedAt) },
     {
-      key: "mobileNumber",
-      header: "Mobile No.",
-      render: (lead) =>
-        lead.mobileNumber || <span className={styles.muted}>—</span>,
-    },
-    {
-      key: "updatedAt",
-      header: "Updated On",
-      render: (lead) => formatDate(lead.updatedAt),
-    },
-    {
-      key: "assignTo",
-      header: "Assign To",
-      render: (lead) =>
-        lead.assignTo || <span className={styles.muted}>—</span>,
-    },
-    {
-      key: "actions",
-      header: "Actions",
+      key: 'actions',
+      header: 'Actions',
+      align: 'right',
       render: (lead) => (
         <div className={styles.actions}>
-          <button
-            className={styles.editBtn}
-            type="button"
-            title="Edit lead"
+          <Button
+            variant="ghost"
+            size="sm"
+            icon={<Icon icon={Edit} size="sm" />}
+            aria-label={`Edit lead for ${lead.customerName}`}
+            title="Edit"
             onClick={() => setEditTarget(lead)}
-          >
-            <Icon icon={Edit} size="sm" />
-          </button>
-          <button
-            className={styles.deleteBtn}
-            type="button"
-            title="Delete lead"
+          />
+          <Button
+            variant="ghost"
+            size="sm"
+            icon={<Icon icon={Delete} size="sm" />}
+            aria-label={`Delete lead for ${lead.customerName}`}
+            title="Delete"
+            className={styles.danger}
             onClick={() => setDeleteTarget(lead)}
-          >
-            <Icon icon={Delete} size="sm" />
-          </button>
+          />
         </div>
       ),
     },
@@ -278,79 +210,60 @@ export default function LeadsPage() {
 
   // ── Render ────────────────────────────────────────────────────────────────
 
+  const filterLabel = filter === 'all' ? '' : ` for ${typeLabel(filter)}`;
+
   return (
-    <div className={styles.page}>
-      <div className={styles.pageHeader}>
-        <h1 className={styles.pageTitle}>Leads</h1>
-        <Button
-          title="Add Lead"
-          className="btn-md"
-          type="button"
-          onClick={() => setShowAdd(true)}
-        >
-          + Add Lead
-        </Button>
-      </div>
-
-      <div className={styles.filterBar}>
-        {FILTER_TABS.map(({ value, label }) => (
-          <button
-            key={value}
-            type="button"
-            className={`${styles.filterTab} ${activeFilter === value ? styles.filterTabActive : ""}`}
-            onClick={() => handleFilterChange(value as LeadType | "")}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
-      <Table
-        columns={columns}
-        rows={leads}
-        rowKey={(lead) => lead.id}
-        loading={loading}
-        error={fetchError}
-        onRetry={() => fetchLeads()}
-        empty={
-          <div className={styles.empty}>
-            <span className={styles.emptyIcon}>
-              <Icon icon={SmartSearch} size="xl" />
-            </span>
-            <p>
-              No leads yet
-              {activeFilter ? ` for ${getTypeLabel(activeFilter)}` : ""}.
-            </p>
-          </div>
-        }
+    <>
+      <PageHeader
+        title="Leads"
+        description="Every enquiry across services, from first contact to confirmation."
+        actions={<Button onClick={() => setShowAdd(true)}>Add lead</Button>}
       />
 
-      <AddLeadModal
-        isOpen={showAdd}
-        onClose={() => setShowAdd(false)}
-        onSuccess={fetchLeads}
-      />
+      <Card
+        title={filter === 'all' ? 'All leads' : `${typeLabel(filter)} leads`}
+        description={loading ? 'Loading…' : `${leads.length} lead${leads.length === 1 ? '' : 's'}`}
+      >
+        <div className={styles.filters}>
+          <Tabs options={FILTER_TABS} value={filter} onChange={setFilter} label="Filter leads by service" size="sm" />
+        </div>
+        <Table
+          caption={`Leads${filterLabel}`}
+          columns={columns}
+          rows={leads}
+          rowKey={(lead) => lead.id}
+          loading={loading}
+          error={error}
+          onRetry={reload}
+          minWidth={960}
+          empty={
+            <EmptyState
+              icon={<Icon icon={SmartSearch} size="md" />}
+              title={`No leads${filterLabel}`}
+              description="New enquiries you add will show up here."
+              action={<Button size="sm" onClick={() => setShowAdd(true)}>Add lead</Button>}
+            />
+          }
+        />
+      </Card>
+
+      <AddLeadModal isOpen={showAdd} onClose={() => setShowAdd(false)} onSuccess={reload} />
 
       <EditLeadModal
         isOpen={!!editTarget}
         lead={editTarget}
         onClose={() => setEditTarget(null)}
-        onSuccess={fetchLeads}
+        onSuccess={reload}
       />
 
       <ConfirmDeleteModal
         isOpen={!!deleteTarget}
-        title="Delete Lead"
-        description={
-          deleteTarget
-            ? `Are you sure you want to delete the lead for ${deleteTarget.customerName}? This action cannot be undone.`
-            : ""
-        }
-        confirmLabel="Delete"
-        loading={deleteLoading}
+        title="Delete lead"
+        description={deleteTarget ? `Delete the lead for ${deleteTarget.customerName}? This can't be undone.` : ''}
+        loading={deleting}
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
       />
-    </div>
+    </>
   );
 }

@@ -7,8 +7,20 @@ import { showError, showSuccess } from '../../utils/toast';
 import Button from '@repo/ui/Button';
 import Spinner from '@repo/ui/Spinner';
 import InputField from '@repo/ui/InputField';
-import { Icon, JetravIconOutline, Edit, SmartSearch } from '@repo/ui/icon';
+import { Icon, Edit } from '@repo/ui/icon';
 import styles from './ProfilePage.module.css';
+
+// Eye / eye-off toggle icon for password fields (not in the shared icon set)
+function EyeIcon({ off }: { off: boolean }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+      <circle cx="12" cy="12" r="3" />
+      {off && <path d="M3 3l18 18" />}
+    </svg>
+  );
+}
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -156,9 +168,11 @@ export default function ProfilePage({
 
     setPwdSaving(true);
     try {
+      // Send passwords exactly as typed (no trim) — the server verifies oldPassword
       const res = await api.post(setPasswordUrl, {
-        password: pwdForm.newPwd.trim(),
-        confirmPassword: pwdForm.confirmPwd.trim(),
+        oldPassword: pwdForm.oldPwd,
+        password: pwdForm.newPwd,
+        confirmPassword: pwdForm.confirmPwd,
       });
       setProfile((prev) => (prev ? { ...prev, hasPassword: true } : prev));
       setPwdForm({ oldPwd: '', newPwd: '', confirmPwd: '' });
@@ -194,7 +208,7 @@ export default function ProfilePage({
           </p>
         </div>
         {!editMode && (
-          <Button title="Edit Profile" type="button" onClick={startEdit} className="btn-md">
+          <Button title="Edit Profile" type="button" onClick={startEdit}>
             <Icon icon={Edit} size="sm" />
             Edit
           </Button>
@@ -207,7 +221,7 @@ export default function ProfilePage({
 
         <div className={styles.fieldsGrid}>
           <InputField
-            label="FIRST NAME"
+            label="First name"
             value={form.firstName}
             onChange={handleInfoChange('firstName')}
             disabled={!editMode}
@@ -216,7 +230,7 @@ export default function ProfilePage({
             error={infoErrors.firstName}
           />
           <InputField
-            label="LAST NAME"
+            label="Last name"
             value={form.lastName}
             onChange={handleInfoChange('lastName')}
             disabled={!editMode}
@@ -225,7 +239,7 @@ export default function ProfilePage({
             error={infoErrors.lastName}
           />
           <InputField
-            label="EMAIL"
+            label="Email"
             value={profile?.email ?? ''}
             disabled
             autoComplete="email"
@@ -250,7 +264,7 @@ export default function ProfilePage({
               loading={infoSaving}
               disabled={!isInfoValid || infoSaving}
               onClick={saveInfo}
-              className="btn-md"
+             
             >
               Save Changes
             </Button>
@@ -265,7 +279,7 @@ export default function ProfilePage({
         <div className={styles.fieldsGrid}>
           {profile?.hasPassword && (
             <InputField
-              label="OLD PASSWORD"
+              label="Current password"
               type={showPwd.oldPwd ? 'text' : 'password'}
               value={pwdForm.oldPwd}
               onChange={handlePwdChange('oldPwd')}
@@ -277,20 +291,17 @@ export default function ProfilePage({
                   className={styles.eyeBtn}
                   type="button"
                   onClick={() => toggleShow('oldPwd')}
-                  aria-label={showPwd.oldPwd ? 'Hide' : 'Show'}
+                  aria-label={showPwd.oldPwd ? 'Hide password' : 'Show password'}
+                  aria-pressed={showPwd.oldPwd}
                 >
-                  {showPwd.oldPwd ? (
-                    <Icon icon={SmartSearch} size="sm" />
-                  ) : (
-                    <Icon icon={JetravIconOutline} size="sm" />
-                  )}
+                  <EyeIcon off={showPwd.oldPwd} />
                 </button>
               }
             />
           )}
 
           <InputField
-            label="NEW PASSWORD"
+            label="New password"
             type={showPwd.newPwd ? 'text' : 'password'}
             value={pwdForm.newPwd}
             onChange={handlePwdChange('newPwd')}
@@ -302,19 +313,16 @@ export default function ProfilePage({
                 className={styles.eyeBtn}
                 type="button"
                 onClick={() => toggleShow('newPwd')}
-                aria-label={showPwd.newPwd ? 'Hide' : 'Show'}
+                aria-label={showPwd.newPwd ? 'Hide password' : 'Show password'}
+                  aria-pressed={showPwd.newPwd}
               >
-                {showPwd.newPwd ? (
-                  <Icon icon={SmartSearch} size="sm" />
-                ) : (
-                  <Icon icon={JetravIconOutline} size="sm" />
-                )}
+                <EyeIcon off={showPwd.newPwd} />
               </button>
             }
           />
 
           <InputField
-            label="CONFIRM PASSWORD"
+            label="Confirm new password"
             type={showPwd.confirmPwd ? 'text' : 'password'}
             value={pwdForm.confirmPwd}
             onChange={handlePwdChange('confirmPwd')}
@@ -326,13 +334,10 @@ export default function ProfilePage({
                 className={styles.eyeBtn}
                 type="button"
                 onClick={() => toggleShow('confirmPwd')}
-                aria-label={showPwd.confirmPwd ? 'Hide' : 'Show'}
+                aria-label={showPwd.confirmPwd ? 'Hide password' : 'Show password'}
+                  aria-pressed={showPwd.confirmPwd}
               >
-                {showPwd.confirmPwd ? (
-                  <Icon icon={SmartSearch} size="sm" />
-                ) : (
-                  <Icon icon={JetravIconOutline} size="sm" />
-                )}
+                <EyeIcon off={showPwd.confirmPwd} />
               </button>
             }
           />
@@ -345,7 +350,7 @@ export default function ProfilePage({
             loading={pwdSaving}
             disabled={pwdSaving}
             onClick={savePwd}
-            className="btn-md"
+           
           >
             {profile?.hasPassword ? 'Change Password' : 'Set Password'}
           </Button>

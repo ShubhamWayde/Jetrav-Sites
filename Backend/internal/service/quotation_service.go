@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"errors"
+	"log"
 
 	"Backend/internal/models"
 	"Backend/internal/repository"
@@ -85,7 +86,8 @@ func (s *quotationService) Create(adminID, customerID uint, req models.CreateQuo
 	}
 
 	if err := s.repo.Create(quotation); err != nil {
-		return nil, errors.New("failed to create quotation: " + err.Error())
+		log.Printf("create quotation: %v", err)
+		return nil, errors.New("failed to create quotation")
 	}
 
 	resp := quotationToResponse(*quotation)

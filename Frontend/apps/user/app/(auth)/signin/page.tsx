@@ -4,7 +4,7 @@ import type { AuthConfig } from '@repo/auth';
 const config: AuthConfig = {
   role:              'user',
   afterAuthRedirect: '/',
-  appLabel: 'User App',
+  appLabel:          'Jetrav app',
 };
 
 export default function SigninPage() {

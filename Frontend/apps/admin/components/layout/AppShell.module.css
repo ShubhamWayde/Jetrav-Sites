@@ -1,0 +1,15 @@
+.signedIn {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--font-xs);
+  line-height: var(--leading-snug);
+}
+
+.name {
+  display: block;
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-500);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

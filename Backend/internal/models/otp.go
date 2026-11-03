@@ -7,9 +7,10 @@ import "time"
 type OTP struct {
 	ID           uint      `gorm:"column:ID;primaryKey;autoIncrement"`
 	MobileNumber string    `gorm:"column:mobileNumber;not null"`
-	OTP          string    `gorm:"column:otp;not null"`
+	OTP          string    `gorm:"column:otp;not null"` // SHA-256 hex of the code, never the code itself
 	Purpose      string    `gorm:"column:purpose;default:signin"`
 	IsUsed       bool      `gorm:"column:isUsed;default:false"`
+	Attempts     int       `gorm:"column:attempts;default:0"`
 	ExpiresAt    time.Time `gorm:"column:expiresAt"`
 	CreatedAt    time.Time `gorm:"column:createdAt;autoCreateTime"`
 }

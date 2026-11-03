@@ -117,10 +117,11 @@ export default function SigninView({ config }: Props) {
       subtitle={`Sign in to continue to the ${config.appLabel}`}
       footer={<>Don&apos;t have an account? <Link href="/signup">Sign Up</Link></>}
     >
-      <div className={styles.tabs}>
+      <div className={styles.tabs} role="group" aria-label="Sign-in method">
         <button
           type="button"
           className={`${styles.tab} ${activeTab === 'otp' ? styles.tabActive : ''}`}
+          aria-pressed={activeTab === 'otp'}
           onClick={() => switchTab('otp')}
         >
           OTP Login
@@ -128,6 +129,7 @@ export default function SigninView({ config }: Props) {
         <button
           type="button"
           className={`${styles.tab} ${activeTab === 'password' ? styles.tabActive : ''}`}
+          aria-pressed={activeTab === 'password'}
           onClick={() => switchTab('password')}
         >
           Password Login

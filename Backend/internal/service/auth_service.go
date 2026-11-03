@@ -2,11 +2,22 @@ package service
 
 import (
 	"errors"
+	"log"
 	"time"
 
 	"Backend/internal/models"
 	"Backend/internal/repository"
 	"Backend/pkg/utils"
+)
+
+const maxActiveSessions = 3
+
+var (
+	ErrAlreadyRegistered     = errors.New("mobile number or email is already registered")
+	ErrAdminSignupNotAllowed = errors.New("admin accounts can only be created for approved mobile numbers")
+	// ErrInvalidCredentials is deliberately the same for unknown numbers, wrong
+	// roles and wrong passwords so responses can't be used to discover accounts.
+	ErrInvalidCredentials = errors.New("invalid credentials")
 )
 
 type authService struct {
@@ -30,15 +41,20 @@ func NewAuthService(
 // ─── Signup ──────────────────────────────────────────────────────────────────
 
 func (s *authService) Signup(req models.SignupRequest) error {
+	// Self-service admin signup would hand anyone full access to customer data
+	if req.Role == "admin" && !utils.IsAdminMobileAllowed(req.MobileNumber) {
+		return ErrAdminSignupNotAllowed
+	}
+
 	existing, _ := s.userRepo.FindByNumber(req.MobileNumber)
 	if existing != nil {
-		return errors.New("mobile number is already registered")
+		return ErrAlreadyRegistered
 	}
 
 	if req.Email != "" {
 		existingEmail, _ := s.userRepo.FindByEmail(req.Email)
 		if existingEmail != nil {
-			return errors.New("email is already registered")
+			return ErrAlreadyRegistered
 		}
 	}
 
@@ -58,7 +74,9 @@ func (s *authService) Signup(req models.SignupRequest) error {
 
 	// Grant 200 welcome coins to every new user account
 	if req.Role == "user" {
-		_ = s.rewardRepo.CreateForUser(user.ID, 200)
+		if err := s.rewardRepo.CreateForUser(user.ID, 200); err != nil {
+			log.Printf("signup: failed to grant welcome coins to user %d: %v", user.ID, err)
+		}
 	}
 
 	return nil
@@ -68,10 +86,7 @@ func (s *authService) Signup(req models.SignupRequest) error {
 
 func (s *authService) CheckUserRole(mobileNumber, role string) error {
 	user, err := s.userRepo.FindByNumber(mobileNumber)
-	if err != nil || user == nil {
-		return errors.New("no " + role + " account found for this mobile number")
-	}
-	if user.Role != role {
+	if err != nil || user == nil || user.Role != role {
 		return errors.New("no " + role + " account found for this mobile number")
 	}
 	return nil
@@ -84,11 +99,8 @@ func (s *authService) LoginWithOTP(
 ) (string, string, string, error) {
 
 	user, err := s.userRepo.FindByNumber(mobileNumber)
-	if err != nil || user == nil {
-		return "", "", "", errors.New("account not found with this mobile number")
-	}
-	if user.Role != expectedRole {
-		return "", "", "", errors.New("no " + expectedRole + " account found for this mobile number")
+	if err != nil || user == nil || user.Role != expectedRole {
+		return "", "", "", ErrInvalidCredentials
 	}
 
 	return s.createSession(user, deviceID, deviceName, browser, ip)
@@ -101,17 +113,9 @@ func (s *authService) LoginWithPassword(
 ) (string, string, string, error) {
 
 	user, err := s.userRepo.FindByNumber(mobileNumber)
-	if err != nil || user == nil {
-		return "", "", "", errors.New("invalid credentials")
-	}
-	if user.Role != expectedRole {
-		return "", "", "", errors.New("no " + expectedRole + " account found for this mobile number")
-	}
-	if user.Password == "" {
-		return "", "", "", errors.New("password not set — please sign in with OTP first and set a password from your profile")
-	}
-	if !user.CheckPassword(password) {
-		return "", "", "", errors.New("invalid credentials")
+	if err != nil || user == nil || user.Role != expectedRole ||
+		user.Password == "" || !user.CheckPassword(password) {
+		return "", "", "", ErrInvalidCredentials
 	}
 
 	return s.createSession(user, deviceID, deviceName, browser, ip)
@@ -124,9 +128,9 @@ func (s *authService) createSession(
 	deviceID, deviceName, browser, ip string,
 ) (string, string, string, error) {
 
-	count, _ := s.sessionRepo.CountActive(user.ID)
-	if count >= 3 {
-		return "", "", "", errors.New("device limit reached — maximum 3 active sessions allowed")
+	// Keep at most maxActiveSessions: signing in on a new device ends the oldest one
+	if err := s.sessionRepo.DeactivateOldest(user.ID, maxActiveSessions-1); err != nil {
+		log.Printf("session: failed to enforce device limit for user %d: %v", user.ID, err)
 	}
 
 	accessToken, err := utils.GenerateAccessToken(user.ID, user.Email, user.Role)

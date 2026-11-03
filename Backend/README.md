@@ -151,8 +151,10 @@ Or via `Authorization: Bearer <token>` header.
 | 15 | `seed_plans` | 6 default plans (Silver/Gold/Platinum × individual/corporate) |
 | 16 | `merge_customers_into_users` | Merged customers table into users |
 | 17 | `add_plantype_to_users` | Add planType column to users |
+| 18 | `harden_otps_and_email` | Hash OTPs + attempt counter; email unique only when non-empty |
 
-Migrations auto-run on server start. If a migration is in a dirty state, the runner resets it and retries.
+Migrations auto-run on server start. If a migration is left dirty (failed part-way), the server stops and prints
+the `migrate force` command to run once you've checked the schema — it never re-applies a half-run migration.
 
 ---
 
@@ -169,8 +171,8 @@ The env file loaded is selected by the `GO_ENV` shell variable:
 Copy `.env.example` and fill in your values:
 
 ```bash
-cp .env.local.example .env.local.local   # for local development
-cp .env.local.example .env.local.prod    # for production
+cp .env.example .env.local   # for local development
+cp .env.example .env.prod    # for production
 ```
 
 **All variables:**
@@ -203,7 +205,21 @@ APP_ENV=development
 # Razorpay
 RAZORPAY_KEY_ID=
 RAZORPAY_KEY_SECRET=
+
+# Security / deployment
+ALLOWED_ORIGINS=            # CORS + WebSocket origins, comma-separated (defaults to the production sites)
+COOKIE_DOMAIN=              # ".jetrav.com" in production so admin./user. receive the refresh cookie; empty locally
+ADMIN_MOBILE_NUMBERS=       # comma-separated numbers allowed to sign up as admin (empty = admin signup disabled)
+TRUSTED_PROXIES=            # load balancer IPs/CIDRs allowed to set X-Forwarded-For (empty = trust none)
 ```
+
+`JWT_SECRET` is required (32+ characters) — the server refuses to start without it.
+With `APP_ENV=production` OTPs are only ever sent by SMS (never logged or returned), so Twilio must be configured.
+
+**Creating an admin:** add the mobile number to `ADMIN_MOBILE_NUMBERS`, restart, then sign up on the admin app.
+Admin signup for any other number is rejected with 403.
+
+**Health check:** `GET /healthz` returns `{"status":"ok"}`.
 
 ---
 
@@ -221,8 +237,8 @@ RAZORPAY_KEY_SECRET=
 go mod download
 
 # Set up local env
-cp .env.local.example .env.local.local
-# Edit .env.local.local with your DB credentials, JWT secret, etc.
+cp .env.example .env.local
+# Edit .env.local with your DB credentials, JWT secret, etc.
 
 # Start server (migrations run automatically)
 go run ./cmd/server/

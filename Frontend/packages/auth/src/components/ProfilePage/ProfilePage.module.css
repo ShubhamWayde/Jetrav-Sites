@@ -1,90 +1,102 @@
 .page {
-  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  max-width: 900px;
+  gap: var(--space-6);
+  max-width: 760px;
 }
 
 .centered {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
-  gap: 10px;
-  color: var(--primary-200);
+  gap: var(--space-3);
+  min-height: 40vh;
+  color: var(--text-muted);
   font-size: var(--font-sm);
 }
 
 .pageHeader {
   display: flex;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .pageTitle {
-  font-size: var(--h3-font);
-  font-weight: var(--font-weight-600);
-  color: var(--primary-50);
   margin: 0;
 }
 
 .pageSubtitle {
+  margin: var(--space-1) 0 0;
   font-size: var(--font-sm);
-  color: var(--primary-200);
-  margin: 0;
+  color: var(--text-muted);
 }
 
 .card {
-  background: #0d0d0d;
-  border: 1px solid var(--secondary-border);
-  border-radius: var(--radius-xl);
-  padding: 28px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-2xl);
+}
+
+@media (max-width: 560px) {
+  .card {
+    padding: var(--space-5) var(--space-4);
+  }
 }
 
 .cardTitle {
-  font-size: var(--h5-font);
-  font-weight: var(--font-weight-600);
-  color: var(--primary-50);
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--secondary-border);
   margin: 0;
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: var(--font-md);
+  font-weight: var(--font-weight-600);
 }
 
 .fieldsGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+/* Email / single fields span the full row */
+.fieldsGrid > :nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 560px) {
+  .fieldsGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .eyeBtn {
-  position: absolute;
-  right: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
+  width: 30px;
+  height: 30px;
   border: none;
-  color: var(--primary-300);
-  cursor: pointer;
-  padding: 2px;
-  transition: color 0.15s ease;
-  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-muted);
+  transition: color var(--time-fast), background-color var(--time-fast);
 }
 
 .eyeBtn:hover {
-  color: var(--primary-200);
+  background: var(--surface-3);
+  color: var(--text-primary);
 }
 
 .cardFooter {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 10px;
-  padding-top: 6px;
-  border-top: 1px solid var(--secondary-border);
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
 }

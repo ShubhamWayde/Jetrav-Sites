@@ -1,52 +1,100 @@
+/* Sign-in / sign-up / OTP: a single card on the brand glow used by the marketing site */
+
 .page {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   min-height: 100dvh;
-  padding: 24px 16px;
+  padding: var(--space-6) var(--space-4);
+  background:
+    radial-gradient(900px 420px at 50% -8%, oklch(from var(--jt-skyBlue-base) l c h / 0.22), transparent 70%),
+    var(--surface-0);
 }
 
 .card {
+  position: relative;
+  isolation: isolate;
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
+  padding: var(--space-8);
+  background: oklch(from var(--surface-1) l c h / 0.85);
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(12px);
+}
+
+/* Sky-blue gradient hairline border, as on the marketing site */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(180deg, var(--accent-border), var(--border-subtle) 60%);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: var(--space-6) var(--space-5);
+    border-radius: var(--radius-2xl);
+  }
+}
+
+.brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-6);
+  color: var(--text-primary);
+}
+
+.logo {
+  height: 22px;
+  width: auto;
 }
 
 .header {
+  margin-bottom: var(--space-6);
   text-align: center;
-  margin-bottom: 28px;
 }
 
 .header h1 {
-  margin: 0 0 6px;
+  margin: 0 0 var(--space-2);
+  font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.625rem);
 }
 
 .header p {
-  font-weight: var(--font-weight-300);
-  font-size: var(--font-sm);
-  letter-spacing: 0.2px;
   margin: 0;
+  font-size: var(--font-sm);
+  color: var(--text-muted);
 }
 
 .body {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: var(--space-4);
 }
 
 .footer {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border-subtle);
   text-align: center;
   font-size: var(--font-sm);
-    color: var(--jt-light-base);
+  color: var(--text-muted);
 }
 
 .footer a {
-  color: var(--jt-neutral-400);
+  color: var(--accent);
   font-weight: var(--font-weight-500);
-  text-decoration: underline;
-  text-underline-offset: 2px;
 }
 
 .footer a:hover {
-  color: var(--primary-50);
+  color: var(--accent-strong);
 }

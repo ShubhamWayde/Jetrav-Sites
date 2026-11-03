@@ -1,258 +1,160 @@
-.page {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 2rem;
-  max-width: 720px;
+.grid {
+  /* Balance + plan sit side by side on wide screens, stack on narrow ones */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+  align-items: start;
+  gap: var(--space-6);
 }
 
-.pageHeader {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+.centered {
+  display: grid;
+  place-items: center;
+  padding: var(--space-16) 0;
 }
 
-.pageTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--jt-light-base);
-  margin: 0 0 0.25rem;
-}
+/* ── Jet Points hero ───────────────────────────────────────────────────────── */
 
-.pageSubtitle {
-  font-size: 0.875rem;
-  color: var(--jt-light-base);
-  margin: 0;
-}
-
-/* ── Jetcoins card ─────────────────────────────────────────────────────────── */
-
-.coinsCard {
+.points {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
-  border: 1px solid #f59e0b;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  overflow: hidden;
+  border: 1px solid oklch(from var(--warning) l c h / 0.35);
+  border-radius: var(--radius-2xl);
+  background:
+    radial-gradient(420px 220px at 100% 0%, oklch(from var(--warning) l c h / 0.18), transparent 70%),
+    linear-gradient(135deg, var(--warning-soft), var(--surface-1) 70%);
 }
 
-.coinsIcon {
-  font-size: 2rem;
-  line-height: 1;
+.pointsIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius-full);
+  background: var(--warning-soft);
+  color: var(--warning);
+  box-shadow: inset 0 0 0 1px oklch(from var(--warning) l c h / 0.3);
 }
 
-.coinsLabel {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #92400e;
-  margin: 0 0 0.2rem;
+.pointsBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
 }
 
-.coinsValue {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #78350f;
+.pointsLabel {
   margin: 0;
+  font-size: var(--font-xs);
+  font-weight: var(--font-weight-500);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--warning);
+}
+
+.pointsValue {
+  margin: 0;
+  font-size: clamp(2rem, 1.5rem + 2vw, 2.75rem);
+  font-weight: var(--font-weight-600);
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.pointsHint {
+  margin: 0;
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
 }
 
 /* ── Plan card ─────────────────────────────────────────────────────────────── */
 
-.card {
-  background: var(--jt-neutral-900);
-  border: 1px solid var(--jt-neutral-900);
-  border-radius: 12px;
-  padding: 1.5rem;
+.planTop {
   display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.cardHead {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.cardTitle {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color:var(--jt-light-base);
-  margin: 0 0 0.35rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-5);
 }
 
 .planName {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color:var(--jt-light-base);
   margin: 0;
+  font-size: var(--h3-font);
+  font-weight: var(--font-weight-600);
+  color: var(--text-primary);
 }
 
-.tierBadge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
-}
-
-.tierSilver {
-  background: var(--jt-neutral-400);
-  color:var(--jt-light-base);
-  border: 1px solid var(--jt-neutral-400);
-}
-
-.tierGold {
-  background: #fef9c3;
-  color: #854d0e;
-  border: 1px solid #fde047;
-}
-
-.tierPlatinum {
-  background: #f3f4f6;
-  color: #374151;
-  border: 1px solid #9ca3af;
-}
-
-/* ── Plan meta grid ────────────────────────────────────────────────────────── */
-
-.planMeta {
+.meta {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  padding: 1rem;
-  background: var(--jt-neutral-800);
-  border-radius: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  background: var(--surface-2);
 }
 
 .metaItem {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: var(--space-1);
 }
 
-.metaLabel {
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--jt-light-base);
+.metaItem dt {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
 }
 
-.metaValue {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--jt-light-base);
+.metaItem dd {
+  margin: 0;
+  font-size: var(--font-md);
+  font-weight: var(--font-weight-500);
+  color: var(--text-primary);
 }
 
 /* ── Features ──────────────────────────────────────────────────────────────── */
 
+.features {
+  margin-top: var(--space-5);
+}
+
 .featuresTitle {
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color:var(--jt-light-base);
-  margin: 0 0 0.75rem;
+  margin: 0 0 var(--space-3);
+  font-size: var(--font-sm);
+  font-weight: var(--font-weight-500);
+  color: var(--text-secondary);
 }
 
-.featuresList {
-  list-style: none;
+.featureList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
   padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
 }
 
-.featureItem {
+.feature {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color:var(--jt-light-base);
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
 }
 
-.featureCheck {
-  color: #16a34a;
+.featureIcon {
   flex-shrink: 0;
+  margin-top: var(--space-0-5);
+  color: var(--success);
 }
 
-/* ── Footer ────────────────────────────────────────────────────────────────── */
-
-.cardFooter {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 1rem;
-  border-top: 1px solid var(--jt-neutral-400);
-}
-
-.changePlanBtn {
-  padding: 0.5rem 1.25rem;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  background: var(--color-primary, #2563eb);
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.15s;
-}
-
-.changePlanBtn:hover {
-  opacity: 0.88;
-}
-
-/* ── Empty state ───────────────────────────────────────────────────────────── */
-
-.emptyPlan {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 2rem 0;
-  text-align: center;
-}
-
-.emptyTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  color:var(--jt-light-base);
-  margin: 0;
-}
-
-.emptySubtitle {
-  font-size: 0.875rem;
-  color:var(--jt-light-base);
-  margin: 0 0 0.75rem;
-}
-
-/* ── Spinner / loading ─────────────────────────────────────────────────────── */
-
-.centered {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem;
-}
-
-.spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid var(--color-border, #e5e7eb);
-  border-top-color: var(--color-primary, #2563eb);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
+@media (max-width: 480px) {
+  .points {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-5);
+  }
 }

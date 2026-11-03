@@ -12,26 +12,25 @@ func AuthMiddleware() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		// Accept token from Authorization header OR ?token= query param
-		// (WebSocket upgrades cannot send custom headers in the browser).
 		var tokenStr string
-		if auth := c.GetHeader("Authorization"); auth != "" {
+		if auth := c.GetHeader("Authorization"); strings.HasPrefix(auth, "Bearer ") {
 			tokenStr = strings.TrimPrefix(auth, "Bearer ")
-		} else if q := c.Query("token"); q != "" {
-			tokenStr = q
+		} else if c.FullPath() == "/ws" {
+			// Browsers cannot send headers on a WebSocket upgrade, so only /ws
+			// accepts the token as a query param (keeps it out of other URLs/logs).
+			tokenStr = c.Query("token")
 		}
 
 		if tokenStr == "" {
-			c.JSON(http.StatusUnauthorized,
-				gin.H{"error": "Missing token"})
+			utils.Error(c, http.StatusUnauthorized, "Missing token")
 			c.Abort()
 			return
 		}
 
-		claims, err := utils.ValidateToken(tokenStr)
+		// Access tokens only — a refresh token must never authorize API calls.
+		claims, err := utils.ValidateAccessToken(tokenStr)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized,
-				gin.H{"error": "Invalid token"})
+			utils.Error(c, http.StatusUnauthorized, "Invalid token")
 			c.Abort()
 			return
 		}

@@ -1,6 +1,6 @@
 'use client';
 
-import type { SelectHTMLAttributes } from 'react';
+import { useId, type SelectHTMLAttributes } from 'react';
 import styles from './SelectField.module.css';
 
 export interface SelectOption {
@@ -11,6 +11,7 @@ export interface SelectOption {
 interface SelectFieldProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   error?: string;
+  hint?: string;
   options?: SelectOption[];
   placeholder?: string;
 }
@@ -18,6 +19,7 @@ interface SelectFieldProps extends SelectHTMLAttributes<HTMLSelectElement> {
 export default function SelectField({
   label,
   error,
+  hint,
   options = [],
   placeholder,
   required,
@@ -25,21 +27,28 @@ export default function SelectField({
   id,
   ...rest
 }: SelectFieldProps) {
-  const selectId = id ?? rest.name;
+  const autoId = useId();
+  const selectId = id ?? rest.name ?? autoId;
+  const messageId = `${selectId}-message`;
+  const message = error || hint;
 
   return (
     <div className={styles.wrapper}>
       {label && (
         <label htmlFor={selectId} className={styles.label}>
           {label}
-          {required && <span className={styles.required}>*</span>}
+          {required && <span className={styles.required} aria-hidden="true">*</span>}
         </label>
       )}
 
       <select
         id={selectId}
         required={required}
-        className={`${styles.select} ${error ? styles.hasError : ''} ${className ?? ''}`}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={message ? messageId : undefined}
+        className={[styles.select, error ? styles.hasError : '', className ?? '']
+          .filter(Boolean)
+          .join(' ')}
         {...rest}
       >
         {placeholder && (
@@ -54,7 +63,11 @@ export default function SelectField({
         ))}
       </select>
 
-      {error && <span className={styles.errorText}>{error}</span>}
+      {message && (
+        <span id={messageId} className={error ? styles.errorText : styles.hintText}>
+          {message}
+        </span>
+      )}
     </div>
   );
 }

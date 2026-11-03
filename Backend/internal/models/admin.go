@@ -1,20 +1,5 @@
 package models
 
-// ─── Admin Auth Requests ─────────────────────────────────────────────────────
-
-type AdminSignupRequest struct {
-	FirstName    string `json:"firstName"    binding:"required"`
-	LastName     string `json:"lastName"     binding:"required"`
-	Email        string `json:"email"        binding:"omitempty,email"`
-	MobileNumber string `json:"mobileNumber" binding:"required"`
-}
-
-type AdminLoginWithPasswordRequest struct {
-	MobileNumber string `json:"mobileNumber" binding:"required"`
-	Password     string `json:"password"     binding:"required"`
-	DeviceID     string `json:"deviceID"     binding:"required"`
-}
-
 // ─── Admin Profile Requests ──────────────────────────────────────────────────
 
 type UpdateAdminProfileRequest struct {
@@ -23,6 +8,8 @@ type UpdateAdminProfileRequest struct {
 }
 
 type SetPasswordRequest struct {
+	// Required (and checked) only when the account already has a password.
+	OldPassword     string `json:"oldPassword"`
 	Password        string `json:"password"        binding:"required,min=8"`
 	ConfirmPassword string `json:"confirmPassword" binding:"required"`
 }

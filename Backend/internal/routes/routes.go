@@ -1,6 +1,9 @@
 package routes
 
 import (
+	"net/http"
+	"time"
+
 	"Backend/internal/middleware"
 	"github.com/gin-gonic/gin"
 
@@ -8,6 +11,9 @@ import (
 )
 
 func Register(r *gin.Engine, app *appmod.App) {
+
+	// Liveness check for load balancers / docker healthchecks
+	r.GET("/healthz", func(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"status": "ok"}) })
 
 	// ── WebSocket ─────────────────────────────────────────────────────────────
 	// GET /ws  — authenticated users connect here for real-time events.
@@ -22,6 +28,8 @@ func Register(r *gin.Engine, app *appmod.App) {
 	// =========================================================================
 
 	auth := api.Group("/auth")
+	// Per-IP cap on the public auth endpoints (OTP guessing, SMS pumping, password spraying)
+	auth.Use(middleware.RateLimit(30, 10*time.Minute))
 	{
 		// Public — Signup → OTP flow
 		auth.POST("/signup",     app.AuthHandler.Signup)
@@ -80,11 +88,12 @@ func Register(r *gin.Engine, app *appmod.App) {
 	}
 
 	// =========================================================================
-	// USER PROTECTED ROUTES  (any authenticated user)
+	// USER PROTECTED ROUTES  (role=user required)
 	// =========================================================================
 
 	user := api.Group("/user")
 	user.Use(middleware.AuthMiddleware())
+	user.Use(middleware.UserOnly())
 	{
 		// Profile
 		user.GET("/profile",               app.UserHandler.GetProfile)

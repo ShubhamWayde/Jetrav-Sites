@@ -1,0 +1,10 @@
+# Keep secrets and local artefacts out of the image (Dockerfile does COPY . .)
+.env
+.env.*
+!.env.example
+*.exe
+*.test
+*.out
+.git
+.idea
+.vscode

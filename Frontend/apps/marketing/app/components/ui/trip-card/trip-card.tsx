@@ -35,6 +35,7 @@ export default function TripCard({
   price,
   highLights,
   features,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- kept for the "View Itinerary" link (commented out below)
   itineraryLink,
   ...props
 }: TripCardProps) {

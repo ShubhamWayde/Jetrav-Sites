@@ -13,7 +13,6 @@ export function Logo({className, withGlow = false, mouseX = 50, mouseY = 50}: Lo
   const rawId = useId();
   const glowId = `glow-${rawId.replace(/:/g, "")}`;
   const fillStyle = withGlow ? `url(#${glowId})` : "currentColor";
-  const stroke = "oklch(from var(--jt-skyBlue-50)l c h / 0.1)";
   const strokeWidth = 0.1;
 
   const cx = (mouseX / 100) * 79;

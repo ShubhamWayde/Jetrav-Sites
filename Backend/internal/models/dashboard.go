@@ -28,7 +28,7 @@ type DashboardFilters struct {
 	CustomerType string
 
 	// TripDateFilter determines which upcoming days are shown in the trip tables.
-	// Values: today | in_1_day | in_2_days
+	// Values: all | today | in_1_day | in_2_days (dates in the business timezone)
 	TripDateFilter string
 
 	// TripFilter narrows trips by domestic/international tripType in JSONB details.

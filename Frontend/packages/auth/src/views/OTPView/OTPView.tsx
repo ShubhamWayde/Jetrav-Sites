@@ -134,7 +134,14 @@ export default function OTPView({ config }: Props) {
     ? `+91 ${'•'.repeat(Math.max(0, mobile.length - 4))}${mobile.slice(-4)}`
     : '';
 
-  if (!ready) return null;
+  // Brief state while the OTP context is read (avoids a blank page)
+  if (!ready) {
+    return (
+      <AuthCard title="Verify OTP" subtitle="Loading…">
+        <span />
+      </AuthCard>
+    );
+  }
 
   return (
     <AuthCard
@@ -148,7 +155,7 @@ export default function OTPView({ config }: Props) {
 
       {isDevMode && (
         <p className={styles.devBanner}>
-          🛠 Dev mode: OTP is printed in the backend console. Enter it manually.
+          Dev mode: the OTP is printed in the backend console.
         </p>
       )}
 
@@ -159,7 +166,7 @@ export default function OTPView({ config }: Props) {
             onChange={(val: SetStateAction<string>) => { setOtp(val); setOtpError(''); setIsDevMode(false); }}
             error={!!otpError && otp.replace(/\D/g, '').length < OTP_LENGTH}
           />
-          {otpError && <p className={styles.otpErrorText}>{otpError}</p>}
+          {otpError && <p className={styles.otpErrorText} role="alert">{otpError}</p>}
         </div>
 
         <Button type="submit" fullWidth loading={loading}>

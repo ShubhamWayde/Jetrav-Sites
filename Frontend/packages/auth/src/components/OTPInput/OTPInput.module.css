@@ -2,45 +2,51 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .label {
   font-size: var(--font-sm);
-  color: var(--jt-light-base);
+  color: var(--text-secondary);
   text-align: center;
 }
 
 .boxes {
   display: flex;
-  gap: 10px;
+  gap: clamp(6px, 2vw, 10px);
 }
 
 .box {
-  width: 48px;
+  width: clamp(40px, 11vw, 50px);
   height: 56px;
-  border: 1px solid var(--jt-light-base);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
-  background: transparent;
-  color: var(--jt-light-base);
+  background: var(--surface-2);
+  color: var(--text-primary);
   font-size: var(--h4-font);
-
-  font-weight: var(--font-weight-500);
+  font-weight: var(--font-weight-600);
+  font-variant-numeric: tabular-nums;
   text-align: center;
-  transition: border-color 0.2s ease, background 0.2s ease;
-  caret-color: var(--jt-light-base);
+  caret-color: var(--accent);
+  transition:
+    border-color var(--time-fast) var(--ease-out),
+    box-shadow var(--time-fast) var(--ease-out),
+    background-color var(--time-fast) var(--ease-out);
 }
 
-.box:focus {
+.box:focus,
+.box:focus-visible {
   outline: none;
-  border-color: var(--jt-light-base);
-  background: var(--jt-neutral-base);
+  border-color: var(--accent-border);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  border-radius: var(--radius-lg);
 }
 
 .box.filled {
-  border-color: var(--jt-light-base);
+  border-color: var(--border-strong);
+  background: var(--surface-3);
 }
 
 .box.hasError {
-  border-color: var(--jt-yellow-base);
+  border-color: var(--danger);
 }

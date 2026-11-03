@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"time"
 
@@ -10,6 +11,10 @@ import (
 	"Backend/internal/repository"
 	"Backend/pkg/razorpay"
 )
+
+// ErrPaymentAlreadyProcessed means the order was already verified (e.g. a retried
+// request); the subscription exists, so clients can treat it as success.
+var ErrPaymentAlreadyProcessed = errors.New("this payment has already been processed")
 
 type planService struct {
 	planRepo   repository.PlanRepository
@@ -112,7 +117,8 @@ func (s *planService) CreateOrder(userID, planID uint) (*models.CreateOrderRespo
 		return nil, errors.New("payment gateway not configured")
 	}
 
-	amountPaise := int64(plan.Price * 100)
+	// Round: float prices like 499.99*100 would otherwise truncate a paisa
+	amountPaise := int64(math.Round(plan.Price * 100))
 	receipt := fmt.Sprintf("rcpt_u%d_p%d_%d", userID, planID, time.Now().UnixMilli())
 
 	orderID, err := razorpay.CreateOrder(keyID, keySecret, amountPaise, receipt)
@@ -144,16 +150,14 @@ func (s *planService) CreateOrder(userID, planID uint) (*models.CreateOrderRespo
 
 func (s *planService) VerifyAndActivate(userID uint, req models.VerifyPaymentRequest) error {
 	keySecret := os.Getenv("RAZORPAY_KEY_SECRET")
+	// An empty key would make the HMAC trivially forgeable
+	if keySecret == "" {
+		return errors.New("payment gateway not configured")
+	}
 	if !razorpay.VerifySignature(keySecret, req.RazorpayOrderID, req.RazorpayPaymentID, req.RazorpaySignature) {
 		return errors.New("payment verification failed: invalid signature")
 	}
 
-	plan, err := s.planRepo.GetByID(req.PlanID)
-	if err != nil {
-		return errors.New("plan not found")
-	}
-
-	// Find and update the pending payment record
 	pendingPayment, err := s.planRepo.GetPaymentByOrderID(req.RazorpayOrderID)
 	if err != nil {
 		return errors.New("payment record not found")
@@ -161,12 +165,15 @@ func (s *planService) VerifyAndActivate(userID uint, req models.VerifyPaymentReq
 	if pendingPayment.UserID != userID {
 		return errors.New("payment does not belong to this user")
 	}
+	if pendingPayment.PlanID == nil {
+		return errors.New("payment has no plan")
+	}
 
-	if err := s.planRepo.UpdatePaymentStatus(
-		pendingPayment.ID, "success",
-		req.RazorpayPaymentID, req.RazorpaySignature,
-	); err != nil {
-		return errors.New("failed to update payment status")
+	// The plan comes from the order that was actually paid, never from the request
+	// (otherwise a cheap order could be verified as an expensive plan).
+	plan, err := s.planRepo.GetByID(*pendingPayment.PlanID)
+	if err != nil {
+		return errors.New("plan not found")
 	}
 
 	// Activate subscription
@@ -186,7 +193,13 @@ func (s *planService) VerifyAndActivate(userID uint, req models.VerifyPaymentReq
 		EndDate:   &endDate,
 		IsActive:  true,
 	}
-	return s.planRepo.CreateSubscription(sub)
+	err = s.planRepo.ActivatePaidSubscription(
+		pendingPayment.ID, req.RazorpayPaymentID, req.RazorpaySignature, sub,
+	)
+	if errors.Is(err, repository.ErrPaymentAlreadyProcessed) {
+		return ErrPaymentAlreadyProcessed
+	}
+	return err
 }
 
 // ─── Helper ───────────────────────────────────────────────────────────────────

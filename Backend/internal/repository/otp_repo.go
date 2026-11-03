@@ -20,18 +20,34 @@ func (r *otpRepository) Create(otp *models.OTP) error {
 	return r.db.Create(otp).Error
 }
 
-// FindValid returns the first active OTP matching mobile, otp value and purpose.
-func (r *otpRepository) FindValid(mobileNumber, otp, purpose string) (*models.OTP, error) {
+// FindLatestActive returns the newest unused, unexpired OTP for a mobile number.
+func (r *otpRepository) FindLatestActive(mobileNumber string) (*models.OTP, error) {
 	var record models.OTP
 	err := r.db.Where(
-		`"mobileNumber" = ? AND "otp" = ? AND "purpose" = ? AND "isUsed" = false AND "expiresAt" > ?`,
-		mobileNumber, otp, purpose, time.Now(),
-	).First(&record).Error
+		`"mobileNumber" = ? AND "isUsed" = false AND "expiresAt" > ?`,
+		mobileNumber, time.Now(),
+	).Order(`"createdAt" DESC`).First(&record).Error
 
 	if err != nil {
 		return nil, err
 	}
 	return &record, nil
+}
+
+// CountSince counts OTPs issued to a mobile number after the given time.
+func (r *otpRepository) CountSince(mobileNumber string, since time.Time) (int64, error) {
+	var count int64
+	err := r.db.Model(&models.OTP{}).
+		Where(`"mobileNumber" = ? AND "createdAt" > ?`, mobileNumber, since).
+		Count(&count).Error
+	return count, err
+}
+
+// IncrementAttempts records one failed verification attempt.
+func (r *otpRepository) IncrementAttempts(id uint) error {
+	return r.db.Model(&models.OTP{}).
+		Where(`"ID" = ?`, id).
+		Update("attempts", gorm.Expr(`"attempts" + 1`)).Error
 }
 
 // MarkUsed marks a single OTP as used.
@@ -41,9 +57,9 @@ func (r *otpRepository) MarkUsed(id uint) error {
 		Update("isUsed", true).Error
 }
 
-// InvalidateAll marks all pending OTPs for a mobile + purpose as used.
-func (r *otpRepository) InvalidateAll(mobileNumber, purpose string) error {
+// InvalidateAll marks every pending OTP for a mobile number as used.
+func (r *otpRepository) InvalidateAll(mobileNumber string) error {
 	return r.db.Model(&models.OTP{}).
-		Where(`"mobileNumber" = ? AND "purpose" = ? AND "isUsed" = false`, mobileNumber, purpose).
+		Where(`"mobileNumber" = ? AND "isUsed" = false`, mobileNumber).
 		Update("isUsed", true).Error
 }

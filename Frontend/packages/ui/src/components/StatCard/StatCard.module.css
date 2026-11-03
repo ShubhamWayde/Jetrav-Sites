@@ -1,0 +1,71 @@
+.card {
+  --tone: var(--accent);
+  --tone-bg: var(--accent-soft);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-5);
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-2xl);
+}
+
+.neutral { --tone: var(--text-secondary); --tone-bg: var(--surface-3); }
+.accent  { --tone: var(--accent);         --tone-bg: var(--accent-soft); }
+.success { --tone: var(--success);        --tone-bg: var(--success-soft); }
+.warning { --tone: var(--warning);        --tone-bg: var(--warning-soft); }
+.danger  { --tone: var(--danger);         --tone-bg: var(--danger-soft); }
+.info    { --tone: var(--info);           --tone-bg: var(--info-soft); }
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-lg);
+  background: var(--tone-bg);
+  color: var(--tone);
+}
+
+.value {
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  font-weight: var(--font-weight-600);
+  line-height: 1.1;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.hint {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+}
+
+.skeleton {
+  display: block;
+  width: 64px;
+  height: 30px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, var(--surface-2), var(--surface-3), var(--surface-2));
+  background-size: 200% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}

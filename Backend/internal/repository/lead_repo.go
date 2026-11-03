@@ -41,6 +41,17 @@ func (r *leadRepo) Create(lead *models.Lead) error {
 }
 
 // List returns leads created by the given admin, optionally filtered by type.
+// CreateWithNewCustomer inserts a customer and their first lead in one transaction.
+func (r *leadRepo) CreateWithNewCustomer(customer *models.User, lead *models.Lead) error {
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Create(customer).Error; err != nil {
+			return err
+		}
+		lead.CustomerID = customer.ID
+		return tx.Create(lead).Error
+	})
+}
+
 func (r *leadRepo) List(adminID uint, leadType string) ([]models.LeadRow, error) {
 	var rows []models.LeadRow
 

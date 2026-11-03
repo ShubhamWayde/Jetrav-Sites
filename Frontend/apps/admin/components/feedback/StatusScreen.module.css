@@ -1,0 +1,85 @@
+/* Full-page states (error / not found / loading) */
+
+.screen {
+  display: grid;
+  place-items: center;
+  min-height: 60dvh;
+  padding: var(--space-8) var(--space-4);
+}
+
+/* Outside the app shell there is no header, so fill the viewport */
+.standalone {
+  min-height: 100dvh;
+}
+
+.panel {
+  width: min(28rem, 100%);
+  padding: var(--space-8) var(--space-6);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-2xl);
+  background: var(--surface-1);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.logo {
+  display: inline-flex;
+  margin-bottom: var(--space-6);
+  color: var(--text-primary);
+}
+
+.logo svg {
+  height: var(--space-5);
+  width: auto;
+}
+
+.code {
+  margin: 0 0 var(--space-2);
+  color: var(--accent);
+  font-size: var(--font-xs);
+  font-weight: var(--font-weight-600);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0 0 var(--space-2);
+}
+
+.text {
+  margin: 0 0 var(--space-6);
+  color: var(--text-muted);
+  font-size: var(--font-sm);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+/* Link styled like the secondary button */
+.link {
+  display: inline-flex;
+  align-items: center;
+  height: var(--space-10);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  color: var(--text-primary);
+  font-size: var(--font-sm);
+  font-weight: var(--font-weight-500);
+}
+
+.link:hover {
+  background: var(--surface-3);
+  color: var(--text-primary);
+}
+
+.digest {
+  margin: var(--space-4) 0 0;
+  color: var(--text-muted);
+  font-size: var(--font-xxs);
+}

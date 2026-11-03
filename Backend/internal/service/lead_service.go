@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 
 	"Backend/internal/models"
 	"Backend/internal/repository"
@@ -89,14 +90,36 @@ func (s *leadService) Create(adminID uint, req models.CreateLeadRequest) (*model
 		return nil, errors.New("invalid lead status: must be one of quotation, confirmed, quoted, negotiation, cancelled, lost")
 	}
 
-	var customerID uint
+	// Validate everything before writing, so a bad request never leaves a half-created customer
+	var details map[string]interface{}
+	if len(req.Details) > 0 {
+		if err := json.Unmarshal(req.Details, &details); err != nil {
+			return nil, errors.New("invalid details format: must be a valid JSON object")
+		}
+	}
+	if details == nil {
+		details = make(map[string]interface{})
+	}
+
+	lead := &models.Lead{
+		Type:      req.Type,
+		Status:    status,
+		Details:   details,
+		AssignTo:  req.AssignTo,
+		Remark:    req.Remark,
+		CreatedBy: adminID,
+	}
 
 	switch {
 	case req.ExistingCustomerID != nil:
 		if _, err := s.customerRepo.GetByID(*req.ExistingCustomerID); err != nil {
 			return nil, errors.New("customer not found")
 		}
-		customerID = *req.ExistingCustomerID
+		lead.CustomerID = *req.ExistingCustomerID
+		if err := s.repo.Create(lead); err != nil {
+			log.Printf("create lead: %v", err)
+			return nil, errors.New("failed to create lead")
+		}
 
 	case req.NewCustomer != nil:
 		nc := req.NewCustomer
@@ -118,37 +141,15 @@ func (s *leadService) Create(adminID uint, req models.CreateLeadRequest) (*model
 			Role:        "user",
 			Password:    "",
 		}
-		if err := s.customerRepo.Create(newUser); err != nil {
-			return nil, errors.New("failed to create customer: " + err.Error())
+		// Customer + lead commit together: a failed lead no longer leaves an
+		// orphan customer that makes every retry fail with "already exists".
+		if err := s.repo.CreateWithNewCustomer(newUser, lead); err != nil {
+			log.Printf("create lead with new customer: %v", err)
+			return nil, errors.New("failed to create lead")
 		}
-		customerID = newUser.ID
 
 	default:
 		return nil, errors.New("either existingCustomerId or newCustomer must be provided")
-	}
-
-	var details map[string]interface{}
-	if len(req.Details) > 0 {
-		if err := json.Unmarshal(req.Details, &details); err != nil {
-			return nil, errors.New("invalid details format: must be a valid JSON object")
-		}
-	}
-	if details == nil {
-		details = make(map[string]interface{})
-	}
-
-	lead := &models.Lead{
-		CustomerID: customerID,
-		Type:       req.Type,
-		Status:     status,
-		Details:    details,
-		AssignTo:   req.AssignTo,
-		Remark:     req.Remark,
-		CreatedBy:  adminID,
-	}
-
-	if err := s.repo.Create(lead); err != nil {
-		return nil, errors.New("failed to create lead: " + err.Error())
 	}
 
 	row, err := s.repo.GetByID(lead.ID)

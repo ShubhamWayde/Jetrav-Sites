@@ -31,7 +31,7 @@ const NAV_LINKS = [
   },
 ];
 
-function header() {
+function Header() {
   const pathname = usePathname();
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -126,4 +126,4 @@ function header() {
   );
 }
 
-export default header;
+export default Header;

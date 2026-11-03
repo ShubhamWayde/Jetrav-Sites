@@ -8,9 +8,8 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { api, configureApiRole } from '../api';
-import { clearAuth, configureAuth, getAccessToken, storeAccessToken } from '../utils/auth';
-import { AUTH_API } from '../constants';
+import { endSession, refreshAccessToken } from '../api';
+import { configureAuth, getAccessToken, storeAccessToken } from '../utils/auth';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -32,24 +31,31 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 interface AuthProviderProps {
   children: ReactNode;
-  /** 'admin' | 'user' — isolates localStorage key and refresh cookie per app. */
+  /** 'admin' | 'user' — isolates the token and refresh cookie per app. */
   role?: string;
 }
 
 export function AuthProvider({ children, role }: AuthProviderProps) {
+  // Configure during render, not in an effect: children's effects run before
+  // this component's effects, and pages fetch on mount.
+  if (role) configureAuth(role);
+
   const [state, setState] = useState<AuthState>({
     accessToken: null,
     isLoading: true,
   });
 
   useEffect(() => {
-    // Configure role-specific storage key and refresh URL once on mount.
-    if (role) {
-      configureAuth(role);
-      configureApiRole(role);
-    }
-    const token = getAccessToken();
-    setState({ accessToken: token, isLoading: false });
+    let cancelled = false;
+    const done = () => {
+      if (!cancelled) setState({ accessToken: getAccessToken(), isLoading: false });
+    };
+    // No token in memory after a reload — restore it from the refresh cookie
+    if (getAccessToken()) done();
+    else refreshAccessToken().finally(done);
+    return () => {
+      cancelled = true;
+    };
   }, [role]);
 
   const saveToken = useCallback((token: string) => {
@@ -58,12 +64,7 @@ export function AuthProvider({ children, role }: AuthProviderProps) {
   }, []);
 
   const logout = useCallback(async () => {
-    try {
-      await api.post(AUTH_API.LOGOUT, {});
-    } catch {
-      // Swallow errors — still clear locally
-    }
-    clearAuth();
+    await endSession();
     setState({ accessToken: null, isLoading: false });
     window.location.href = '/signin';
   }, []);

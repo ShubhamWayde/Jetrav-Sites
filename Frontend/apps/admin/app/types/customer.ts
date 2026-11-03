@@ -22,7 +22,6 @@ export interface CustomerFormValues {
   email:        string;
   mobileNumber: string;
   planType:     string;
-  jetcoins:     string;
   totalTrips:   string;
   totalStays:   string;
   reference:    string;

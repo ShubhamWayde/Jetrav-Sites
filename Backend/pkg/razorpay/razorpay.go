@@ -8,9 +8,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 const apiBase = "https://api.razorpay.com/v1"
+
+// httpClient bounds every Razorpay call so a slow gateway can't hang requests.
+var httpClient = &http.Client{Timeout: 10 * time.Second}
 
 // CreateOrder creates a Razorpay order and returns the order ID.
 // amount must be in the smallest currency unit (paise for INR).
@@ -29,7 +33,7 @@ func CreateOrder(keyID, keySecret string, amountPaise int64, receipt string) (st
 	req.SetBasicAuth(keyID, keySecret)
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return "", err
 	}

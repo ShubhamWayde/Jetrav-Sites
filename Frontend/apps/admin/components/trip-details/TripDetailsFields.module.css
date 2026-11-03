@@ -1,0 +1,33 @@
+/* Six-column grid so rows of 2 (span 3) and 3 (span 2) fields line up */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.cell {
+  min-width: 0;
+}
+
+.span2 {
+  grid-column: span 2;
+}
+
+.span3 {
+  grid-column: span 3;
+}
+
+.span6 {
+  grid-column: span 6;
+}
+
+/* Phones: text and date inputs get the full row; small counters stay side by side */
+@media (max-width: 560px) {
+  .cell:not([data-kind='count']) {
+    grid-column: span 6;
+  }
+
+  .cell[data-kind='count'].span3 {
+    grid-column: span 3;
+  }
+}

@@ -1,0 +1,37 @@
+.badge {
+  --tone: var(--text-secondary);
+  --tone-bg: var(--surface-3);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 var(--space-2);
+  border: 1px solid color-mix(in oklch, var(--tone) 28%, transparent);
+  border-radius: var(--radius-full);
+  background: var(--tone-bg);
+  color: var(--tone);
+  font-size: var(--font-xs);
+  font-weight: var(--font-weight-500);
+  line-height: 1;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
+
+.neutral  { --tone: var(--text-secondary); --tone-bg: var(--surface-3); }
+.accent   { --tone: var(--accent);         --tone-bg: var(--accent-soft); }
+.success  { --tone: var(--success);        --tone-bg: var(--success-soft); }
+.warning  { --tone: var(--warning);        --tone-bg: var(--warning-soft); }
+.danger   { --tone: var(--danger);         --tone-bg: var(--danger-soft); }
+.info     { --tone: var(--info);           --tone-bg: var(--info-soft); }
+.silver   { --tone: var(--tier-silver);    --tone-bg: color-mix(in oklch, var(--tier-silver) 12%, transparent); }
+.gold     { --tone: var(--tier-gold);      --tone-bg: color-mix(in oklch, var(--tier-gold) 12%, transparent); }
+.platinum { --tone: var(--tier-platinum);  --tone-bg: color-mix(in oklch, var(--tier-platinum) 12%, transparent); }
+.diamond  { --tone: var(--tier-diamond);   --tone-bg: color-mix(in oklch, var(--tier-diamond) 14%, transparent); }

@@ -1,14 +1,10 @@
-import Script from 'next/script';
+import type { Metadata } from 'next';
 import PlanView from './PlanView';
 
+export const metadata: Metadata = {
+  title: 'Choose your plan',
+};
+
 export default function PlanPage() {
-  return (
-    <>
-      <Script
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        strategy="beforeInteractive"
-      />
-      <PlanView />
-    </>
-  );
+  return <PlanView />;
 }

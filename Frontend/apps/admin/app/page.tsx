@@ -1,5 +1,6 @@
-import { redirect } from 'next/navigation'
+import { redirect } from 'next/navigation';
 
+// The proxy sends visitors without a session on to /signin
 export default function Home() {
-  redirect('/signin')
+  redirect('/dashboard');
 }

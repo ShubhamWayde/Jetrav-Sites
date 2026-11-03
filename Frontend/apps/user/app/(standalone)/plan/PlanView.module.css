@@ -1,260 +1,194 @@
-/* ── Page wrapper ─────────────────────────────────────────────────────────── */
-.container {
-  min-height: 100vh;
-  background: #000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 56px 24px 80px;
-}
+/* ── Controls ─────────────────────────────────────────────────────────────── */
 
-/* ── Header ───────────────────────────────────────────────────────────────── */
-.header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.title {
-  font-size: var(--h2-font);
-  font-weight: var(--font-weight-600);
-  color: var(--jt-light-base);
-  margin: 0;
-}
-
-.subtitle {
-  font-size: var(--font-sm);
-  color: var(--jt-neutral-400);
-  margin: 8px 0 0;
-}
-
-/* ── Controls (tabs + billing) ────────────────────────────────────────────── */
 .controls {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
-  width: 100%;
-  max-width: 960px;
-  margin-bottom: 36px;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
 }
 
-.tabGroup {
-  display: flex;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-lg);
-  padding: 4px;
-}
-
-.tabBtn {
-  padding: 8px 20px;
-  border-radius: calc(var(--radius-lg) - 2px);
-  border: none;
-  background: transparent;
-  color: var(--jt-neutral-400);
-  font-size: var(--font-sm);
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-  white-space: nowrap;
-}
-
-.tabBtn:hover {
-  color: var(--jt-light-base);
-}
-
-.tabBtnActive {
-  background: var(--jt-light-base);
-  color: var(--jt-neutral-base);
-}
-
-.discount {
+.saving {
+  padding: var(--space-0-5) var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--warning-soft);
+  color: var(--warning);
+  font-size: var(--font-xxs);
   font-weight: var(--font-weight-600);
-  font-size: var(--font-xs);
 }
 
-/* ── Loading dots ─────────────────────────────────────────────────────────── */
-.loadingRow {
+.centered {
+  display: grid;
+  place-items: center;
+  padding: var(--space-16) 0;
+}
+
+/* ── Alerts (payment confirmation / checkout blocked) ────────────────────── */
+
+.alert {
   display: flex;
-  gap: 8px;
-  margin-top: 64px;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid oklch(from var(--danger) l c h / 0.4);
+  border-radius: var(--radius-xl);
+  background: var(--danger-soft);
 }
 
-.loadingDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--jt-neutral-400);
-  animation: pulse 1.2s infinite ease-in-out;
+.alertWarning {
+  border-color: oklch(from var(--warning) l c h / 0.4);
+  background: var(--warning-soft);
 }
 
-.loadingDot:nth-child(2) { animation-delay: 0.2s; }
-.loadingDot:nth-child(3) { animation-delay: 0.4s; }
+.alertTitle {
+  margin: 0;
+  font-weight: var(--font-weight-600);
+  color: var(--text-primary);
+}
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.3; }
-  50%       { opacity: 1; }
+.alertText {
+  margin: 0;
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+}
+
+.alertActions {
+  margin-top: var(--space-1);
+}
+
+.paymentId {
+  padding: var(--space-0-5) var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--text-primary);
+  font-size: var(--font-xs);
+  user-select: all;
+  overflow-wrap: anywhere;
 }
 
 /* ── Plans grid ───────────────────────────────────────────────────────────── */
-.plansGrid {
+
+.grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  width: 100%;
-  max-width: 960px;
-}
-
-/* ── Card wrapper (holds popular badge + card) ────────────────────────────── */
-.cardWrap {
-  display: flex;
-  flex-direction: column;
-}
-
-.popularBadge {
-  background: var(--jt-light-base);
-  color: var(--jt-neutral-base);
-  text-align: center;
-  padding: 8px 12px;
-  font-size: var(--font-xs);
-  font-weight: var(--font-weight-600);
-  letter-spacing: 0.05em;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: var(--space-5);
+  align-items: stretch;
 }
 
 /* ── Card ─────────────────────────────────────────────────────────────────── */
+
 .card {
-  flex: 1;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-lg);
-  padding: 28px 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-5);
+  min-width: 0;
+  padding: var(--space-6);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-2xl);
+  background: var(--surface-1);
+  transition: border-color var(--time-fast) var(--ease-out);
 }
 
-.cardPopular {
-  border-color: var(--jt-light-base);
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+.card:hover {
+  border-color: var(--border-default);
 }
 
-/* ── Plan name + desc ─────────────────────────────────────────────────────── */
+/* Marketing-style sky-blue gradient border on the highlighted plan */
+.cardPopular,
+.cardPopular:hover {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--surface-1), var(--surface-1)) padding-box,
+    linear-gradient(160deg, var(--accent), var(--accent-border) 45%, var(--border-subtle)) border-box;
+  box-shadow: var(--shadow-md);
+}
+
+.cardTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
 .planName {
-  font-size: var(--h4-font);
+  margin: 0;
+  font-size: var(--h3-font);
   font-weight: var(--font-weight-600);
-  color: var(--jt-light-base);
-  margin: 0 0 4px;
 }
 
 .planDesc {
-  font-size: var(--font-xs);
-  color: var(--jt-neutral-400);
-  margin: 0;
+  margin: var(--space-1) 0 0;
+  font-size: var(--font-sm);
+  color: var(--text-muted);
 }
 
 /* ── Price ────────────────────────────────────────────────────────────────── */
-.priceRow {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 2px;
-}
-
-.priceCurrency {
-  font-size: var(--font-sm);
-  color: var(--jt-light-base);
-  font-weight: var(--font-weight-500);
-}
 
 .price {
-  font-size: var(--h3-font);
-  font-weight: var(--font-weight-700);
-  color: var(--jt-light-base);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+
+.priceValue {
+  font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+  font-weight: var(--font-weight-600);
   line-height: 1;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
 }
 
 .pricePeriod {
   font-size: var(--font-sm);
-  color: var(--jt-neutral-400);
-  margin-left: 2px;
+  color: var(--text-muted);
 }
 
-.billedYearly {
+.priceNote {
   width: 100%;
   font-size: var(--font-xs);
-  color: var(--jt-neutral-400);
+  color: var(--text-muted);
 }
 
-/* ── Feature list ─────────────────────────────────────────────────────────── */
+/* ── Features ─────────────────────────────────────────────────────────────── */
+
 .features {
-  list-style: none;
-  padding: 0;
-  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-4) 0 0;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .feature {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--space-2);
   font-size: var(--font-sm);
-  color: var(--jt-neutral-200);
-  line-height: 1.4;
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
 }
 
-.bullet {
-  color: var(--jt-light-base);
+.featureIcon {
   flex-shrink: 0;
+  margin-top: var(--space-0-5);
+  color: var(--success);
 }
 
-/* ── Success screen ───────────────────────────────────────────────────────── */
-.successScreen {
-  min-height: 100vh;
-  background: #000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 24px;
+/* ── Success / footnote ───────────────────────────────────────────────────── */
+
+.successCard {
+  max-width: 32rem;
+  margin: var(--space-12) auto 0;
 }
 
-.successLabel {
+.footnote {
+  margin: var(--space-8) 0 0;
   font-size: var(--font-xs);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--jt-neutral-400);
-  margin: 0;
-}
-
-.successTitle {
-  font-size: var(--h2-font);
-  font-weight: var(--font-weight-700);
-  color: var(--jt-light-base);
-  margin: 0;
-}
-
-.successSubtitle {
-  font-size: var(--font-sm);
-  color: var(--jt-neutral-400);
-  margin: 0 0 8px;
-}
-
-.successBtn {
-  width: 100%;
-  max-width: 320px;
-}
-
-/* ── Responsive ───────────────────────────────────────────────────────────── */
-@media (max-width: 768px) {
-  .controls {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-  }
-
-  .plansGrid {
-    grid-template-columns: 1fr;
-    max-width: 400px;
-  }
+  color: var(--text-muted);
+  text-align: center;
 }

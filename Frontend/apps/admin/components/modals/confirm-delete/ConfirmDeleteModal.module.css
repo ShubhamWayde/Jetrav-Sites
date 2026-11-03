@@ -1,67 +1,25 @@
 .body {
-  padding: 32px 28px 24px;
-  align-items: center;
-  gap: 12px;
-}
-
-/* ── Icon ─────────────────────────────────────────────────────────────────── */
-
-.iconWrap {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: rgba(255, 80, 80, 0.1);
-  border: 1px solid rgba(255, 80, 80, 0.25);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 4px;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-6);
 }
 
 .icon {
-  color: #ff6b6b;
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-10);
+  height: var(--space-10);
   flex-shrink: 0;
-}
-
-/* ── Typography ───────────────────────────────────────────────────────────── */
-
-.title {
-  font-size: var(--h5-font);
-  font-weight: var(--font-weight-600);
-color: var(--jt-light-base);
-  text-align: center;
-  margin: 0;
+  border-radius: var(--radius-full);
+  background: var(--danger-soft);
+  color: var(--danger);
 }
 
 .description {
-  font-size: var(--font-sm);
-  color: var(--jt-light-base);
-  text-align: center;
-  line-height: 1.55;
   margin: 0;
-}
-
-/* ── Action buttons ───────────────────────────────────────────────────────── */
-
-.actions {
-  display: flex;
-  gap: 12px;
-  width: 100%;
-  margin-top: 8px;
-}
-
-.actions > * {
-  flex: 1;
-}
-
-/* Override primary button to use red for the delete action */
-.deleteBtn {
-  background: #e53935 !important;
-  border-color: #e53935 !important;
-}
-
-.deleteBtn:hover:not(:disabled) {
-  background: #c62828 !important;
-  border-color: #c62828 !important;
+  padding-top: var(--space-2);
+  color: var(--text-secondary);
+  font-size: var(--font-sm);
 }

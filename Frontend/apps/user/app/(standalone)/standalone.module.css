@@ -1,0 +1,54 @@
+.shell {
+  min-height: 100dvh;
+  background:
+    radial-gradient(1100px 520px at 50% -12%, oklch(from var(--jt-skyBlue-base) l c h / 0.12), transparent 70%),
+    var(--surface-0);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: var(--app-header-height);
+  max-width: var(--app-content-max);
+  margin: 0 auto;
+  padding: 0 var(--space-8);
+}
+
+.logo {
+  display: inline-flex;
+  color: var(--text-primary);
+}
+
+.logo:hover {
+  color: var(--text-primary);
+}
+
+.logo svg {
+  height: 20px;
+  width: auto;
+}
+
+.back {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+}
+
+.back:hover {
+  color: var(--text-primary);
+}
+
+.main {
+  padding: var(--space-8) var(--space-8) var(--space-20);
+}
+
+@media (max-width: 640px) {
+  .bar {
+    padding: 0 var(--space-4);
+  }
+
+  .main {
+    padding: var(--space-6) var(--space-4) var(--space-16);
+  }
+}

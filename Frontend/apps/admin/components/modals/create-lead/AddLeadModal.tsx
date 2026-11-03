@@ -1,33 +1,22 @@
-"use client";
+'use client';
 
-import InputField from "@repo/ui/InputField";
-import TextareaField from "@repo/ui/TextareaField";
-import { useCallback, useEffect, useState } from "react";
-import { showSuccess, showError } from "@repo/auth";
-import { api } from "@/lib/api";
-import { ADMIN_API } from "@/lib/constants";
-import { CustomerResponse } from "@/app/types/customer";
-import {
-  LEAD_DEFAULT_DETAILS,
-  LEAD_STATUSES,
-  LEAD_TYPES,
-  LeadDetails,
-  LeadStatus,
-  LeadType,
-} from "@/app/types/lead";
-import SelectField from "@repo/ui/SelectField";
-import Button from "@repo/ui/Button";
-import Modal, { ModalFooter } from "@repo/ui/Modal";
-import styles from "./AddLeadModal.module.css";
-
-function countOptions(max: number) {
-  return Array.from({ length: max + 1 }, (_, i) => ({
-    value: String(i),
-    label: String(i),
-  }));
-}
-
-// ── Props ─────────────────────────────────────────────────────────────────────
+import { useMemo, useState } from 'react';
+import { api, getErrorMessage, showError, showSuccess } from '@repo/auth';
+import Button from '@repo/ui/Button';
+import InputField from '@repo/ui/InputField';
+import Modal, { ModalFooter } from '@repo/ui/Modal';
+import SelectField from '@repo/ui/SelectField';
+import Spinner from '@repo/ui/Spinner';
+import { Tabs } from '@repo/ui/Tabs';
+import TextareaField from '@repo/ui/TextareaField';
+import { ADMIN_API } from '@/lib/constants';
+import { useApiQuery } from '@/lib/useApiQuery';
+import { EMAIL_RE, MOBILE_RE, hasErrors, sanitizeMobile, type FieldErrors } from '@/lib/validation';
+import type { CustomerResponse } from '@/app/types/customer';
+import { LEAD_STATUSES, LEAD_TYPES, type LeadStatus, type LeadType } from '@/app/types/lead';
+import TripDetailsFields from '@/components/trip-details/TripDetailsFields';
+import { defaultTripDetails, validateTripDetails } from '@/components/trip-details/tripDetailsConfig';
+import styles from '../ModalForm.module.css';
 
 interface AddLeadModalProps {
   isOpen: boolean;
@@ -35,774 +24,321 @@ interface AddLeadModalProps {
   onSuccess: () => void;
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+type CustomerMode = 'existing' | 'new';
 
-export default function AddLeadModal({
-  isOpen,
-  onClose,
-  onSuccess,
-}: AddLeadModalProps) {
-  // ── Customer mode ─────────────────────────────────────────────────────────
-  const [mode, setMode] = useState<"existing" | "new">("existing");
+const CUSTOMER_MODES: { value: CustomerMode; label: string }[] = [
+  { value: 'existing', label: 'Existing customer' },
+  { value: 'new', label: 'New customer' },
+];
 
-  // Existing customer state
-  const [customers, setCustomers] = useState<CustomerResponse[]>([]);
-  const [customersLoading, setCustomersLoading] = useState(false);
-  const [customerSearch, setCustomerSearch] = useState("");
-  const [existingCustomerId, setExistingCustomerId] = useState<number>(0);
+const EMPTY_NEW_CUSTOMER = { firstName: '', lastName: '', mobileNumber: '', email: '', reference: '' };
 
-  // New customer state
-  const [newFirstName, setNewFirstName] = useState("");
-  const [newLastName, setNewLastName] = useState("");
-  const [newGender, setNewGender] = useState("Male");
-  const [newMobile, setNewMobile] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [newReference, setNewReference] = useState("");
+function matchesSearch(customer: CustomerResponse, query: string): boolean {
+  const q = query.trim().toLowerCase();
+  if (!q) return true;
+  return (
+    customer.fullName.toLowerCase().includes(q) ||
+    customer.mobileNumber.includes(q) ||
+    (customer.email ?? '').toLowerCase().includes(q)
+  );
+}
 
-  // ── Lead fields ───────────────────────────────────────────────────────────
-  const [activeTab, setActiveTab] = useState<LeadType>("air");
-  const [details, setDetails] = useState<LeadDetails>({
-    ...LEAD_DEFAULT_DETAILS.air,
-  });
-  const [status, setStatus] = useState<LeadStatus>("quotation");
-  const [assignTo, setAssignTo] = useState("");
-  const [remark, setRemark] = useState("");
-  const [loading, setLoading] = useState(false);
+// ── Dialog wrapper: the form only mounts while open, so every open starts fresh ─
 
-  // ── Reset on open ─────────────────────────────────────────────────────────
+export default function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModalProps) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title="Add lead" subtitle="Capture a new enquiry" maxWidth={760}>
+      <AddLeadForm onClose={onClose} onSuccess={onSuccess} />
+    </Modal>
+  );
+}
 
-  useEffect(() => {
-    if (!isOpen) return;
-    setMode("existing");
-    setCustomerSearch("");
-    setExistingCustomerId(0);
-    setNewFirstName("");
-    setNewLastName("");
-    setNewGender("Male");
-    setNewMobile("");
-    setNewEmail("");
-    setNewReference("");
-    setActiveTab("air");
-    setDetails({ ...LEAD_DEFAULT_DETAILS.air });
-    setStatus("quotation");
-    setAssignTo("");
-    setRemark("");
-  }, [isOpen]);
+function AddLeadForm({ onClose, onSuccess }: Omit<AddLeadModalProps, 'isOpen'>) {
+  // ── Customer ──────────────────────────────────────────────────────────────
+  const [mode, setMode] = useState<CustomerMode>('existing');
+  const customersQuery = useApiQuery<CustomerResponse[]>(ADMIN_API.CUSTOMERS, 'Failed to load customers.');
+  const [customerSearch, setCustomerSearch] = useState('');
+  // No default: the admin must pick a customer explicitly
+  const [customerId, setCustomerId] = useState<number | null>(null);
+  const [newCustomer, setNewCustomer] = useState(EMPTY_NEW_CUSTOMER);
 
-  // ── Fetch customers (for Existing mode) ───────────────────────────────────
+  // ── Lead ──────────────────────────────────────────────────────────────────
+  const [type, setType] = useState<LeadType>('air');
+  const [details, setDetails] = useState(() => defaultTripDetails('air', 'lead'));
+  const [status, setStatus] = useState<LeadStatus>('quotation');
+  const [assignTo, setAssignTo] = useState('');
+  const [remark, setRemark] = useState('');
 
-  useEffect(() => {
-    if (!isOpen) return;
-    setCustomersLoading(true);
-    api
-      .get<CustomerResponse[]>(ADMIN_API.CUSTOMERS)
-      .then((res) => {
-        const list = res.data ?? [];
-        setCustomers(list);
-        if (list.length > 0) setExistingCustomerId(list[0]?.id ?? 0);
-      })
-      .catch(() => showError("Failed to load customers."))
-      .finally(() => setCustomersLoading(false));
-  }, [isOpen]);
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [submitting, setSubmitting] = useState(false);
 
-  // ── Tab change ────────────────────────────────────────────────────────────
-  // Must be defined before the early return to satisfy Rules of Hooks.
-
-  const handleTabChange = useCallback((tab: LeadType) => {
-    setActiveTab(tab);
-    setDetails({ ...LEAD_DEFAULT_DETAILS[tab] });
-  }, []);
-
-  // ── Detail field updater ──────────────────────────────────────────────────
-
-  const handleDetailChange = useCallback(
-    (field: string) =>
-      (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setDetails((prev) => ({ ...prev, [field]: e.target.value }));
-      },
-    [],
+  const customers = useMemo(() => customersQuery.data ?? [], [customersQuery.data]);
+  const filteredCustomers = useMemo(
+    () => customers.filter((c) => matchesSearch(c, customerSearch)),
+    [customers, customerSearch],
   );
 
-  // ── Filtered customers ────────────────────────────────────────────────────
+  const clearError = (key: string) => setErrors((prev) => (prev[key] ? { ...prev, [key]: '' } : prev));
 
-  const filteredCustomers = customerSearch.trim()
-    ? customers.filter(
-        (c) =>
-          c.fullName.toLowerCase().includes(customerSearch.toLowerCase()) ||
-          c.mobileNumber.includes(customerSearch) ||
-          (c.email ?? "").toLowerCase().includes(customerSearch.toLowerCase()),
-      )
-    : customers;
-
-  // ── Submit ────────────────────────────────────────────────────────────────
-
-  const handleSubmit = async (e: { preventDefault(): void }) => {
-    e.preventDefault();
-
-    // Validate customer selection
-    if (mode === "existing" && !existingCustomerId) {
-      showError("Please select a customer.");
-      return;
-    }
-    if (mode === "new") {
-      if (!newFirstName.trim() || !newLastName.trim() || !newMobile.trim()) {
-        showError("First name, last name, and mobile number are required.");
-        return;
-      }
-    }
-
-    setLoading(true);
-    try {
-      const body =
-        mode === "existing"
-          ? {
-              existingCustomerId: existingCustomerId,
-              type: activeTab,
-              status,
-              details,
-              assignTo: assignTo.trim(),
-              remark: remark.trim(),
-            }
-          : {
-              newCustomer: {
-                firstName: newFirstName.trim(),
-                lastName: newLastName.trim(),
-                gender: newGender,
-                mobileNumber: newMobile.trim(),
-                email: newEmail.trim(),
-                reference: newReference.trim(),
-              },
-              type: activeTab,
-              status,
-              details,
-              assignTo: assignTo.trim(),
-              remark: remark.trim(),
-            };
-
-      const res = await api.post(ADMIN_API.LEADS, body);
-      showSuccess(res.message ?? "Lead created successfully.");
-      onSuccess();
-      onClose();
-    } catch (err) {
-      showError(err instanceof Error ? err.message : "Failed to create lead.");
-    } finally {
-      setLoading(false);
+  const handleSearch = (value: string) => {
+    setCustomerSearch(value);
+    // Never keep a selection the admin can no longer see in the list
+    if (customerId !== null && !customers.some((c) => c.id === customerId && matchesSearch(c, value))) {
+      setCustomerId(null);
     }
   };
 
-  // ── Per-type dynamic fields ───────────────────────────────────────────────
+  const handleTypeChange = (next: LeadType) => {
+    setType(next);
+    setDetails(defaultTripDetails(next, 'lead'));
+    setErrors({});
+  };
 
-  const renderTypeFields = () => {
-    switch (activeTab) {
-      case "air":
-        return (
-          <>
-            <div className={styles.row2}>
-              <InputField
-                label="Source"
-                value={details["source"] ?? ""}
-                onChange={handleDetailChange("source")}
-                placeholder="e.g. Mumbai (BOM)"
-              />
-              <InputField
-                label="Destination"
-                value={details["destination"] ?? ""}
-                onChange={handleDetailChange("destination")}
-                placeholder="e.g. Dubai (DXB)"
-              />
-            </div>
-            <div className={styles.row2}>
-              <InputField
-                label="Departure"
-                type="date"
-                value={details["departure"] ?? ""}
-                onChange={handleDetailChange("departure")}
-              />
-              <InputField
-                label="Return"
-                type="date"
-                value={details["return"] ?? ""}
-                onChange={handleDetailChange("return")}
-              />
-            </div>
-            <div className={styles.row3}>
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Children"
-                value={details["children"] ?? "0"}
-                onChange={handleDetailChange("children")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Infant"
-                value={details["infant"] ?? "0"}
-                onChange={handleDetailChange("infant")}
-                options={countOptions(5)}
-              />
-            </div>
-            <div className={styles.row1}>
-              <InputField
-                label="SSR (Special Service Request)"
-                value={details["ssr"] ?? ""}
-                onChange={handleDetailChange("ssr")}
-                placeholder="e.g. Wheelchair, Vegan meal"
-              />
-            </div>
-          </>
-        );
+  const handleNewCustomer = (key: keyof typeof EMPTY_NEW_CUSTOMER, value: string) => {
+    setNewCustomer((prev) => ({ ...prev, [key]: key === 'mobileNumber' ? sanitizeMobile(value) : value }));
+    clearError(key);
+  };
 
-      case "train":
-        return (
-          <>
-            <div className={styles.row2}>
-              <InputField
-                label="Source"
-                value={details["source"] ?? ""}
-                onChange={handleDetailChange("source")}
-                placeholder="e.g. Mumbai"
-              />
-              <InputField
-                label="Destination"
-                value={details["destination"] ?? ""}
-                onChange={handleDetailChange("destination")}
-                placeholder="e.g. Delhi"
-              />
-            </div>
-            <div className={styles.row2}>
-              <InputField
-                label="Departure"
-                type="date"
-                value={details["departure"] ?? ""}
-                onChange={handleDetailChange("departure")}
-              />
-              <InputField
-                label="Return"
-                type="date"
-                value={details["return"] ?? ""}
-                onChange={handleDetailChange("return")}
-              />
-            </div>
-            <div className={styles.row2}>
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Children"
-                value={details["children"] ?? "0"}
-                onChange={handleDetailChange("children")}
-                options={countOptions(10)}
-              />
-            </div>
-          </>
-        );
+  // ── Validation ────────────────────────────────────────────────────────────
 
-      case "hotel":
-        return (
-          <>
-            <div className={styles.row1}>
-              <InputField
-                label="City"
-                value={details["city"] ?? ""}
-                onChange={handleDetailChange("city")}
-                placeholder="e.g. Dubai"
-              />
-            </div>
-            <div className={styles.row2}>
-              <InputField
-                label="Check-In"
-                type="date"
-                value={details["checkIn"] ?? ""}
-                onChange={handleDetailChange("checkIn")}
-              />
-              <InputField
-                label="Check-Out"
-                type="date"
-                value={details["checkOut"] ?? ""}
-                onChange={handleDetailChange("checkOut")}
-              />
-            </div>
-            <div className={styles.row3}>
-              <SelectField
-                label="Rooms"
-                value={details["rooms"] ?? "1"}
-                onChange={handleDetailChange("rooms")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Children"
-                value={details["children"] ?? "0"}
-                onChange={handleDetailChange("children")}
-                options={countOptions(10)}
-              />
-            </div>
-          </>
-        );
+  const validate = (): FieldErrors => {
+    const errs: FieldErrors = { ...validateTripDetails(type, details) };
+    if (mode === 'existing') {
+      if (customerId === null) errs.customerId = 'Select a customer.';
+    } else {
+      if (!newCustomer.firstName.trim()) errs.firstName = 'First name is required.';
+      if (!newCustomer.lastName.trim()) errs.lastName = 'Last name is required.';
+      if (!MOBILE_RE.test(newCustomer.mobileNumber)) errs.mobileNumber = 'Enter a valid 10-digit mobile number.';
+      if (newCustomer.email.trim() && !EMAIL_RE.test(newCustomer.email.trim()))
+        errs.email = 'Enter a valid email address.';
+    }
+    return errs;
+  };
 
-      case "visa":
-        return (
-          <>
-            <div className={styles.row2}>
-              <InputField
-                label="Country"
-                value={details["country"] ?? ""}
-                onChange={handleDetailChange("country")}
-                placeholder="e.g. UAE"
-              />
-              <InputField
-                label="Visa Type"
-                value={details["visaType"] ?? ""}
-                onChange={handleDetailChange("visaType")}
-                placeholder="e.g. Tourist"
-              />
-            </div>
-            <div className={styles.row1}>
-              <InputField
-                label="Travel Date"
-                type="date"
-                value={details["travelDate"] ?? ""}
-                onChange={handleDetailChange("travelDate")}
-              />
-            </div>
-            <div className={styles.row2}>
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Children"
-                value={details["children"] ?? "0"}
-                onChange={handleDetailChange("children")}
-                options={countOptions(10)}
-              />
-            </div>
-          </>
-        );
+  // ── Submit ────────────────────────────────────────────────────────────────
 
-      case "insurance":
-        return (
-          <>
-            <div className={styles.row1}>
-              <InputField
-                label="Country"
-                value={details["country"] ?? ""}
-                onChange={handleDetailChange("country")}
-                placeholder="e.g. Europe"
-              />
-            </div>
-            <div className={styles.row2}>
-              <InputField
-                label="Start Date"
-                type="date"
-                value={details["startDate"] ?? ""}
-                onChange={handleDetailChange("startDate")}
-              />
-              <InputField
-                label="End Date"
-                type="date"
-                value={details["endDate"] ?? ""}
-                onChange={handleDetailChange("endDate")}
-              />
-            </div>
-            <div className={styles.row1}>
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-            </div>
-          </>
-        );
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (submitting) return;
 
-      case "bus":
-        return (
-          <>
-            <div className={styles.row2}>
-              <InputField
-                label="Source"
-                value={details["source"] ?? ""}
-                onChange={handleDetailChange("source")}
-                placeholder="e.g. Mumbai"
-              />
-              <InputField
-                label="Destination"
-                value={details["destination"] ?? ""}
-                onChange={handleDetailChange("destination")}
-                placeholder="e.g. Pune"
-              />
-            </div>
-            <div className={styles.row1}>
-              <InputField
-                label="Departure"
-                type="date"
-                value={details["departure"] ?? ""}
-                onChange={handleDetailChange("departure")}
-              />
-            </div>
-            <div className={styles.row2}>
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Children"
-                value={details["children"] ?? "0"}
-                onChange={handleDetailChange("children")}
-                options={countOptions(10)}
-              />
-            </div>
-          </>
-        );
+    const errs = validate();
+    setErrors(errs);
+    if (hasErrors(errs)) return;
 
-      case "car":
-        return (
-          <>
-            <div className={styles.row2}>
-              <InputField
-                label="Source"
-                value={details["source"] ?? ""}
-                onChange={handleDetailChange("source")}
-                placeholder="e.g. Mumbai"
-              />
-              <InputField
-                label="Destination"
-                value={details["destination"] ?? ""}
-                onChange={handleDetailChange("destination")}
-                placeholder="e.g. Pune"
-              />
-            </div>
-            <div className={styles.row2}>
-              <InputField
-                label="Pickup Date"
-                type="date"
-                value={details["pickupDate"] ?? ""}
-                onChange={handleDetailChange("pickupDate")}
-              />
-              <InputField
-                label="Drop Date"
-                type="date"
-                value={details["dropDate"] ?? ""}
-                onChange={handleDetailChange("dropDate")}
-              />
-            </div>
-            <div className={styles.row1}>
-              <InputField
-                label="Car Type"
-                value={details["carType"] ?? ""}
-                onChange={handleDetailChange("carType")}
-                placeholder="e.g. Sedan, SUV"
-              />
-            </div>
-          </>
-        );
+    const customer =
+      mode === 'existing'
+        ? { existingCustomerId: customerId }
+        : {
+            newCustomer: {
+              firstName: newCustomer.firstName.trim(),
+              lastName: newCustomer.lastName.trim(),
+              mobileNumber: newCustomer.mobileNumber,
+              email: newCustomer.email.trim(),
+              reference: newCustomer.reference.trim(),
+            },
+          };
 
-      case "foreign_exchange":
-        return (
-          <>
-            <div className={styles.row2}>
-              <InputField
-                label="Currency"
-                value={details["currency"] ?? ""}
-                onChange={handleDetailChange("currency")}
-                placeholder="e.g. USD"
-              />
-              <InputField
-                label="Amount"
-                type="number"
-                value={details["amount"] ?? ""}
-                onChange={handleDetailChange("amount")}
-                placeholder="0"
-              />
-            </div>
-            <div className={styles.row1}>
-              <InputField
-                label="Purpose"
-                value={details["purpose"] ?? ""}
-                onChange={handleDetailChange("purpose")}
-                placeholder="e.g. Travel, Business"
-              />
-            </div>
-          </>
-        );
-
-      case "package":
-        return (
-          <>
-            <div className={styles.row1}>
-              <InputField
-                label="Destination"
-                value={details["destination"] ?? ""}
-                onChange={handleDetailChange("destination")}
-                placeholder="e.g. Dubai"
-              />
-            </div>
-            <div className={styles.row2}>
-              <InputField
-                label="Start Date"
-                type="date"
-                value={details["startDate"] ?? ""}
-                onChange={handleDetailChange("startDate")}
-              />
-              <InputField
-                label="End Date"
-                type="date"
-                value={details["endDate"] ?? ""}
-                onChange={handleDetailChange("endDate")}
-              />
-            </div>
-            <div className={styles.row3}>
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Children"
-                value={details["children"] ?? "0"}
-                onChange={handleDetailChange("children")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Package Type"
-                value={details["packageType"] ?? "domestic"}
-                onChange={handleDetailChange("packageType")}
-                options={[
-                  { value: "domestic", label: "Domestic" },
-                  { value: "international", label: "International" },
-                ]}
-              />
-            </div>
-          </>
-        );
-
-      default:
-        return null;
+    setSubmitting(true);
+    try {
+      const res = await api.post(ADMIN_API.LEADS, {
+        ...customer,
+        type,
+        status,
+        details,
+        assignTo: assignTo.trim(),
+        remark: remark.trim(),
+      });
+      showSuccess(res.message || 'Lead created successfully.');
+      onSuccess();
+      onClose();
+    } catch (err) {
+      showError(getErrorMessage(err, 'Failed to create lead.'));
+    } finally {
+      setSubmitting(false);
     }
   };
 
   // ── Render ────────────────────────────────────────────────────────────────
 
+  const renderExistingCustomer = () => {
+    if (customersQuery.loading) {
+      return (
+        <div className={styles.loading}>
+          <Spinner label="Loading customers" /> Loading customers…
+        </div>
+      );
+    }
+    if (customersQuery.error) {
+      return (
+        <div className={styles.grid}>
+          <p className={`${styles.note} ${styles.full}`} role="alert">
+            {customersQuery.error}{' '}
+            <Button variant="ghost" size="sm" onClick={customersQuery.reload}>
+              Try again
+            </Button>
+          </p>
+        </div>
+      );
+    }
+    return (
+      <div className={styles.grid}>
+        <InputField
+          id="lead-customer-search"
+          label="Search customers"
+          type="search"
+          placeholder="Name, mobile or email"
+          value={customerSearch}
+          onChange={(e) => handleSearch(e.target.value)}
+          hint={`${filteredCustomers.length} of ${customers.length} customers`}
+        />
+        <SelectField
+          id="lead-customer"
+          label="Customer"
+          required
+          placeholder={filteredCustomers.length ? 'Select a customer' : 'No matching customers'}
+          value={customerId === null ? '' : String(customerId)}
+          onChange={(e) => {
+            setCustomerId(e.target.value ? Number(e.target.value) : null);
+            clearError('customerId');
+          }}
+          error={errors.customerId}
+          options={filteredCustomers.map((c) => ({
+            value: String(c.id),
+            label: `${c.fullName} · ${c.mobileNumber}`,
+          }))}
+        />
+      </div>
+    );
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Add Lead" maxWidth={720}>
-      {/* ── Type tab bar ─────────────────────────────────────────────── */}
-      <div className={styles.tabBar}>
-        {LEAD_TYPES.map(({ value, label }) => (
-          <button
-            key={value}
-            type="button"
-            className={`${styles.tab} ${activeTab === value ? styles.tabActive : ""}`}
-            onClick={() => handleTabChange(value)}
-          >
-            {label}
-          </button>
-        ))}
+    <form onSubmit={handleSubmit} noValidate className={styles.form}>
+      <div className={styles.typeBar}>
+        <Tabs options={LEAD_TYPES} value={type} onChange={handleTypeChange} label="Service type" size="sm" />
       </div>
 
-      {/* ── Form ─────────────────────────────────────────────────────── */}
-      <form onSubmit={handleSubmit} noValidate className={styles.form}>
-        <div className={styles.formWrapper}>
-          {/* ── Customer section ─────────────────────────────────────── */}
-          <div className={styles.section}>
-            <p className={styles.sectionLabel}>Customer</p>
+      <div className={styles.body}>
+        <fieldset className={styles.section}>
+          <legend className={styles.sectionTitle}>Customer</legend>
+          <Tabs
+            options={CUSTOMER_MODES}
+            value={mode}
+            onChange={(next) => {
+              setMode(next);
+              setErrors({});
+            }}
+            label="Customer source"
+            size="sm"
+          />
 
-            {/* Sub-tabs: Existing | New */}
-            <div className={styles.subTabBar}>
-              <button
-                type="button"
-                className={`${styles.subTab} ${mode === "existing" ? styles.subTabActive : ""}`}
-                onClick={() => setMode("existing")}
-              >
-                Existing Customer
-              </button>
-              <button
-                type="button"
-                className={`${styles.subTab} ${mode === "new" ? styles.subTabActive : ""}`}
-                onClick={() => setMode("new")}
-              >
-                New Customer
-              </button>
+          {mode === 'existing' ? (
+            renderExistingCustomer()
+          ) : (
+            <div className={styles.grid}>
+              <InputField
+                id="lead-first-name"
+                label="First name"
+                required
+                autoComplete="off"
+                value={newCustomer.firstName}
+                onChange={(e) => handleNewCustomer('firstName', e.target.value)}
+                error={errors.firstName}
+              />
+              <InputField
+                id="lead-last-name"
+                label="Last name"
+                required
+                autoComplete="off"
+                value={newCustomer.lastName}
+                onChange={(e) => handleNewCustomer('lastName', e.target.value)}
+                error={errors.lastName}
+              />
+              <InputField
+                id="lead-mobile"
+                label="Mobile number"
+                required
+                type="tel"
+                inputMode="numeric"
+                autoComplete="off"
+                placeholder="9876543210"
+                value={newCustomer.mobileNumber}
+                onChange={(e) => handleNewCustomer('mobileNumber', e.target.value)}
+                error={errors.mobileNumber}
+              />
+              <InputField
+                id="lead-email"
+                label="Email"
+                type="email"
+                autoComplete="off"
+                placeholder="name@example.com"
+                value={newCustomer.email}
+                onChange={(e) => handleNewCustomer('email', e.target.value)}
+                error={errors.email}
+              />
+              <div className={styles.full}>
+                <InputField
+                  id="lead-reference"
+                  label="Reference"
+                  placeholder="e.g. Agent, walk-in"
+                  value={newCustomer.reference}
+                  onChange={(e) => handleNewCustomer('reference', e.target.value)}
+                />
+              </div>
             </div>
+          )}
+        </fieldset>
 
-            {mode === "existing" ? (
-              <>
-                {/* Search input */}
-                <div className={styles.row1}>
-                  <InputField
-                    label="Search Customer"
-                    type="text"
-                    placeholder="Search by name, mobile, or email…"
-                    value={customerSearch}
-                    onChange={(e) => setCustomerSearch(e.target.value)}
-                  />
-                </div>
+        <fieldset className={styles.section}>
+          <legend className={styles.sectionTitle}>Trip details</legend>
+          <TripDetailsFields
+            type={type}
+            context="lead"
+            values={details}
+            errors={errors}
+            onChange={(key, value) => {
+              setDetails((prev) => ({ ...prev, [key]: value }));
+              clearError(key);
+            }}
+          />
+        </fieldset>
 
-                {/* Customer select */}
-                <div className={styles.row1}>
-                  {customersLoading ? (
-                    <div className={styles.fieldWrap}>
-                      <label className={styles.fieldLabel}>
-                        Select Customer
-                      </label>
-                      <p className={styles.loadingText}>Loading customers…</p>
-                    </div>
-                  ) : filteredCustomers.length === 0 ? (
-                    <div className={styles.fieldWrap}>
-                      <label className={styles.fieldLabel}>
-                        Select Customer
-                      </label>
-                      <p className={styles.loadingText}>No customers found.</p>
-                    </div>
-                  ) : (
-                    <SelectField
-                      label="Select Customer"
-                      placeholder="— Select a customer —"
-                      value={
-                        existingCustomerId === 0
-                          ? ""
-                          : String(existingCustomerId)
-                      }
-                      onChange={(e) =>
-                        setExistingCustomerId(Number(e.target.value))
-                      }
-                      options={filteredCustomers.map((c) => ({
-                        value: String(c.id),
-                        label: `${c.fullName} — ${c.mobileNumber}`,
-                      }))}
-                    />
-                  )}
-                </div>
-              </>
-            ) : (
-              <>
-                <div className={styles.row2}>
-                  <InputField
-                    label="First Name"
-                    value={newFirstName}
-                    onChange={(e) => setNewFirstName(e.target.value)}
-                    placeholder="First name"
-                  />
-                  <InputField
-                    label="Last Name"
-                    value={newLastName}
-                    onChange={(e) => setNewLastName(e.target.value)}
-                    placeholder="Last name"
-                  />
-                </div>
-                <div className={styles.row2}>
-                  <SelectField
-                    label="Gender"
-                    value={newGender}
-                    onChange={(e) => setNewGender(e.target.value)}
-                    options={[
-                      { value: "Male", label: "Male" },
-                      { value: "Female", label: "Female" },
-                      { value: "Other", label: "Other" },
-                    ]}
-                  />
-                  <InputField
-                    label="Mobile Number"
-                    value={newMobile}
-                    onChange={(e) => setNewMobile(e.target.value)}
-                    placeholder="e.g. 9876543210"
-                  />
-                </div>
-                <div className={styles.row2}>
-                  <InputField
-                    label="Email"
-                    value={newEmail}
-                    onChange={(e) => setNewEmail(e.target.value)}
-                    placeholder="email@example.com"
-                  />
-                  <InputField
-                    label="Reference"
-                    value={newReference}
-                    onChange={(e) => setNewReference(e.target.value)}
-                    placeholder="e.g. Agent / Walk-in"
-                  />
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* ── Type-specific fields ──────────────────────────────────── */}
-          <div className={styles.divider} />
-          {renderTypeFields()}
-
-          {/* ── Status ───────────────────────────────────────────────── */}
-          <div className={styles.row1}>
+        <fieldset className={styles.section}>
+          <legend className={styles.sectionTitle}>Pipeline</legend>
+          <div className={styles.grid}>
             <SelectField
+              id="lead-status"
               label="Status"
               value={status}
               onChange={(e) => setStatus(e.target.value as LeadStatus)}
-              options={LEAD_STATUSES.map((s) => ({
-                value: s.value,
-                label: s.label,
-              }))}
+              options={LEAD_STATUSES}
             />
-          </div>
-
-          {/* ── Assign To ────────────────────────────────────────────── */}
-          <div className={styles.row1}>
             <InputField
-              label="Assign To"
+              id="lead-assign-to"
+              label="Assign to"
+              placeholder="e.g. John (Sales)"
               value={assignTo}
               onChange={(e) => setAssignTo(e.target.value)}
-              placeholder="e.g. John (Sales)"
             />
-          </div>
-
-          {/* ── Remark ───────────────────────────────────────────────── */}
-          <div className={styles.row1}>
             <TextareaField
+              id="lead-remark"
+              className={styles.full}
               label="Remark"
+              placeholder="Any additional notes…"
               value={remark}
               onChange={(e) => setRemark(e.target.value)}
-              placeholder="Any additional notes…"
-              rows={3}
             />
           </div>
-        </div>
-        {/* ── Footer ───────────────────────────────────────────────── */}
-        <ModalFooter>
-          <Button
-            title="Cancel"
-            className="btn-md"
-            variant="secondary"
-            type="button"
-            onClick={onClose}
-            disabled={loading}
-          >
-            Cancel
-          </Button>
-          <Button
-            title="Save Lead"
-            className="btn-md"
-            type="submit"
-            loading={loading}
-          >
-            Save Lead
-          </Button>
-        </ModalFooter>
-      </form>
-    </Modal>
+        </fieldset>
+      </div>
+
+      <ModalFooter>
+        <Button variant="secondary" onClick={onClose} disabled={submitting}>
+          Cancel
+        </Button>
+        <Button type="submit" loading={submitting}>
+          Save lead
+        </Button>
+      </ModalFooter>
+    </form>
   );
 }

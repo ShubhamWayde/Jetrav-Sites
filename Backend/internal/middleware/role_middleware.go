@@ -10,6 +10,17 @@ import (
 // AdminOnly allows access only to users with role == "admin".
 // Must be used after AuthMiddleware (which sets the "role" context value).
 func AdminOnly() gin.HandlerFunc {
+	return RequireRole("admin")
+}
+
+// UserOnly allows access only to customers (role == "user"), so an admin token
+// held by the user app can't act as a customer.
+func UserOnly() gin.HandlerFunc {
+	return RequireRole("user")
+}
+
+// RequireRole allows access only to the given role. Must run after AuthMiddleware.
+func RequireRole(want string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		role, exists := c.Get("role")
 		if !exists {
@@ -18,8 +29,8 @@ func AdminOnly() gin.HandlerFunc {
 			return
 		}
 
-		if role != "admin" {
-			utils.Error(c, http.StatusForbidden, "Access denied: admin privileges required")
+		if role != want {
+			utils.Error(c, http.StatusForbidden, "Access denied: "+want+" privileges required")
 			c.Abort()
 			return
 		}

@@ -1,133 +1,116 @@
-.page {
-  padding: 24px 28px;
-  max-width: 900px;
+/* ── Stats ─────────────────────────────────────────────────────────────────── */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
 }
 
-.pageTitle {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 24px;
-  color: var(--jt-light-base);
+/* ── Lists ─────────────────────────────────────────────────────────────────── */
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: var(--space-6);
+  align-items: start;
 }
 
-/* ── Stats row ─────────────────────────────────────────────────────────────── */
-
-.statsRow {
+.list {
   display: flex;
-  gap: 16px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
 }
 
-.statCard {
-  background: var(--jt-neutral-900);
-  border-radius: 10px;
-  padding: 18px 28px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  min-width: 140px;
+.item {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.item:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.item:last-child {
+  padding-bottom: 0;
+}
+
+.itemIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-xl);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.itemBody {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
 }
 
-.statLabel {
-  font-size: 13px;
-  color: var(--jt-light-base);
-  margin: 0;
-}
-
-.statValue {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--jt-light-base);
-  margin: 0;
-}
-
-/* ── Sections ──────────────────────────────────────────────────────────────── */
-
-.section {
-  margin-bottom: 32px;
-}
-
-.sectionTitle {
+.itemTop {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 14px;
-  color: var(--jt-light-base);
-}
-
-.emptyText {
-  color: var(--jt-light-base);
-  font-size: 14px;
-}
-
-.cardList {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* ── Lead / Quotation cards ────────────────────────────────────────────────── */
-
-.card {
-  background: var(--jt-neutral-900);
-  border-radius: 10px;
-  padding: 16px 20px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.cardTop {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
+  gap: var(--space-2);
 }
 
-.cardType {
-  font-weight: 600;
-  font-size: 15px;
-  text-transform: capitalize;
-}
-
-.statusBadge {
-  border-radius: 20px;
-  padding: 2px 10px;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: capitalize;
-}
-
-.cardAssign {
-  font-size: 13px;
-  color: var(--jt-light-base);
+.itemTitle {
   margin: 0;
+  font-size: var(--font-md);
+  font-weight: var(--font-weight-500);
+  color: var(--text-primary);
 }
 
-.cardRemark {
-  font-size: 13px;
-  color: var(--jt-light-base);
+.itemDate {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+}
+
+.itemRemark {
   margin: 0;
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
 }
 
-.cardMeta {
-  font-size: 12px;
-  color: var(--jt-light-base);
+.itemMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
   margin: 0;
+  font-size: var(--font-xs);
+  color: var(--text-muted);
 }
 
-/* ── Loading / error ───────────────────────────────────────────────────────── */
+/* ── Loading skeleton ──────────────────────────────────────────────────────── */
 
-.loading {
-  padding: 32px;
-  text-align: center;
-  color: var(--jt-light-base);
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
-.error {
-  padding: 32px;
-  text-align: center;
-  color: #e53e3e;
+.skeletonList span {
+  height: 3.5rem;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(90deg, var(--surface-2), var(--surface-3), var(--surface-2));
+  background-size: 200% 100%;
+  animation: shimmer 1.4s var(--ease-out) infinite;
+}
+
+@keyframes shimmer {
+  from { background-position: 100% 0; }
+  to   { background-position: -100% 0; }
 }

@@ -1,30 +1,18 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
-import { showSuccess, showError } from "@repo/auth";
-import InputField from "@repo/ui/InputField";
-import TextareaField from "@repo/ui/TextareaField";
-import { api } from "@/lib/api";
-import { ADMIN_API } from "@/lib/constants";
-import {
-  DEFAULT_DETAILS,
-  QUOTATION_TYPES,
-  QuotationDetails,
-  QuotationType,
-} from "@/app/types/quotation";
-import SelectField from "@repo/ui/SelectField";
-import Button from "@repo/ui/Button";
-import Modal, { ModalFooter } from "@repo/ui/Modal";
-import styles from "./AddQuotationModal.module.css";
-
-function countOptions(max: number) {
-  return Array.from({ length: max + 1 }, (_, i) => ({
-    value: String(i),
-    label: String(i),
-  }));
-}
-
-// ── Main component ────────────────────────────────────────────────────────────
+import { useState } from 'react';
+import { api, getErrorMessage, showError, showSuccess } from '@repo/auth';
+import Button from '@repo/ui/Button';
+import InputField from '@repo/ui/InputField';
+import Modal, { ModalFooter } from '@repo/ui/Modal';
+import { Tabs } from '@repo/ui/Tabs';
+import TextareaField from '@repo/ui/TextareaField';
+import { ADMIN_API } from '@/lib/constants';
+import { hasErrors, type FieldErrors } from '@/lib/validation';
+import { QUOTATION_TYPES, type QuotationType } from '@/app/types/quotation';
+import TripDetailsFields from '@/components/trip-details/TripDetailsFields';
+import { defaultTripDetails, validateTripDetails } from '@/components/trip-details/tripDetailsConfig';
+import styles from '../ModalForm.module.css';
 
 interface AddQuotationModalProps {
   isOpen: boolean;
@@ -34,561 +22,113 @@ interface AddQuotationModalProps {
   onSuccess: () => void;
 }
 
-export default function AddQuotationModal({
-  isOpen,
-  customerId,
-  customerName,
-  onClose,
-  onSuccess,
-}: AddQuotationModalProps) {
-  const [activeTab, setActiveTab] = useState<QuotationType>("air");
-  const [details, setDetails] = useState<QuotationDetails>({
-    ...DEFAULT_DETAILS.air,
-  });
-  const [assignTo, setAssignTo] = useState("");
-  const [remark, setRemark] = useState("");
-  const [loading, setLoading] = useState(false);
+export default function AddQuotationModal({ isOpen, customerName, ...props }: AddQuotationModalProps) {
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={props.onClose}
+      title="Add quotation"
+      subtitle={customerName ? `For ${customerName}` : undefined}
+      maxWidth={760}
+    >
+      <AddQuotationForm {...props} />
+    </Modal>
+  );
+}
 
-  // ── Reset when modal opens ────────────────────────────────────────────────
+function AddQuotationForm({ customerId, onClose, onSuccess }: Omit<AddQuotationModalProps, 'isOpen' | 'customerName'>) {
+  const [type, setType] = useState<QuotationType>('air');
+  const [details, setDetails] = useState(() => defaultTripDetails('air', 'quotation'));
+  const [assignTo, setAssignTo] = useState('');
+  const [remark, setRemark] = useState('');
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    setActiveTab("air");
-    setDetails({ ...DEFAULT_DETAILS.air });
-    setAssignTo("");
-    setRemark("");
-  }, [isOpen]);
-
-  // ── Tab switch ────────────────────────────────────────────────────────────
-
-  const handleTabChange = (tab: QuotationType) => {
-    setActiveTab(tab);
-    setDetails({ ...DEFAULT_DETAILS[tab] });
+  const handleTypeChange = (next: QuotationType) => {
+    setType(next);
+    setDetails(defaultTripDetails(next, 'quotation'));
+    setErrors({});
   };
 
-  // ── Detail field updater ──────────────────────────────────────────────────
-
-  const handleDetailChange = useCallback(
-    (field: string) =>
-      (
-        e: React.ChangeEvent<
-          HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-        >,
-      ) => {
-        setDetails((prev) => ({ ...prev, [field]: e.target.value }));
-      },
-    [],
-  );
-
-  // ── Submit ────────────────────────────────────────────────────────────────
-
-  const handleSubmit = async (e: { preventDefault(): void }) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    if (submitting) return;
+
+    const errs = validateTripDetails(type, details);
+    setErrors(errs);
+    if (hasErrors(errs)) return;
+
+    setSubmitting(true);
     try {
       const res = await api.post(ADMIN_API.QUOTATIONS(customerId), {
-        type: activeTab,
+        type,
         assignTo: assignTo.trim(),
         remark: remark.trim(),
         details,
       });
-      showSuccess(res.message ?? "Quotation created successfully.");
+      showSuccess(res.message || 'Quotation created successfully.');
       onSuccess();
       onClose();
     } catch (err) {
-      showError(
-        err instanceof Error ? err.message : "Failed to create quotation.",
-      );
+      showError(getErrorMessage(err, 'Failed to create quotation.'));
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
-
-  // ── Per-type dynamic fields ───────────────────────────────────────────────
-
-  const renderTypeFields = () => {
-    switch (activeTab) {
-      case "air":
-        return (
-          <>
-            <div className={styles.row2}>
-              <InputField
-                label="Source"
-                value={details["source"] ?? ""}
-                onChange={handleDetailChange("source")}
-                placeholder="e.g. Mumbai (BOM)"
-              />
-              <InputField
-                label="Destination"
-                value={details["destination"] ?? ""}
-                onChange={handleDetailChange("destination")}
-                placeholder="e.g. Dubai (DXB)"
-              />
-            </div>
-            <div className={styles.row2}>
-              <InputField
-                label="Departure"
-                type="date"
-                value={details["departure"] ?? ""}
-                onChange={handleDetailChange("departure")}
-              />
-              <InputField
-                label="Return"
-                type="date"
-                value={details["return"] ?? ""}
-                onChange={handleDetailChange("return")}
-              />
-            </div>
-            <div className={styles.row3}>
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Children"
-                value={details["children"] ?? "0"}
-                onChange={handleDetailChange("children")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Infant"
-                value={details["infant"] ?? "0"}
-                onChange={handleDetailChange("infant")}
-                options={countOptions(5)}
-              />
-            </div>
-          </>
-        );
-
-      case "train":
-        return (
-          <>
-            <div className={styles.row2}>
-              <InputField
-                label="Source"
-                value={details["source"] ?? ""}
-                onChange={handleDetailChange("source")}
-                placeholder="e.g. Mumbai"
-              />
-              <InputField
-                label="Destination"
-                value={details["destination"] ?? ""}
-                onChange={handleDetailChange("destination")}
-                placeholder="e.g. Delhi"
-              />
-            </div>
-            <div className={styles.row2}>
-              <InputField
-                label="Departure"
-                type="date"
-                value={details["departure"] ?? ""}
-                onChange={handleDetailChange("departure")}
-              />
-              <InputField
-                label="Return"
-                type="date"
-                value={details["return"] ?? ""}
-                onChange={handleDetailChange("return")}
-              />
-            </div>
-            <div className={styles.row2}>
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Children"
-                value={details["children"] ?? "0"}
-                onChange={handleDetailChange("children")}
-                options={countOptions(10)}
-              />
-            </div>
-          </>
-        );
-
-      case "hotel":
-        return (
-          <>
-            <div className={styles.row1}>
-              <InputField
-                label="City"
-                value={details["city"] ?? ""}
-                onChange={handleDetailChange("city")}
-                placeholder="e.g. Dubai"
-              />
-            </div>
-            <div className={styles.row2}>
-              <InputField
-                label="Check-In"
-                type="date"
-                value={details["checkIn"] ?? ""}
-                onChange={handleDetailChange("checkIn")}
-              />
-              <InputField
-                label="Check-Out"
-                type="date"
-                value={details["checkOut"] ?? ""}
-                onChange={handleDetailChange("checkOut")}
-              />
-            </div>
-            <div className={styles.row3}>
-              <SelectField
-                label="Rooms"
-                value={details["rooms"] ?? "1"}
-                onChange={handleDetailChange("rooms")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Children"
-                value={details["children"] ?? "0"}
-                onChange={handleDetailChange("children")}
-                options={countOptions(10)}
-              />
-            </div>
-          </>
-        );
-
-      case "visa":
-        return (
-          <>
-            <div className={styles.row2}>
-              <InputField
-                label="Country"
-                value={details["country"] ?? ""}
-                onChange={handleDetailChange("country")}
-                placeholder="e.g. UAE"
-              />
-              <InputField
-                label="Visa Type"
-                value={details["visaType"] ?? ""}
-                onChange={handleDetailChange("visaType")}
-                placeholder="e.g. Tourist"
-              />
-            </div>
-            <div className={styles.row1}>
-              <InputField
-                label="Travel Date"
-                type="date"
-                value={details["travelDate"] ?? ""}
-                onChange={handleDetailChange("travelDate")}
-              />
-            </div>
-            <div className={styles.row2}>
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Children"
-                value={details["children"] ?? "0"}
-                onChange={handleDetailChange("children")}
-                options={countOptions(10)}
-              />
-            </div>
-          </>
-        );
-
-      case "insurance":
-        return (
-          <>
-            <div className={styles.row1}>
-              <InputField
-                label="Country"
-                value={details["country"] ?? ""}
-                onChange={handleDetailChange("country")}
-                placeholder="e.g. Europe"
-              />
-            </div>
-            <div className={styles.row2}>
-              <InputField
-                label="Start Date"
-                type="date"
-                value={details["startDate"] ?? ""}
-                onChange={handleDetailChange("startDate")}
-              />
-              <InputField
-                label="End Date"
-                type="date"
-                value={details["endDate"] ?? ""}
-                onChange={handleDetailChange("endDate")}
-              />
-            </div>
-            <div className={styles.row1}>
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-            </div>
-          </>
-        );
-
-      case "bus":
-        return (
-          <>
-            <div className={styles.row2}>
-              <InputField
-                label="Source"
-                value={details["source"] ?? ""}
-                onChange={handleDetailChange("source")}
-                placeholder="e.g. Mumbai"
-              />
-              <InputField
-                label="Destination"
-                value={details["destination"] ?? ""}
-                onChange={handleDetailChange("destination")}
-                placeholder="e.g. Pune"
-              />
-            </div>
-            <div className={styles.row1}>
-              <InputField
-                label="Departure"
-                type="date"
-                value={details["departure"] ?? ""}
-                onChange={handleDetailChange("departure")}
-              />
-            </div>
-            <div className={styles.row2}>
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Children"
-                value={details["children"] ?? "0"}
-                onChange={handleDetailChange("children")}
-                options={countOptions(10)}
-              />
-            </div>
-          </>
-        );
-
-      case "car":
-        return (
-          <>
-            <div className={styles.row2}>
-              <InputField
-                label="Source"
-                value={details["source"] ?? ""}
-                onChange={handleDetailChange("source")}
-                placeholder="e.g. Mumbai"
-              />
-              <InputField
-                label="Destination"
-                value={details["destination"] ?? ""}
-                onChange={handleDetailChange("destination")}
-                placeholder="e.g. Pune"
-              />
-            </div>
-            <div className={styles.row2}>
-              <InputField
-                label="Pickup Date"
-                type="date"
-                value={details["pickupDate"] ?? ""}
-                onChange={handleDetailChange("pickupDate")}
-              />
-              <InputField
-                label="Drop Date"
-                type="date"
-                value={details["dropDate"] ?? ""}
-                onChange={handleDetailChange("dropDate")}
-              />
-            </div>
-            <div className={styles.row1}>
-              <InputField
-                label="Car Type"
-                value={details["carType"] ?? ""}
-                onChange={handleDetailChange("carType")}
-                placeholder="e.g. Sedan, SUV"
-              />
-            </div>
-          </>
-        );
-
-      case "foreign_exchange":
-        return (
-          <>
-            <div className={styles.row2}>
-              <InputField
-                label="Currency"
-                value={details["currency"] ?? ""}
-                onChange={handleDetailChange("currency")}
-                placeholder="e.g. USD"
-              />
-              <InputField
-                label="Amount"
-                type="number"
-                value={details["amount"] ?? ""}
-                onChange={handleDetailChange("amount")}
-                placeholder="0"
-              />
-            </div>
-            <div className={styles.row1}>
-              <InputField
-                label="Purpose"
-                value={details["purpose"] ?? ""}
-                onChange={handleDetailChange("purpose")}
-                placeholder="e.g. Travel, Business"
-              />
-            </div>
-          </>
-        );
-
-      case "package":
-        return (
-          <>
-            <div className={styles.row1}>
-              <InputField
-                label="Destination"
-                value={details["destination"] ?? ""}
-                onChange={handleDetailChange("destination")}
-                placeholder="e.g. Dubai"
-              />
-            </div>
-            <div className={styles.row2}>
-              <InputField
-                label="Start Date"
-                type="date"
-                value={details["startDate"] ?? ""}
-                onChange={handleDetailChange("startDate")}
-              />
-              <InputField
-                label="End Date"
-                type="date"
-                value={details["endDate"] ?? ""}
-                onChange={handleDetailChange("endDate")}
-              />
-            </div>
-            <div className={styles.row3}>
-              <SelectField
-                label="Adults"
-                value={details["adults"] ?? "1"}
-                onChange={handleDetailChange("adults")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Children"
-                value={details["children"] ?? "0"}
-                onChange={handleDetailChange("children")}
-                options={countOptions(10)}
-              />
-              <SelectField
-                label="Package Type"
-                value={details["packageType"] ?? "domestic"}
-                onChange={handleDetailChange("packageType")}
-                options={[
-                  { value: "domestic", label: "Domestic" },
-                  { value: "international", label: "International" },
-                ]}
-              />
-            </div>
-          </>
-        );
-
-      default:
-        return null;
-    }
-  };
-
-  // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Add Quotation"
-      maxWidth={720}
-    >
-      {/* ── Tab bar ──────────────────────────────────────────────────── */}
-      <div className={styles.tabBar}>
-        {QUOTATION_TYPES.map(({ value, label }) => (
-          <button
-            key={value}
-            type="button"
-            className={`${styles.tab} ${activeTab === value ? styles.tabActive : ""}`}
-            onClick={() => handleTabChange(value)}
-          >
-            {label}
-          </button>
-        ))}
+    <form onSubmit={handleSubmit} noValidate className={styles.form}>
+      <div className={styles.typeBar}>
+        <Tabs options={QUOTATION_TYPES} value={type} onChange={handleTypeChange} label="Service type" size="sm" />
       </div>
 
-      {/* ── Form ─────────────────────────────────────────────────────── */}
-      <form onSubmit={handleSubmit} noValidate className={styles.form}>
-        <div className={styles.formWrapper}>
-          {/* Customer name (read-only) */}
-          <div className={styles.row1}>
-            <InputField
-              label="Customer Name"
-              value={customerName}
-              onChange={() => {}}
-              disabled
-            />
-          </div>
+      <div className={styles.body}>
+        <fieldset className={styles.section}>
+          <legend className={styles.sectionTitle}>Trip details</legend>
+          <TripDetailsFields
+            type={type}
+            context="quotation"
+            values={details}
+            errors={errors}
+            onChange={(key, value) => {
+              setDetails((prev) => ({ ...prev, [key]: value }));
+              setErrors((prev) => ({ ...prev, [key]: '' }));
+            }}
+          />
+        </fieldset>
 
-          {/* Type-specific dynamic fields */}
-          {renderTypeFields()}
-
-          {/* Assign To */}
-          <div className={styles.row1}>
-            <InputField
-              label="Assign To"
-              type="text"
-              value={assignTo}
-              onChange={(e) => setAssignTo(e.target.value)}
-              placeholder="e.g. John (Sales)"
-            />
-          </div>
-
-          {/* Remark */}
-          <div className={styles.row1}>
+        <fieldset className={styles.section}>
+          <legend className={styles.sectionTitle}>Follow-up</legend>
+          <div className={styles.grid}>
+            <div className={styles.full}>
+              <InputField
+                id="quotation-assign-to"
+                label="Assign to"
+                placeholder="e.g. John (Sales)"
+                value={assignTo}
+                onChange={(e) => setAssignTo(e.target.value)}
+              />
+            </div>
             <TextareaField
+              id="quotation-remark"
+              className={styles.full}
               label="Remark"
+              placeholder="Any additional notes…"
               value={remark}
               onChange={(e) => setRemark(e.target.value)}
-              placeholder="Any additional notes…"
-              rows={3}
             />
           </div>
-        </div>
+        </fieldset>
+      </div>
 
-        {/* Footer */}
-        <ModalFooter>
-          <Button
-            title="Cancel"
-            className="btn-md"
-            variant="secondary"
-            type="button"
-            onClick={onClose}
-            disabled={loading}
-          >
-            Cancel
-          </Button>
-          <Button
-            title="Save Quotation"
-            className="btn-md"
-            type="submit"
-            loading={loading}
-          >
-            Save
-          </Button>
-        </ModalFooter>
-      </form>
-    </Modal>
+      <ModalFooter>
+        <Button variant="secondary" onClick={onClose} disabled={submitting}>
+          Cancel
+        </Button>
+        <Button type="submit" loading={submitting}>
+          Save quotation
+        </Button>
+      </ModalFooter>
+    </form>
   );
 }

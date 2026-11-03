@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"log"
 
 	"Backend/internal/models"
 	"Backend/internal/repository"
@@ -18,13 +19,16 @@ func NewCustomerService(repo repository.CustomerRepository, rewardRepo repositor
 
 // ─── Create ───────────────────────────────────────────────────────────────────
 
+// ErrCustomerPhoneExists is returned when the mobile number belongs to another user.
+var ErrCustomerPhoneExists = errors.New("a customer with this mobile number already exists")
+
 func (s *customerService) Create(adminID uint, req models.CreateCustomerRequest) (*models.CustomerResponse, error) {
 	exists, err := s.repo.ExistsByPhone(req.MobileNumber, 0)
 	if err != nil {
 		return nil, errors.New("failed to check mobile number availability")
 	}
 	if exists {
-		return nil, errors.New("a customer with this mobile number already exists")
+		return nil, ErrCustomerPhoneExists
 	}
 
 	planType := req.PlanType
@@ -47,7 +51,8 @@ func (s *customerService) Create(adminID uint, req models.CreateCustomerRequest)
 	}
 
 	if err := s.repo.Create(user); err != nil {
-		return nil, errors.New("failed to create customer: " + err.Error())
+		log.Printf("create customer: %v", err)
+		return nil, errors.New("failed to create customer")
 	}
 
 	// Grant 200 welcome Jetcoins to admin-created customers
@@ -114,7 +119,7 @@ func (s *customerService) Update(_ uint, id uint, req models.UpdateCustomerReque
 			return nil, errors.New("failed to check mobile number availability")
 		}
 		if exists {
-			return nil, errors.New("a customer with this mobile number already exists")
+			return nil, ErrCustomerPhoneExists
 		}
 		updates["phoneNumber"] = *req.MobileNumber
 	}

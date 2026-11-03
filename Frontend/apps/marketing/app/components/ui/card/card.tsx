@@ -9,7 +9,6 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   image?: React.ReactNode;
   heading: React.ReactNode | string;
   description?: string;
-  price?: string;
   tagName?: string;
   contentClassName?: string;
   children?: React.ReactNode;
@@ -20,7 +19,6 @@ export default function Card({
   image,
   heading,
   description,
-  price,
   tagName,
   contentClassName,
   children,

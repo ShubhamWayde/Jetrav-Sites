@@ -7,7 +7,8 @@ type SignupRequest struct {
 	LastName     string `json:"lastName"     binding:"required"`
 	Email        string `json:"email"        binding:"omitempty,email"`
 	MobileNumber string `json:"mobileNumber" binding:"required"`
-	Role         string `json:"role"         binding:"required,oneof=admin user"`
+	// Admin signup is only honoured for numbers in ADMIN_MOBILE_NUMBERS.
+	Role string `json:"role" binding:"required,oneof=admin user"`
 }
 
 type LoginWithPasswordRequest struct {

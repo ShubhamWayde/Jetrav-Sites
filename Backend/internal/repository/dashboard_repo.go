@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"Backend/internal/models"
+	"Backend/pkg/utils"
 	"gorm.io/gorm"
 )
 
@@ -49,11 +50,11 @@ func jsonbDateField(tripType string) string {
 // ─── GetStats ─────────────────────────────────────────────────────────────────
 
 func (r *dashboardRepo) GetStats(adminID uint, filters models.DashboardFilters) (models.DashboardStats, error) {
-	q := r.db.Table(`leads`).Where(`"createdBy" = ?`, adminID)
+	q := r.db.Table(`leads`).Where(`leads."createdBy" = ?`, adminID)
 
 	// Date range filter on createdAt.
 	if since := dateRangeStart(filters.DateRange); !since.IsZero() {
-		q = q.Where(`"createdAt" >= ?`, since)
+		q = q.Where(`leads."createdAt" >= ?`, since)
 	}
 
 	// Customer type filter — join users table (customers merged into users).
@@ -71,8 +72,8 @@ func (r *dashboardRepo) GetStats(adminID uint, filters models.DashboardFilters) 
 		Count  int64
 	}
 	var rows []statusCount
-	err := q.Select(`status AS "Status", COUNT(*) AS "Count"`).
-		Group(`status`).
+	err := q.Select(`leads.status AS "Status", COUNT(*) AS "Count"`).
+		Group(`leads.status`).
 		Scan(&rows).Error
 	if err != nil {
 		return models.DashboardStats{}, err
@@ -102,7 +103,9 @@ func (r *dashboardRepo) GetStats(adminID uint, filters models.DashboardFilters) 
 
 func (r *dashboardRepo) GetUpcomingTrips(tripType string, filters models.DashboardFilters) ([]models.LeadRow, error) {
 	dateField := jsonbDateField(tripType)
-	today := time.Now().Format("2006-01-02")
+	// Trip dates are plain YYYY-MM-DD strings entered in India, so "today" must be
+	// the business-timezone date, not the server's (UTC in Docker).
+	today := utils.BusinessToday()
 
 	q := r.db.
 		Table(`leads l`).
@@ -113,7 +116,14 @@ func (r *dashboardRepo) GetUpcomingTrips(tripType string, filters models.Dashboa
 		// Only active pipeline trips — exclude terminal statuses.
 		Where(`l."status" NOT IN ('cancelled', 'lost')`).
 		// Only upcoming trips (from today onwards).
-		Where(fmt.Sprintf(`l."details"->>'%s' >= ?`, dateField), today)
+		Where(fmt.Sprintf(`l."details"->>'%s' >= ?`, dateField), today.Format(time.DateOnly))
+
+	// Optional single-day filter; "all" (default) keeps every upcoming trip.
+	dayOffset := map[string]int{"today": 0, "in_1_day": 1, "in_2_days": 2}
+	if offset, ok := dayOffset[filters.TripDateFilter]; ok {
+		q = q.Where(fmt.Sprintf(`l."details"->>'%s' = ?`, dateField),
+			today.AddDate(0, 0, offset).Format(time.DateOnly))
+	}
 
 	// Domestic / international filter (stored as tripType in JSONB details).
 	switch filters.TripFilter {

@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import { getAccessToken } from '../utils/auth';
+import { refreshAccessToken } from '../api';
+import { WS_BASE_URL } from '../constants';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -12,10 +14,8 @@ export interface SocketMessage {
 
 type EventHandler = (data: unknown) => void;
 
-// ── Defaults ───────────────────────────────────────────────────────────────────
-
-const WS_BASE =
-  (typeof process !== 'undefined' && process.env?.JETRAV_WS_URL) || 'ws://localhost:8080';
+const MIN_RETRY_MS = 1_000;
+const MAX_RETRY_MS = 30_000;
 
 // ── Hook ───────────────────────────────────────────────────────────────────────
 
@@ -23,29 +23,32 @@ export function useSocket() {
   const ws = useRef<WebSocket | null>(null);
   const handlers = useRef<Map<string, Set<EventHandler>>>(new Map());
   const reconnect = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const retryDelay = useRef(MIN_RETRY_MS);
   const stopped = useRef(false);
 
-  const connect = useCallback(() => {
+  const scheduleReconnect = useCallback((connectFn: () => void) => {
+    if (stopped.current) return;
+    reconnect.current = setTimeout(connectFn, retryDelay.current);
+    // Exponential backoff so a down server or dead session isn't hammered
+    retryDelay.current = Math.min(retryDelay.current * 2, MAX_RETRY_MS);
+  }, []);
+
+  const connect = useCallback(async () => {
     if (stopped.current) return;
 
-    // Re-read token on every attempt — it may have been stored after mount.
-    const token = getAccessToken();
-    if (!token) {
-      // Not authenticated yet — retry after a short delay.
-      reconnect.current = setTimeout(connect, 2000);
+    // The token lives in memory; after a reload get one from the refresh cookie.
+    if (!getAccessToken() && !(await refreshAccessToken())) {
+      scheduleReconnect(connect);
       return;
     }
+    const token = getAccessToken();
+    if (stopped.current || !token) return;
 
-    const url = `${WS_BASE}/ws?token=${token}`;
-    const socket = new WebSocket(url);
+    const socket = new WebSocket(`${WS_BASE_URL}/ws?token=${encodeURIComponent(token)}`);
     ws.current = socket;
 
     socket.onopen = () => {
-      // Clear any pending reconnect timer on successful open.
-      if (reconnect.current) {
-        clearTimeout(reconnect.current);
-        reconnect.current = null;
-      }
+      retryDelay.current = MIN_RETRY_MS;
     };
 
     socket.onmessage = (e) => {
@@ -57,22 +60,22 @@ export function useSocket() {
       }
     };
 
-    socket.onclose = (ev) => {
+    socket.onclose = async () => {
       if (stopped.current) return;
-      // 4001 = custom code we could use for "unauthorized" — don't retry.
-      // Normal close codes: reconnect after 3 s.
-      if (ev.code === 1008 /* Policy Violation = auth error */ || ev.code === 4001) return;
-      reconnect.current = setTimeout(connect, 3000);
+      // A rejected upgrade (e.g. expired token) arrives as an abnormal close,
+      // so refresh before the next attempt; give up quietly if the session is gone.
+      if (!(await refreshAccessToken())) return;
+      scheduleReconnect(connect);
     };
 
     socket.onerror = () => {
       socket.close();
     };
-  }, []);
+  }, [scheduleReconnect]);
 
   useEffect(() => {
     stopped.current = false;
-    connect();
+    void connect();
     return () => {
       stopped.current = true;
       if (reconnect.current) clearTimeout(reconnect.current);

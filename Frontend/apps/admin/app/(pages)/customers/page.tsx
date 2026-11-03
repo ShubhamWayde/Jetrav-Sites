@@ -1,77 +1,67 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { showError, showSuccess } from "@repo/auth";
-import { api } from "@/lib/api";
-import { ADMIN_API } from "@/lib/constants";
-import CustomerModal from "@/components/modals/create-customer/CustomerModal";
-import ConfirmDeleteModal from "@/components/modals/confirm-delete/ConfirmDeleteModal";
-import AddQuotationModal from "@/components/modals/create-quotation/AddQuotationModal";
-import { Icon, Edit, Delete, Workspaces } from "@repo/ui/icon";
-import Table, { type Column } from "@repo/ui/Table";
-import styles from "./customers.module.css";
-import { CustomerResponse } from "@/app/types/customer";
-import Button from "@repo/ui/Button";
-import { formatDate, formatNumber } from "@/utility/date";
+import { useMemo, useState } from 'react';
+import Link from 'next/link';
+import { api, getErrorMessage, showError, showSuccess } from '@repo/auth';
+import { Badge } from '@repo/ui/Badge';
+import Button from '@repo/ui/Button';
+import { Card } from '@repo/ui/Card';
+import { EmptyState } from '@repo/ui/EmptyState';
+import InputField from '@repo/ui/InputField';
+import { PageHeader } from '@repo/ui/PageHeader';
+import Table, { type Column } from '@repo/ui/Table';
+import { Delete, Edit, Icon, Workspaces } from '@repo/ui/icon';
+import { ADMIN_API } from '@/lib/constants';
+import { formatDate, formatNumber } from '@/lib/format';
+import { planTone } from '@/lib/tones';
+import { useApiQuery } from '@/lib/useApiQuery';
+import type { CustomerResponse } from '@/app/types/customer';
+import CustomerModal from '@/components/modals/create-customer/CustomerModal';
+import ConfirmDeleteModal from '@/components/modals/confirm-delete/ConfirmDeleteModal';
+import AddQuotationModal from '@/components/modals/create-quotation/AddQuotationModal';
+import styles from './customers.module.css';
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// `undefined` = closed, `null` = create, number = edit that customer
+type EditorState = number | null | undefined;
 
 export default function CustomersPage() {
-  const router = useRouter();
-
-  const [customers, setCustomers] = useState<CustomerResponse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [fetchError, setFetchError] = useState("");
-  const [showCreate, setShowCreate] = useState(false);
-  const [editId, setEditId] = useState<number | undefined>();
-  const [deleteTarget, setDeleteTarget] = useState<CustomerResponse | null>(
-    null,
+  const { data, loading, error, reload } = useApiQuery<CustomerResponse[]>(
+    ADMIN_API.CUSTOMERS,
+    'Failed to load customers.',
   );
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [quotationTarget, setQuotationTarget] =
-    useState<CustomerResponse | null>(null);
+  const customers = useMemo(() => data ?? [], [data]);
 
-  // ── Fetch ─────────────────────────────────────────────────────────────────
+  const [search, setSearch] = useState('');
+  const [editor, setEditor] = useState<EditorState>(undefined);
+  const [deleteTarget, setDeleteTarget] = useState<CustomerResponse | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [quotationTarget, setQuotationTarget] = useState<CustomerResponse | null>(null);
 
-  const fetchCustomers = useCallback(async () => {
-    setLoading(true);
-    setFetchError("");
-    try {
-      const res = await api.get<CustomerResponse[]>(ADMIN_API.CUSTOMERS);
-      setCustomers(res.data ?? []);
-    } catch (err) {
-      const msg =
-        err instanceof Error ? err.message : "Failed to fetch customers.";
-      setFetchError(msg);
-      showError(msg);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchCustomers();
-  }, [fetchCustomers]);
+  const rows = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return customers;
+    return customers.filter(
+      (c) =>
+        c.fullName.toLowerCase().includes(q) ||
+        c.mobileNumber.includes(q) ||
+        (c.email ?? '').toLowerCase().includes(q),
+    );
+  }, [customers, search]);
 
   // ── Delete ────────────────────────────────────────────────────────────────
 
   const handleDelete = async () => {
-    if (!deleteTarget) return;
-    setDeleteLoading(true);
+    if (!deleteTarget || deleting) return;
+    setDeleting(true);
     try {
       const res = await api.delete(ADMIN_API.CUSTOMER_BY_ID(deleteTarget.id));
-      showSuccess(
-        res.message ?? `${deleteTarget.fullName} deleted successfully.`,
-      );
+      showSuccess(res.message || `${deleteTarget.fullName} deleted.`);
       setDeleteTarget(null);
-      fetchCustomers();
+      reload();
     } catch (err) {
-      showError(
-        err instanceof Error ? err.message : "Failed to delete customer.",
-      );
+      showError(getErrorMessage(err, 'Failed to delete customer.'));
     } finally {
-      setDeleteLoading(false);
+      setDeleting(false);
     }
   };
 
@@ -79,112 +69,65 @@ export default function CustomersPage() {
 
   const columns: Column<CustomerResponse>[] = [
     {
-      key: "radio",
-      header: "",
-      width: 32,
-      render: () => <span className={styles.radioIcon} />,
-    },
-    {
-      key: "fullName",
-      header: "Name",
-      render: (c) => <span className={styles.name}>{c.fullName}</span>,
-    },
-    {
-      key: "planType",
-      header: "Plan Type",
+      key: 'fullName',
+      header: 'Customer',
       render: (c) => (
-        <span
-          className={`${styles.planBadge} ${styles[`plan${c.planType}`] ?? ""}`}
-        >
-          {c.planType}
-        </span>
+        <div className={styles.customer}>
+          <Link href={`/quotations/${c.id}`} className={styles.name}>
+            {c.fullName}
+          </Link>
+          <span className={styles.sub}>
+            {c.email ? <a href={`mailto:${c.email}`}>{c.email}</a> : 'No email'}
+          </span>
+        </div>
+      ),
+    },
+    { key: 'mobileNumber', header: 'Mobile' },
+    {
+      key: 'planType',
+      header: 'Plan',
+      render: (c) => <Badge tone={planTone(c.planType)}>{c.planType}</Badge>,
+    },
+    { key: 'jetcoins', header: 'Jetcoins', align: 'right', render: (c) => formatNumber(c.jetcoins) },
+    { key: 'totalTrips', header: 'Trips', align: 'right', render: (c) => formatNumber(c.totalTrips) },
+    { key: 'totalStays', header: 'Stays', align: 'right', render: (c) => formatNumber(c.totalStays) },
+    { key: 'reference', header: 'Reference', render: (c) => c.reference || '—' },
+    {
+      key: 'addedOn',
+      header: 'Added',
+      render: (c) => (
+        <div className={styles.customer}>
+          <span>{formatDate(c.addedOn)}</span>
+          <span className={styles.sub}>{c.addedByName?.trim() || '—'}</span>
+        </div>
       ),
     },
     {
-      key: "jetcoins",
-      header: "Jetcoins",
-      render: (c) => formatNumber(c.jetcoins),
-    },
-    {
-      key: "totalTrips",
-      header: "Total Trips",
-      render: (c) => formatNumber(c.totalTrips),
-    },
-    {
-      key: "totalStays",
-      header: "Total Stays",
-      render: (c) => formatNumber(c.totalStays),
-    },
-    {
-      key: "email",
-      header: "Email",
-      render: (c) =>
-        c.email ? (
-          <a className={styles.emailLink} href={`mailto:${c.email}`}>
-            {c.email}
-          </a>
-        ) : (
-          <span className={styles.muted}>—</span>
-        ),
-    },
-    { key: "mobileNumber", header: "Mobile Number" },
-    {
-      key: "reference",
-      header: "Reference",
-      render: (c) => c.reference || <span className={styles.muted}>—</span>,
-    },
-    {
-      key: "addedOn",
-      header: "Added on",
-      render: (c) => formatDate(c.addedOn),
-    },
-    {
-      key: "addedByName",
-      header: "Added by",
-      render: (c) => c.addedByName?.trim() || "—",
-    },
-    {
-      key: "actions",
-      header: "Actions",
+      key: 'actions',
+      header: 'Actions',
+      align: 'right',
       render: (c) => (
         <div className={styles.actions}>
-          <button
-            className={styles.editBtn}
-            type="button"
-            title="Edit customer"
-            onClick={() => {
-              setEditId(c.id);
-              setShowCreate(true);
-            }}
-          >
-            <Icon icon={Edit} size="sm" />
-          </button>
-          <button
-            className={styles.deleteBtn}
-            type="button"
-            title="Delete customer"
+          <Button variant="secondary" size="sm" onClick={() => setQuotationTarget(c)}>
+            Add quotation
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            icon={<Icon icon={Edit} size="sm" />}
+            aria-label={`Edit ${c.fullName}`}
+            title="Edit"
+            onClick={() => setEditor(c.id)}
+          />
+          <Button
+            variant="ghost"
+            size="sm"
+            icon={<Icon icon={Delete} size="sm" />}
+            aria-label={`Delete ${c.fullName}`}
+            title="Delete"
+            className={styles.danger}
             onClick={() => setDeleteTarget(c)}
-          >
-            <Icon icon={Delete} size="sm" />
-          </button>
-          <Button
-            className="btn-sm"
-            variant="secondary"
-            type="button"
-            title="Add quotation"
-            onClick={() => setQuotationTarget(c)}
-          >
-            + Quotation
-          </Button>
-          <Button
-            className="btn-sm"
-            variant="secondary"
-            type="button"
-            title="View quotations"
-            onClick={() => router.push(`/quotations/${c.id}`)}
-          >
-            View
-          </Button>
+          />
         </div>
       ),
     },
@@ -193,59 +136,67 @@ export default function CustomersPage() {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className={styles.page}>
-      <div className={styles.pageHeader}>
-        <h1 className={styles.pageTitle}>Customers</h1>
-        <Button
-          title="Add Customer"
-          className="btn-md"
-          type="button"
-          onClick={() => {
-            setEditId(undefined);
-            setShowCreate(true);
-          }}
-        >
-          + Add Customer
-        </Button>
-      </div>
-
-      <Table
-        columns={columns}
-        rows={customers}
-        rowKey={(c) => c.id}
-        loading={loading}
-        error={fetchError}
-        onRetry={fetchCustomers}
-        empty={
-          <div className={styles.empty}>
-            <span className={styles.emptyIcon}>
-              <Icon icon={Workspaces} size="xl" />
-            </span>
-            <p>No customers yet.</p>
-          </div>
-        }
+    <>
+      <PageHeader
+        title="Customers"
+        description="Everyone you've added, their plan and travel history. Open a customer to see their quotations."
+        actions={<Button onClick={() => setEditor(null)}>Add customer</Button>}
       />
 
+      <Card
+        title="All customers"
+        description={loading ? 'Loading…' : `${rows.length} of ${customers.length} shown`}
+        actions={
+          <div className={styles.search}>
+            <InputField
+              id="customer-search"
+              type="search"
+              aria-label="Search customers"
+              placeholder="Search name, mobile or email"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        }
+      >
+        <Table
+          caption="Customers"
+          columns={columns}
+          rows={rows}
+          rowKey={(c) => c.id}
+          loading={loading}
+          error={error}
+          onRetry={reload}
+          minWidth={1040}
+          empty={
+            search ? (
+              <EmptyState title="No matching customers" description="Try a different name, number or email." />
+            ) : (
+              <EmptyState
+                icon={<Icon icon={Workspaces} size="md" />}
+                title="No customers yet"
+                description="Add your first customer to start creating leads and quotations."
+                action={<Button size="sm" onClick={() => setEditor(null)}>Add customer</Button>}
+              />
+            )
+          }
+        />
+      </Card>
+
       <CustomerModal
-        isOpen={showCreate}
-        customerId={editId}
-        onClose={() => {
-          setShowCreate(false);
-          setEditId(undefined);
-        }}
-        onSuccess={fetchCustomers}
+        isOpen={editor !== undefined}
+        customerId={editor ?? undefined}
+        onClose={() => setEditor(undefined)}
+        onSuccess={reload}
       />
 
       <ConfirmDeleteModal
         isOpen={!!deleteTarget}
-        title="Delete Customer"
+        title="Delete customer"
         description={
-          deleteTarget
-            ? `Are you sure you want to delete ${deleteTarget.fullName}? This action cannot be undone.`
-            : ""
+          deleteTarget ? `Delete ${deleteTarget.fullName}? This can't be undone.` : ''
         }
-        confirmLabel="Delete"
-        loading={deleteLoading}
+        loading={deleting}
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
       />
@@ -253,10 +204,10 @@ export default function CustomersPage() {
       <AddQuotationModal
         isOpen={!!quotationTarget}
         customerId={quotationTarget?.id ?? 0}
-        customerName={quotationTarget?.fullName ?? ""}
+        customerName={quotationTarget?.fullName ?? ''}
         onClose={() => setQuotationTarget(null)}
         onSuccess={() => setQuotationTarget(null)}
       />
-    </div>
+    </>
   );
 }

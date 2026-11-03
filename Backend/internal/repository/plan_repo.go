@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"Backend/internal/models"
 	"gorm.io/gorm"
 )
@@ -55,10 +57,34 @@ func (r *planRepo) CreateSubscription(subscription *models.Subscription) error {
 	return r.db.Create(subscription).Error
 }
 
+// ActivatePaidSubscription marks a pending payment as successful and creates its
+// subscription in one transaction. The status guard makes replays a no-op.
+func (r *planRepo) ActivatePaidSubscription(
+	paymentID uint, razorpayPaymentID, razorpaySignature string, subscription *models.Subscription,
+) error {
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		res := tx.Model(&models.Payment{}).
+			Where(`"ID" = ? AND "status" = ?`, paymentID, "pending").
+			Updates(map[string]interface{}{
+				"status":            "success",
+				"razorpayPaymentID": razorpayPaymentID,
+				"razorpaySignature": razorpaySignature,
+			})
+		if res.Error != nil {
+			return res.Error
+		}
+		if res.RowsAffected == 0 {
+			return ErrPaymentAlreadyProcessed
+		}
+		return tx.Create(subscription).Error
+	})
+}
+
 func (r *planRepo) GetActiveSubscription(userID uint) (*models.Subscription, error) {
 	var sub models.Subscription
 	err := r.db.
-		Where(`"userID" = ? AND "isActive" = true`, userID).
+		// Paid plans end at endDate; free plans have none
+		Where(`"userID" = ? AND "isActive" = true AND ("endDate" IS NULL OR "endDate" > ?)`, userID, time.Now()).
 		Order(`"createdAt" DESC`).
 		First(&sub).Error
 	if err != nil {

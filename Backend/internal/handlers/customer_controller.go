@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -37,7 +38,11 @@ func (h *CustomerHandler) Create(c *gin.Context) {
 
 	customer, err := h.customerService.Create(adminIDRaw.(uint), req)
 	if err != nil {
-		utils.Error(c, http.StatusInternalServerError, err.Error())
+		if errors.Is(err, service.ErrCustomerPhoneExists) {
+			utils.Error(c, http.StatusConflict, err.Error())
+			return
+		}
+		utils.ServerError(c, err, "Could not create customer — please try again")
 		return
 	}
 
@@ -55,7 +60,7 @@ func (h *CustomerHandler) List(c *gin.Context) {
 
 	customers, err := h.customerService.List(adminIDRaw.(uint))
 	if err != nil {
-		utils.Error(c, http.StatusInternalServerError, err.Error())
+		utils.ServerError(c, err, "Something went wrong — please try again")
 		return
 	}
 
@@ -119,6 +124,8 @@ func (h *CustomerHandler) Update(c *gin.Context) {
 			status = http.StatusForbidden
 		case "no fields provided to update":
 			status = http.StatusBadRequest
+		case service.ErrCustomerPhoneExists.Error():
+			status = http.StatusConflict
 		}
 		utils.Error(c, status, err.Error())
 		return

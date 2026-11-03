@@ -5,9 +5,7 @@ export type { OTPInputProps, VerifyOTPData, SignupFormType, AuthConfig } from '.
 export {
   API_BASE_URL,
   AUTH_API,
-  STORAGE_ACCESS_TOKEN,
   STORAGE_DEVICE_ID,
-  COOKIE_TOKEN,
   SESSION_DAYS,
   OTP_RESEND_SECONDS,
   OTP_LENGTH,
@@ -29,7 +27,7 @@ export {
 } from './utils/auth';
 
 // ─── API wrapper ──────────────────────────────────────────────────────────────
-export { api, configureApiRole } from './api';
+export { api, ApiError, configureApiRole, refreshAccessToken, endSession } from './api';
 export type { ApiResponse } from './api';
 
 // ─── Context ──────────────────────────────────────────────────────────────────

@@ -1,16 +1,62 @@
+/*
+ * Desktop (≥1024px): fixed sidebar on the left, header + scrolling page on the right.
+ * Below 1024px the sidebar is an off-canvas drawer opened from the header.
+ */
+
 .shell {
   min-height: 100dvh;
+  background:
+    radial-gradient(1200px 480px at 70% -10%, oklch(from var(--jt-skyBlue-base) l c h / 0.08), transparent 70%),
+    var(--surface-0);
 }
 
-.mainWrapper {
+.content {
   display: flex;
-  height: calc(100dvh - 55px);
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100dvh;
+  margin-left: var(--app-sidebar-width);
 }
 
 .main {
   flex: 1;
   min-width: 0;
-  padding: 8px;
-  height: calc(100dvh - 55px);
-  overflow-y: auto;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--app-content-max);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-8) var(--space-12);
+}
+
+.backdrop {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .content {
+    margin-left: 0;
+  }
+
+  .inner {
+    padding: var(--space-5) var(--space-4) var(--space-10);
+  }
+
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--z-drawer) - 1);
+    display: block;
+    border: none;
+    background: var(--surface-overlay);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--time-normal) var(--ease-out);
+  }
+
+  .shell[data-sidebar-open] .backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }

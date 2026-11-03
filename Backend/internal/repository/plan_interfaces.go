@@ -1,6 +1,14 @@
 package repository
 
-import "Backend/internal/models"
+import (
+	"errors"
+
+	"Backend/internal/models"
+)
+
+// ErrPaymentAlreadyProcessed is returned when a payment is no longer pending
+// (e.g. a replayed verify-payment request).
+var ErrPaymentAlreadyProcessed = errors.New("payment already processed")
 
 type PlanRepository interface {
 	ListActive() ([]models.Plan, error)
@@ -11,5 +19,7 @@ type PlanRepository interface {
 	UpdatePaymentStatus(paymentID uint, status, razorpayPaymentID, razorpaySignature string) error
 
 	CreateSubscription(subscription *models.Subscription) error
+	// ActivatePaidSubscription atomically moves a pending payment to success and creates its subscription.
+	ActivatePaidSubscription(paymentID uint, razorpayPaymentID, razorpaySignature string, subscription *models.Subscription) error
 	GetActiveSubscription(userID uint) (*models.Subscription, error)
 }

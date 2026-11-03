@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -79,7 +80,11 @@ func (h *PlanHandler) VerifyPayment(c *gin.Context) {
 		return
 	}
 	if err := h.planService.VerifyAndActivate(userID, req); err != nil {
-		utils.Error(c, http.StatusBadRequest, err.Error())
+		status := http.StatusBadRequest
+		if errors.Is(err, service.ErrPaymentAlreadyProcessed) {
+			status = http.StatusConflict
+		}
+		utils.Error(c, status, err.Error())
 		return
 	}
 	utils.Success(c, http.StatusOK, "Payment verified. Subscription activated!", nil)

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSocket } from './useSocket';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -66,25 +66,20 @@ const ROLE_EVENTS: Record<string, string[]> = {
 export function useNotifications(role: string) {
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const { on, off } = useSocket();
-  const registeredRef = useRef(false);
 
-  // Register once per role
-  const registerHandlers = useCallback(() => {
-    if (registeredRef.current) return;
-    registeredRef.current = true;
-
+  // Subscribe in an effect (not during render) and unsubscribe on cleanup
+  useEffect(() => {
     const events = ROLE_EVENTS[role] ?? [];
-    events.forEach(event => {
+    const subscriptions = events.map(event => {
       const handler = (data: unknown) => {
         const n = fromEvent(event, data);
         if (n) setNotifications(prev => [n, ...prev]);
       };
       on(event, handler);
+      return { event, handler };
     });
+    return () => subscriptions.forEach(({ event, handler }) => off(event, handler));
   }, [role, on, off]);
-
-  // Call once on mount (safe to call multiple times — guarded by ref)
-  registerHandlers();
 
   const unreadCount = notifications.filter(n => !n.read).length;
 

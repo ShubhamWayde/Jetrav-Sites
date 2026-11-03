@@ -22,6 +22,12 @@
     "./Logo": "./src/components/logo/index.ts",
     "./FormError": "./src/components/FormError/index.ts",
     "./ToastMessage": "./src/components/ToastMessage/index.ts",
+    "./PageHeader": "./src/components/PageHeader/index.ts",
+    "./Card": "./src/components/Card/index.ts",
+    "./Badge": "./src/components/Badge/index.ts",
+    "./EmptyState": "./src/components/EmptyState/index.ts",
+    "./Tabs": "./src/components/Tabs/index.ts",
+    "./StatCard": "./src/components/StatCard/index.ts",
     "./*": [
       "./src/components/*/index.ts",
       "./src/*.tsx"

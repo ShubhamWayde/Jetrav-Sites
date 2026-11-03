@@ -2,6 +2,9 @@ package service
 
 import (
 	"crypto/rand"
+	"crypto/sha256"
+	"crypto/subtle"
+	"encoding/hex"
 	"fmt"
 	"math/big"
 	"time"
@@ -9,6 +12,14 @@ import (
 	"Backend/internal/models"
 	"Backend/internal/repository"
 	"Backend/pkg/sms"
+)
+
+const (
+	otpLength      = 6
+	otpTTL         = 10 * time.Minute
+	otpResendDelay = 30 * time.Second // matches OTP_RESEND_SECONDS in the frontend
+	otpMaxPerHour  = 5
+	otpMaxAttempts = 5
 )
 
 type otpService struct {
@@ -22,22 +33,31 @@ func NewOTPService(repo repository.OTPRepository, smsService sms.SMSService) OTP
 
 // GenerateAndSend creates and delivers a new OTP for the given mobile + purpose.
 func (s *otpService) GenerateAndSend(mobileNumber, purpose string) (string, error) {
-	// Invalidate any previous pending OTPs for this mobile + purpose
-	_ = s.repo.InvalidateAll(mobileNumber, purpose)
+	// Throttle per number: limits SMS cost abuse and guessing across many codes
+	now := time.Now()
+	if recent, err := s.repo.CountSince(mobileNumber, now.Add(-otpResendDelay)); err == nil && recent > 0 {
+		return "", ErrOTPCooldown
+	}
+	if hourly, err := s.repo.CountSince(mobileNumber, now.Add(-time.Hour)); err == nil && hourly >= otpMaxPerHour {
+		return "", ErrOTPRateLimited
+	}
+
+	// Only one code may be valid at a time
+	_ = s.repo.InvalidateAll(mobileNumber)
 
 	// Generate a cryptographically-secure 6-digit OTP
-	otp, err := generateSecureOTP(6)
+	otp, err := generateSecureOTP(otpLength)
 	if err != nil {
 		return "", fmt.Errorf("otp: failed to generate: %w", err)
 	}
 
-	// Persist
+	// Persist only the hash so a database leak doesn't expose live codes
 	record := &models.OTP{
 		MobileNumber: mobileNumber,
-		OTP:          otp,
+		OTP:          hashOTP(otp),
 		Purpose:      purpose,
 		IsUsed:       false,
-		ExpiresAt:    time.Now().Add(10 * time.Minute), // valid for 10 minutes
+		ExpiresAt:    now.Add(otpTTL),
 	}
 	if err := s.repo.Create(record); err != nil {
 		return "", fmt.Errorf("otp: failed to save: %w", err)
@@ -52,12 +72,32 @@ func (s *otpService) GenerateAndSend(mobileNumber, purpose string) (string, erro
 }
 
 // Verify validates the OTP and marks it used on success.
-func (s *otpService) Verify(mobileNumber, otp, purpose string) error {
-	record, err := s.repo.FindValid(mobileNumber, otp, purpose)
+func (s *otpService) Verify(mobileNumber, otp string) error {
+	record, err := s.repo.FindLatestActive(mobileNumber)
 	if err != nil {
-		return fmt.Errorf("invalid or expired OTP")
+		return ErrOTPInvalid
 	}
+
+	if record.Attempts >= otpMaxAttempts {
+		_ = s.repo.MarkUsed(record.ID)
+		return ErrOTPInvalid
+	}
+
+	if subtle.ConstantTimeCompare([]byte(record.OTP), []byte(hashOTP(otp))) != 1 {
+		_ = s.repo.IncrementAttempts(record.ID)
+		// Burn the code on the last allowed failure
+		if record.Attempts+1 >= otpMaxAttempts {
+			_ = s.repo.MarkUsed(record.ID)
+		}
+		return ErrOTPInvalid
+	}
+
 	return s.repo.MarkUsed(record.ID)
+}
+
+func hashOTP(otp string) string {
+	sum := sha256.Sum256([]byte(otp))
+	return hex.EncodeToString(sum[:])
 }
 
 // generateSecureOTP returns a numeric string of the requested length using

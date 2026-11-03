@@ -2,19 +2,33 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// getSecret reads JWT_SECRET from env, falls back to a dev default.
-func getSecret() []byte {
+const minSecretLength = 32
+
+var jwtSecret []byte
+
+// InitJWT loads JWT_SECRET once at startup. There is deliberately no fallback:
+// a guessable default secret would let anyone forge admin tokens.
+func InitJWT() error {
 	s := os.Getenv("JWT_SECRET")
-	if s == "" {
-		return []byte("change-me-in-production-super-secret-key")
+	if len(s) < minSecretLength {
+		return fmt.Errorf("JWT_SECRET must be set and at least %d characters long", minSecretLength)
 	}
-	return []byte(s)
+	jwtSecret = []byte(s)
+	return nil
+}
+
+func getSecret() []byte {
+	if jwtSecret == nil {
+		panic("utils.InitJWT must be called before issuing or validating tokens")
+	}
+	return jwtSecret
 }
 
 // ─── Claims ───────────────────────────────────────────────────────────────────
@@ -64,11 +78,10 @@ func ValidateToken(tokenStr string) (*Claims, error) {
 		tokenStr,
 		&Claims{},
 		func(token *jwt.Token) (interface{}, error) {
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, errors.New("invalid signing method")
-			}
 			return getSecret(), nil
 		},
+		jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}),
+		jwt.WithExpirationRequired(),
 	)
 	if err != nil {
 		return nil, err

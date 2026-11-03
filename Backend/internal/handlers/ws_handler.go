@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"slices"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -13,8 +14,14 @@ import (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
-	// Allow all origins — CORS is already enforced by the Gin CORS middleware.
-	CheckOrigin: func(r *http.Request) bool { return true },
+	// Browsers don't apply CORS to WebSocket upgrades, so check Origin here.
+	CheckOrigin: func(r *http.Request) bool {
+		origin := r.Header.Get("Origin")
+		if origin == "" {
+			return true // non-browser client; still needs a valid token
+		}
+		return slices.Contains(utils.AllowedOrigins(), origin)
+	},
 }
 
 // WsHandler upgrades HTTP connections to WebSocket and registers them with the hub.

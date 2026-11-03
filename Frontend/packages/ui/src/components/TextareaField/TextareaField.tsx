@@ -1,36 +1,53 @@
-import type { ChangeEvent } from 'react';
+'use client';
+
+import { useId, type TextareaHTMLAttributes } from 'react';
 import styles from './TextareaField.module.css';
 
-interface TextareaFieldProps {
-  label?:       string;
-  value:        string;
-  onChange:     (e: ChangeEvent<HTMLTextAreaElement>) => void;
-  placeholder?: string;
-  rows?:        number;
-  disabled?:    boolean;
-  className?:   string;
+interface TextareaFieldProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  label?: string;
+  error?: string;
+  hint?: string;
+  /** Applied to the wrapper (kept for existing callers). */
+  className?: string;
 }
 
 export default function TextareaField({
   label,
-  value,
-  onChange,
-  placeholder,
+  error,
+  hint,
   rows = 3,
-  disabled,
+  required,
   className,
+  id,
+  ...rest
 }: TextareaFieldProps) {
+  const autoId = useId();
+  const textareaId = id ?? rest.name ?? autoId;
+  const messageId = `${textareaId}-message`;
+  const message = error || hint;
+
   return (
     <div className={`${styles.wrap}${className ? ` ${className}` : ''}`}>
-      {label && <label className={styles.label}>{label}</label>}
+      {label && (
+        <label htmlFor={textareaId} className={styles.label}>
+          {label}
+          {required && <span className={styles.required} aria-hidden="true">*</span>}
+        </label>
+      )}
       <textarea
-        className={styles.textarea}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
+        id={textareaId}
         rows={rows}
-        disabled={disabled}
+        required={required}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={message ? messageId : undefined}
+        className={`${styles.textarea}${error ? ` ${styles.hasError}` : ''}`}
+        {...rest}
       />
+      {message && (
+        <span id={messageId} className={error ? styles.errorText : styles.hintText}>
+          {message}
+        </span>
+      )}
     </div>
   );
 }

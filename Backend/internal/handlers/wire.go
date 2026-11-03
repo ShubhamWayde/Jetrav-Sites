@@ -11,4 +11,5 @@ var ProviderSet = wire.NewSet(
 	NewLeadHandler,
 	NewDashboardHandler,
 	NewPlanHandler,
+	NewWsHandler,
 )

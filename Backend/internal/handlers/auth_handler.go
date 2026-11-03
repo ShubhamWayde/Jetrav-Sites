@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"fmt"
+	"errors"
+	"log"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mssola/user_agent"
@@ -45,13 +45,21 @@ func (h *AuthHandler) Signup(c *gin.Context) {
 	}
 
 	if err := h.authService.Signup(req); err != nil {
-		utils.Error(c, http.StatusConflict, err.Error())
+		switch {
+		case errors.Is(err, service.ErrAdminSignupNotAllowed):
+			utils.Error(c, http.StatusForbidden, err.Error())
+		case errors.Is(err, service.ErrAlreadyRegistered):
+			utils.Error(c, http.StatusConflict, err.Error())
+		default:
+			log.Printf("signup failed: %v", err)
+			utils.Error(c, http.StatusInternalServerError, "Could not create account — please try again")
+		}
 		return
 	}
 
 	otp, err := h.otpService.GenerateAndSend(req.MobileNumber, service.OTPPurposeSignup)
 	if err != nil {
-		utils.Error(c, http.StatusInternalServerError, "Account created but failed to send OTP: "+err.Error())
+		h.otpSendError(c, err, "Account created but the OTP could not be sent — please sign in to request a new one")
 		return
 	}
 
@@ -63,13 +71,8 @@ func (h *AuthHandler) Signup(c *gin.Context) {
 		})
 	}
 
-	resp := gin.H{"mobileNumber": req.MobileNumber}
-	if os.Getenv("APP_ENV") == "development" || os.Getenv("TWILIO_ACCOUNT_SID") == "" {
-		resp["otp"] = otp
-		resp["note"] = "OTP returned only in development mode"
-	}
-
-	utils.Success(c, http.StatusCreated, "Account created — OTP sent to your mobile number", resp)
+	utils.Success(c, http.StatusCreated, "Account created — OTP sent to your mobile number",
+		otpResponse(req.MobileNumber, otp))
 }
 
 // ─── POST /api/auth/send-otp ──────────────────────────────────────────────────
@@ -87,17 +90,11 @@ func (h *AuthHandler) SendOTP(c *gin.Context) {
 
 	otp, err := h.otpService.GenerateAndSend(req.MobileNumber, service.OTPPurposeSignin)
 	if err != nil {
-		utils.Error(c, http.StatusInternalServerError, "Failed to send OTP: "+err.Error())
+		h.otpSendError(c, err, "Failed to send OTP — please try again")
 		return
 	}
 
-	resp := gin.H{"mobileNumber": req.MobileNumber}
-	if os.Getenv("APP_ENV") == "development" || os.Getenv("TWILIO_ACCOUNT_SID") == "" {
-		resp["otp"] = otp
-		resp["note"] = "OTP returned only in development mode"
-	}
-
-	utils.Success(c, http.StatusOK, "OTP sent successfully", resp)
+	utils.Success(c, http.StatusOK, "OTP sent successfully", otpResponse(req.MobileNumber, otp))
 }
 
 // ─── POST /api/auth/verify-otp ────────────────────────────────────────────────
@@ -108,11 +105,9 @@ func (h *AuthHandler) VerifyOTP(c *gin.Context) {
 		return
 	}
 
-	if err := h.otpService.Verify(req.MobileNumber, req.OTP, service.OTPPurposeSignup); err != nil {
-		if err := h.otpService.Verify(req.MobileNumber, req.OTP, service.OTPPurposeSignin); err != nil {
-			utils.Error(c, http.StatusUnauthorized, "Invalid or expired OTP")
-			return
-		}
+	if err := h.otpService.Verify(req.MobileNumber, req.OTP); err != nil {
+		utils.Error(c, http.StatusUnauthorized, "Invalid or expired OTP")
+		return
 	}
 
 	ua := user_agent.New(c.Request.UserAgent())
@@ -161,21 +156,10 @@ func (h *AuthHandler) Login(c *gin.Context) {
 func (h *AuthHandler) Refresh(c *gin.Context) {
 	// If the frontend passes ?role=admin|user, only check that app's cookie so
 	// admin and user sessions on the same browser never bleed into each other.
-	role := c.Query("role")
-	var refreshToken string
-	var err error
-	if role != "" {
-		refreshToken, err = c.Cookie(refreshCookieName(role))
-		if err != nil {
-			utils.Error(c, http.StatusUnauthorized, "Refresh token missing")
-			return
-		}
-	} else {
-		refreshToken, _, err = h.getRefreshToken(c)
-		if err != nil {
-			utils.Error(c, http.StatusUnauthorized, "Refresh token missing")
-			return
-		}
+	refreshToken, _, err := h.getRefreshToken(c, c.Query("role"))
+	if err != nil {
+		utils.Error(c, http.StatusUnauthorized, "Refresh token missing")
+		return
 	}
 
 	claims, err := utils.ValidateRefreshToken(refreshToken)
@@ -200,7 +184,8 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 
 // ─── POST /api/auth/logout ────────────────────────────────────────────────────
 func (h *AuthHandler) Logout(c *gin.Context) {
-	refreshToken, cookieName, err := h.getRefreshToken(c)
+	// ?role= keeps logging out of one app from ending the other app's session
+	refreshToken, cookieName, err := h.getRefreshToken(c, c.Query("role"))
 	if err != nil {
 		// No cookie — already logged out; return success so frontend can proceed.
 		utils.Success(c, http.StatusOK, "Logged out successfully", nil)
@@ -211,8 +196,9 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 	// retain a stale token that would block the /signin redirect.
 	h.clearCookieByName(c, cookieName)
 
-	// Best-effort DB cleanup; if the session was already expired it's fine.
-	_ = h.sessionService.LogoutByToken(refreshToken)
+	if err := h.sessionService.LogoutByToken(refreshToken); err != nil {
+		log.Printf("logout: failed to revoke session: %v", err)
+	}
 
 	utils.Success(c, http.StatusOK, "Logged out successfully", nil)
 }
@@ -230,12 +216,35 @@ func (h *AuthHandler) LogoutAll(c *gin.Context) {
 
 	userID := userIDRaw.(uint)
 	if err := h.sessionService.LogoutAll(userID); err != nil {
+		log.Printf("logout-all: %v", err)
 		utils.Error(c, http.StatusInternalServerError, "Failed to logout from all devices")
 		return
 	}
 
 	h.clearCookieByName(c, refreshCookieName(role))
 	utils.Success(c, http.StatusOK, "Logged out from all devices", nil)
+}
+
+// ─── OTP helpers ──────────────────────────────────────────────────────────────
+
+// otpResponse includes the raw OTP only in development (APP_ENV=development).
+func otpResponse(mobileNumber, otp string) gin.H {
+	resp := gin.H{"mobileNumber": mobileNumber}
+	if utils.OTPDebugEnabled() {
+		resp["otp"] = otp
+		resp["note"] = "OTP returned only in development mode"
+	}
+	return resp
+}
+
+func (h *AuthHandler) otpSendError(c *gin.Context, err error, fallback string) {
+	switch {
+	case errors.Is(err, service.ErrOTPCooldown), errors.Is(err, service.ErrOTPRateLimited):
+		utils.Error(c, http.StatusTooManyRequests, err.Error())
+	default:
+		log.Printf("otp send failed: %v", err)
+		utils.Error(c, http.StatusInternalServerError, fallback)
+	}
 }
 
 // ─── Cookie helpers ───────────────────────────────────────────────────────────
@@ -250,19 +259,29 @@ func refreshCookieName(role string) string {
 }
 
 func (h *AuthHandler) setRefreshCookie(c *gin.Context, refreshToken, role string) {
-	c.SetCookie(refreshCookieName(role), refreshToken, 60*60*24*7, "/", "", false, true)
+	// Lax keeps the cookie on same-site requests (admin./user.jetrav.com → api.jetrav.com)
+	// while blocking cross-site CSRF; Secure is required outside localhost.
+	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetCookie(refreshCookieName(role), refreshToken, 60*60*24*7, "/",
+		utils.CookieDomain(), utils.IsProduction(), true)
 }
 
-// getRefreshToken tries each role-specific cookie and returns the first valid one.
-func (h *AuthHandler) getRefreshToken(c *gin.Context) (token, cookieName string, err error) {
-	for _, name := range []string{"admin_refresh_token", "user_refresh_token"} {
-		if t, e := c.Cookie(name); e == nil {
+// getRefreshToken reads the cookie for the given role, or when role is empty,
+// the first role-specific cookie present (legacy clients).
+func (h *AuthHandler) getRefreshToken(c *gin.Context, role string) (token, cookieName string, err error) {
+	names := []string{"admin_refresh_token", "user_refresh_token"}
+	if role == "admin" || role == "user" {
+		names = []string{refreshCookieName(role)}
+	}
+	for _, name := range names {
+		if t, e := c.Cookie(name); e == nil && t != "" {
 			return t, name, nil
 		}
 	}
-	return "", "", fmt.Errorf("refresh token missing")
+	return "", "", errors.New("refresh token missing")
 }
 
 func (h *AuthHandler) clearCookieByName(c *gin.Context, cookieName string) {
-	c.SetCookie(cookieName, "", -1, "/", "", false, true)
+	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetCookie(cookieName, "", -1, "/", utils.CookieDomain(), utils.IsProduction(), true)
 }
